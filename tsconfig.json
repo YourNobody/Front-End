@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "removeComments": true,
+    "outDir": "js",
+    "sourceMap": true,
+    "module": "es6",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}
