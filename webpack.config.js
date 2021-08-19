@@ -57,11 +57,8 @@ const config = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {},
-          },
-          'css-loader',
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader', options: { modules: true }},
         ],
       },
       {
