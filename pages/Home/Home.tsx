@@ -1,13 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { withMainLayout } from '../../layouts/MainLayout';
 import { HomeProps } from './Home.props';
 
-const HomeComponent = (props: HomeProps): JSX.Element => {
+const Home = (props: HomeProps): JSX.Element => {
   return (
     <div {...props}>
       <h1>Hello World, It's React App</h1>
+      <Link to="/quizes">Quizes</Link>
+      <Link to="/profile">Profile</Link>
+      <Link to="/auth">Authorization</Link>
+      <Link to="/erro12321321vwvwk">Black Hole</Link>
     </div>
   );
 };
 
-export const Home = withMainLayout(HomeComponent);
+export default withMainLayout(Home);

@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
-export interface 404Props {
-  children: ReactNode;
+export interface Page404Props {
+  title?: string;
 }
