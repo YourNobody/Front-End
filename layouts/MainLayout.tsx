@@ -1,11 +1,14 @@
 import React, {FC} from 'react';
-import { Header } from '../pageComponents/index';
-import { Footer } from '../pageComponents/index';
+import { Helmet } from 'react-helmet';
+import { Header, Footer } from '../pageComponents/index';
 import { MainLayoutProps } from './MainLayout.props';
 
 const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   return (
     <>
+      <Helmet>
+        <meta name="Description" content="application: Quiz App, frameworks: React & Express" />
+      </Helmet>
       <Header />
       <main>
         {children}

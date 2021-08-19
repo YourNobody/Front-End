@@ -1,16 +1,17 @@
-const path = require('path')
-const HTMLWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizePlugin = require('css-minimizer-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const path = require('path');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizePlugin = require('css-minimizer-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const IS_DEV_MODE = (process.env.NODE_ENV = 'development')
-const MODE = process.env.NODE_ENV
+const IS_DEV_MODE = (process.env.NODE_ENV = 'development');
+const MODE = process.env.NODE_ENV;
 
 function filename(ext) {
-  if (IS_DEV_MODE) return `[name]${ext}`
-  return `[name].[hash]${ext}`
+  if (IS_DEV_MODE) return `[name]${ext}`;
+  return `[name].[hash]${ext}`;
 }
 
 const config = {
@@ -49,6 +50,11 @@ const config = {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src/assets'), to: 'assets' },
+      ]
     }),
   ],
 
@@ -91,7 +97,8 @@ const config = {
         },
       },
       {
-        test: /\.(png|jpg|svg|gif|jpeg)$/,
+        test: /\.(svg|png|gif|jpg|ico)$/,
+        exclude: /node_modules/,
         use: ['file-loader'],
       },
     ],
@@ -109,4 +116,4 @@ if (!IS_DEV_MODE) {
   }
 }
 
-module.exports = config
+module.exports = config;
