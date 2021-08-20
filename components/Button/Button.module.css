@@ -1,0 +1,28 @@
+.button {
+	margin-top: 10px;
+	padding: 12px 20px;
+
+	transition: all 0.2s;
+	text-align: center;
+
+	border-radius: 5px;
+
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.primary {
+  background-color: var(--blue);
+}
+
+.ghost {
+  background-color: var(--white);
+}
+
+.primary:hover {
+	background-color: var(--blue-hover);
+}
+
+.ghost:hover {
+  background-color: var(--blue);
+}
