@@ -12,11 +12,11 @@
 }
 
 .primary {
-  background-color: var(--blue);
+	background-color: var(--blue);
 }
 
 .ghost {
-  background-color: var(--white);
+	background-color: var(--white);
 }
 
 .primary:hover {
@@ -24,5 +24,5 @@
 }
 
 .ghost:hover {
-  background-color: var(--blue);
+	background-color: var(--blue);
 }

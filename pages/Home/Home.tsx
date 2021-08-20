@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { withMainLayout } from '../../layouts/MainLayout';
+import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import { HomeProps } from './Home.props';
 
 const Home = (props: HomeProps): JSX.Element => {
