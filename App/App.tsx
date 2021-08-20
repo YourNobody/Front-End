@@ -7,21 +7,22 @@ import {
 } from 'react-router-dom';
 
 import { Home, Quizes, Profile, Authorization, Page404 } from '..//pages/pages';
+import { routes } from "../constants/routes";
 
 function App(): JSX.Element {
   return (
     <Router>
       <Switch>
-        <Route path="/" exact>
+        <Route path={routes.HOME} exact>
           <Authorization title="Authorization" />
         </Route>
-        <Route path="/quizes">
+        <Route path={routes.QUIZES.ROOT}>
           <Quizes title="Quizes" />
         </Route>
-        <Route path="/profile">
+        <Route path={routes.PROFILE}>
           <Profile title="Profile" />
         </Route>
-        <Route path="/auth">
+        <Route path={routes.AUTH}>
           <Authorization title="Authorization" />
         </Route>
         <Route>
