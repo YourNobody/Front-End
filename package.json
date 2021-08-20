@@ -8,7 +8,7 @@
     "start": "cross-env NODE_ENV=development webpack serve --hot",
     "build": "cross-env NODE_ENV=production webpack",
     "eslint": "eslint . --ext .ts,.tsx src/ --fix-dry-run",
-    "stylelint": "stylelint --aei --fix src/**/**.css",
+    "stylelint": "stylelint --aei --fix ./**/**.css",
     "lint": "concurrently \"npm run eslint\" \"npm run stylelint\"",
     "prettier-ts": "prettier --write ./src/**/**.ts",
     "prettier-tsx": "prettier --write ./src/**/**.tsx",
