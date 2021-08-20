@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 import { Helmet } from 'react-helmet';
-import { Header, Footer } from '../pageComponents/index';
+import { Header, Footer } from '../../pageComponents/index';
 import { MainLayoutProps } from './MainLayout.props';
 
-const MainLayout = ({ children, title = 'Quiz App | Home' }: MainLayoutProps): JSX.Element => {
+const MainLayout = ({ children, title = 'Home' }: MainLayoutProps): JSX.Element => {
   return (
     <>
       <Helmet>

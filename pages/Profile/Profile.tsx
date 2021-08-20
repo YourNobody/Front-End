@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProfileProps } from './Profile.props';
 import styles from './Profile.module.css';
-import { withMainLayout } from '../../layouts/MainLayout';
+import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 
 export const Profile = (props: ProfileProps): JSX.Element => {
   return (

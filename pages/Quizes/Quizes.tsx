@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuizesProps } from './Quizes.props';
 import styles from './Quizes.module.css';
-import { withMainLayout } from './../../layouts/MainLayout';
+import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 
 export const Quizes = (props: QuizesProps): JSX.Element => {
   return (

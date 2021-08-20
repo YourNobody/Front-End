@@ -1,0 +1,17 @@
+:root {
+  --black: #0B0c10;
+  --black-light: #1F2833;
+  --gray: #C5C6C7;
+	--white: #e7e7e7;
+  --mega-white: #f0f0f0;
+  --blue: #66FCF1;
+  --blue-dark: #45A29E;
+  --blue-hover: #51cfc9;
+  --blue-purple: #4e5ff0;
+}
+
+body {
+	background-color: var(--black);
+	color: var(--white);
+	font-family: 'Roboto', sans-serif;
+}
