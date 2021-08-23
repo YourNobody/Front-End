@@ -41,7 +41,7 @@ export const Image = ({ isEmpty = true, userInitials, src, alt, fit = 'contain',
   const buildNoImage = (): JSX.Element => {
     return (
       <div 
-        className={cn(styles.template, {
+        className={cn(styles.template, className, {
           [styles.circle]: isCircled
         })}
         style={{ backgroundColor: getRandomColor() }}
