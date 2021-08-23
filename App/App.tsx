@@ -14,7 +14,7 @@ function App(): JSX.Element {
     <Router>
       <Switch>
         <Route path={routes.HOME} exact>
-          <Authorization title="Authorization" />
+          <Home title="Home" />
         </Route>
         <Route path={routes.QUIZES.ROOT}>
           <Quizes title="Quizes" />
