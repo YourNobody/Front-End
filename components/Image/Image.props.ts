@@ -4,5 +4,6 @@ export interface ImageProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElem
   alt?: string;
   fit?: 'contain' | 'cover' | 'fill' | 'none';
   isEmpty?: boolean;
-  userInitials: string;
+  userInitials?: string;
+  isCircled?: boolean;
 }
