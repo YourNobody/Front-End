@@ -15,7 +15,7 @@ export const Image = ({ isEmpty = true, text, src, alt, fit = 'contain', isCircl
     if (splitted.length > 1) {
       return splitted[0][0].toUpperCase() + splitted[1][0].toUpperCase();
     } else if (splitted.length === 1) {
-      return splitted[0].toUpperCase();
+      return splitted[0][0].toUpperCase();
     }
     return 'YOU';
   };

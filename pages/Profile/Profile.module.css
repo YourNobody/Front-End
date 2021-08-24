@@ -1,0 +1,40 @@
+.profile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  height: 100%;
+}
+
+.navList {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr;
+  font-size: 16px;
+  background-color: var(--black-light);
+}
+
+.navList a {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.navList li {
+  width: 100%;
+  color: var(--white);
+  padding: 20px 15px;
+  transition: all 0.2s;
+}
+
+.navList a:nth-of-type(3) li {
+  color: var(--red);
+}
+
+.navList a:nth-of-type(3) li:hover {
+  background-color: var(--red-transparent);
+}
+
+.navList li:hover {
+  color: var(--blue);
+  background-color: var(--white-transparent);
+}

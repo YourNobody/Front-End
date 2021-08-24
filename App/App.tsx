@@ -14,12 +14,12 @@ function App(): JSX.Element {
     <Router>
       <Switch>
         <Route path={routes.HOME} exact>
-          <Home title="Home" />
+          <Profile title="Home" />
         </Route>
         <Route path={routes.QUIZES.ROOT}>
           <Quizes title="Quizes" />
         </Route>
-        <Route path={routes.PROFILE}>
+        <Route path={routes.PROFILE + '/account'}>
           <Profile title="Profile" />
         </Route>
         <Route path={routes.AUTH}>
