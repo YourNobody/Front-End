@@ -83,20 +83,33 @@
 }
 
 .personInfo {
+	height: 100%;
+}
+
+.personInfo a {
 	display: grid;
 	align-items: center;
 
-	height: 100%;
 	padding: 0 20px;
+	height: 100%;
 
 	transition: all 0.2s;
 	grid-template-columns: auto 50px;
 	gap: 10px;
 }
 
-.personInfo:hover {
+.personInfo a:hover {
 	color: var(--blue);
 	background-color: var(--white-transparent);
+}
+
+.personInfo a:hover .name {
+	color: var(--blue);
+}
+
+.name {
+	color: var(--white);
+	cursor: pointer;
 }
 
 .image {

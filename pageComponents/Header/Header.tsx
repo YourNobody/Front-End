@@ -25,8 +25,10 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
             </div>
           </Link>
           <div className={styles.personInfo}>
-            <div className={styles.name}>Username</div>
-            <Image isEmpty={true} isCircled={true} className={styles.image}/>
+            <Link to={routes.PROFILE}>
+              <div className={styles.name}>Username</div>
+              <Image isEmpty={true} isCircled={true} className={styles.image}/>
+            </Link>
           </div>
         </div>
       </nav>
