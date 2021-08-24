@@ -1,0 +1,19 @@
+.layout {
+  display: grid;
+  grid-template-areas: 1fr;
+}
+
+.header {
+
+}
+
+.body {
+  padding: 20px 40px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
