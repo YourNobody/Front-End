@@ -1,19 +1,24 @@
 .layout {
   display: grid;
-  grid-template-areas: 1fr;
+  min-height: 100vh;
+  grid-template-areas: 
+    'header header header'
+    '. body .'
+    'footer footer footer'
+  ;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto 1300px auto;
 }
 
 .header {
-
+  grid-area: header;
 }
 
 .body {
+  grid-area: body;
   padding: 20px 40px;
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  grid-area: footer;
 }
