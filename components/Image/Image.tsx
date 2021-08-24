@@ -3,7 +3,7 @@ import { ImageProps } from './Image.props';
 import styles from './Image.module.css';
 import cn from 'classnames';
 
-export const Image = ({ isEmpty = true, userInitials, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
+export const Image = ({ isEmpty = true, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
   if (src) {
     isEmpty = false;
   } else {
@@ -38,6 +38,8 @@ export const Image = ({ isEmpty = true, userInitials, src, alt, fit = 'contain',
     );
   };
 
+  console.log(className);
+
   const buildNoImage = (): JSX.Element => {
     return (
       <div 
@@ -48,7 +50,7 @@ export const Image = ({ isEmpty = true, userInitials, src, alt, fit = 'contain',
       >
         <span 
           className={styles.templateInitials}
-        >{getFirstLetters(userInitials)}</span>
+        >{getFirstLetters(text)}</span>
       </div>
     );
   };
@@ -61,4 +63,4 @@ export const Image = ({ isEmpty = true, userInitials, src, alt, fit = 'contain',
 
 function getRandomColor(): string {
   return '#' + (Math.random().toString(16) + '000000').substring(2,8).toUpperCase();
-};
+}
