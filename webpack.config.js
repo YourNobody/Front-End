@@ -41,6 +41,13 @@ const config = {
     hot: true,
     open: true,
     clientLogLevel: 'silent',
+    proxy: {
+      context: ['/'],
+      target: 'http://localhost:4000',
+      secure: false,
+      changeOrigin: true,
+      logLevel: 'debug'
+    }
   },
 
   plugins: [

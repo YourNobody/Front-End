@@ -21,7 +21,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
         </Link>
       </ul>
       <Route path={routes.HOME}>
-        <AccountInfo userName="Pavel" email="p@mail.ru" />
+        <AccountInfo firstName="Pavel" email="p@mail.ru" />
       </Route>
       <Route path={routes.PROFILE + '/questions'}>
         questions

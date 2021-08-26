@@ -14,7 +14,7 @@ function App(): JSX.Element {
     <Router>
       <Switch>
         <Route path={routes.HOME} exact>
-          <Profile title="Home" />
+          <Home title="Home" />
         </Route>
         <Route path={routes.QUIZES.ROOT}>
           <Quizes title="Quizes" />
@@ -22,7 +22,7 @@ function App(): JSX.Element {
         <Route path={routes.PROFILE + '/account'}>
           <Profile title="Profile" />
         </Route>
-        <Route path={routes.AUTH}>
+        <Route path={routes.AUTH.LOGIN}>
           <Authorization title="Authorization" />
         </Route>
         <Route>

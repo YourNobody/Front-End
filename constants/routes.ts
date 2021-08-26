@@ -5,5 +5,9 @@ export const routes = {
     CREATE: '/quizes/create'
   },
   PROFILE: '/profile',
-  AUTH: '/auth',
+  AUTH: {
+    ROOT: '/auth',
+    LOGIN: '/auth/login',
+    REGISTER: '?auth/register',
+  },
 };
