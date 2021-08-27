@@ -36,6 +36,7 @@ const config = {
 
   devServer: {
     port: 3000,
+    historyApiFallback: true,
     contentBase: path.resolve(__dirname, 'dist'),
     watchContentBase: true,
     hot: true,
