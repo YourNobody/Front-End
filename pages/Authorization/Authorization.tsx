@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
@@ -6,14 +6,22 @@ import styles from './Authorization.module.css';
 import { HTag, Input, Button } from '../../components';
 import { routes } from '../../constants/routes';
 import { Link, Route, Switch } from 'react-router-dom';
-import { useRequest } from '../../hooks/request.hook';
+import { useActions } from '../../hooks/useActions.hook';
+import { IUserReducer } from '../../store/reducers.interface';import { useRequest } from '../../hooks/useRequest';
+;
 
 const Login: FC<AuthorizationProps> = () => {
-  const { loading, error, request, clearError } = useRequest();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const { fetchUserBegging, fetchUserSuccess, fetchUserError } = useActions();
 
-  const onSubmit = (data) => {
-    request('login', 'POST', data, {});
+  const onSubmit = async (data) => {
+    try {
+      fetchUserBegging();
+      const user = await useRequest<IUserReducer>('login', 'POST', data, {});
+      fetchUserSuccess(user.data);
+    } catch (e) {
+      fetchUserError(e);
+    }
   };
   
   return (
@@ -39,16 +47,11 @@ const Login: FC<AuthorizationProps> = () => {
 
 const Register: FC<AuthorizationProps> = () => {
   console.log('HERE')
-  const { loading, error, request, clearError } = useRequest();
   const { register, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {
-    request('register', 'POST', data, {});
-  };
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
-      <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} action="post">
         <HTag size="large" className={styles.title}>Registration</HTag>
         <div className={styles.inputBlock}>
           <Input type="email" label="Email" {...register('email')}/>
