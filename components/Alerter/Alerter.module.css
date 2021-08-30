@@ -1,0 +1,60 @@
+.alerter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  position: fixed;
+  z-index: 9999;
+  max-width: 35%;
+  bottom: -25%;
+  opacity: 0;
+  right: 0;
+  transition: all 1s 0s cubic-bezier(0, 0.55, 0.45, 1);
+}
+
+.active {
+  bottom: 0;
+  opacity: 1;
+}
+
+.message {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 15px;
+  padding-left: 15px;
+}
+
+.close {
+  padding: 16px 15px 15px 15px;
+  font-size: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.success {
+  background-color: var(--green-transparent);
+}
+
+.success .close:hover {
+  padding-top: 100%;
+  color: var(--black);
+  background-color: var(--green);
+}
+
+.warning {
+  background-color: var(--yellow-transparent);
+}
+
+.warning .close:hover {
+  padding-top: 100%;
+  color: var(--black);
+  background-color: var(--yellow);
+}
+
+.error {
+  background-color: var(--red-transparent);
+}
+
+.error .close:hover {
+  color: var(--black);
+  padding-top: 100%;
+  background-color: var(--red);
+}

@@ -8,6 +8,6 @@ export const routes = {
   AUTH: {
     ROOT: '/auth',
     LOGIN: '/auth/login',
-    REGISTER: '?auth/register',
+    REGISTER: '/auth/register',
   },
 };

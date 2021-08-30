@@ -22,6 +22,7 @@ const config = {
   output: {
     filename: filename('.js'),
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
   },
 
   resolve: {
@@ -37,16 +38,21 @@ const config = {
   devServer: {
     port: 3000,
     historyApiFallback: true,
-    contentBase: path.resolve(__dirname, 'dist'),
     watchContentBase: true,
     hot: true,
     open: true,
     clientLogLevel: 'silent',
     proxy: {
       context: ['/'],
-      target: 'http://localhost:4000',
-      secure: false,
-      changeOrigin: true,
+      '/': {
+        target: 'http://localhost:4000',
+        bypass: function (req, res, proxyOptions) {
+          if (req.headers.accept.indexOf('text/html') !== -1) {
+            console.log('Skipping proxy for browser request');
+            return '/index.html';
+          }
+        },
+      },
       logLevel: 'debug'
     }
   },

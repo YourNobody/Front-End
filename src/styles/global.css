@@ -12,6 +12,10 @@
 	--blue-purple: #4e5ff0;
 	--red: rgba(253, 105, 105, 0.842);
 	--red-transparent: rgba(253, 105, 105, 0.3);
+	--green: rgba(152, 252, 112, 0.842);
+	--green-transparent: rgba(166, 255, 131, 0.4);
+	--yellow: rgba(255, 239, 97, 0.842);
+	--yellow-transparent: rgba(255, 240, 101, 0.4);
 }
 
 body {

@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import { Helmet } from 'react-helmet';
-import { Header, Footer } from '../../pageComponents/index';
 import { AuthLayoutProps } from './AuthLayout.props';
 
 const AuthLayout = ({ children, title = 'Authorization' }: AuthLayoutProps): JSX.Element => {

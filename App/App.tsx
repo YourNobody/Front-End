@@ -22,7 +22,7 @@ function App(): JSX.Element {
         <Route path={routes.PROFILE + '/account'}>
           <Profile title="Profile" />
         </Route>
-        <Route path={routes.AUTH.LOGIN}>
+        <Route path={routes.AUTH.ROOT}>
           <Authorization title="Authorization" />
         </Route>
         <Route>

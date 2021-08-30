@@ -22,12 +22,12 @@ const Home = (props: HomeProps): JSX.Element => {
         Also you can create anonymous questions!
       </div>
       <div className={styles.actions}>
-          <Button onClick={clickRedirectHandler.bind(null, routes.AUTH.LOGIN)}>
-            Log In
-          </Button>
-          <Button onClick={clickRedirectHandler.bind(null, routes.QUIZES.ROOT)}>
-            To Questions!          
-          </Button>
+          <Link to={routes.AUTH.LOGIN}>          
+            <Button>Log In</Button>
+          </Link>
+          <Link to={routes.QUIZES.ROOT}>
+            <Button>To Questions!</Button>
+          </Link>
       </div>
     </div>
   );
