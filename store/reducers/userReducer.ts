@@ -1,4 +1,4 @@
-import { IUserAction, IUserState, userTypes } from "../reducers.interface";
+import { IUserAction, IUserState, userTypes } from "../interfaces-reducers/userReducer.interface";
 
 const initialState: IUserState = {
   user: {
@@ -7,20 +7,17 @@ const initialState: IUserState = {
     email: '',
     isAuthenticated: false,
   },
-  error: null,
   loading: false
 };
 
 export const userReducer = (state = initialState, action: IUserAction): IUserState => {
   switch (action.type) {
     case userTypes.FETCH_USER:
-      return {...state, loading: true, error: null};
+      return {...state, loading: true};
     case userTypes.FETCH_USER_SUCCESS:
-      return {...state, loading: false, error: null, user: action.payload};
+      return {...state, loading: false, user: action.payload};
     case userTypes.FETCH_USER_ERROR:
-      return {...state, loading: false, error: action.payload};
-    case userTypes.CLEAR_ERROR:
-      return {...state, error: null};
+      return {...state, loading: false};
     default: return state;
   }
 };

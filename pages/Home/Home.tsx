@@ -5,6 +5,7 @@ import { HTag, Button } from '../../components';
 import { HomeProps } from './Home.props';
 import styles from './Home.module.css';
 import { routes } from '../../constants/routes';
+import { Alerter } from '../../components/Alerter/Alerter';
 
 const Home = (props: HomeProps): JSX.Element => {
   const history: RouteComponentProps['history'] = useHistory<RouteComponentProps>();

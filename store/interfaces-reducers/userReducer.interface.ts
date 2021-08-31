@@ -1,14 +1,12 @@
-//user reducer
 export interface IUserReducer {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   isAuthenticated: boolean;
 }
 
 export interface IUserState {
   user: IUserReducer;
-  error: string;
   loading: boolean;
 }
 
@@ -27,7 +25,6 @@ export interface IUserActionFetchUserSuccess {
 
 export interface IUserActionFetchUserError {
   type: userTypes.FETCH_USER_ERROR,
-  payload: string;
 }
 
 export interface IUserActionClearError {

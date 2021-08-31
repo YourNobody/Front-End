@@ -15,26 +15,27 @@ import { Alerter } from "../components/Alerter/Alerter";
 function App(): JSX.Element {
   return (
     <Provider store={store}>
-      <Alerter />
-      <Router>
-        <Switch>
-          <Route path={routes.HOME} exact>
-            <Home title="Home" />
-          </Route>
-          <Route path={routes.QUIZES.ROOT}>
-            <Quizes title="Quizes" />
-          </Route>
-          <Route path={routes.PROFILE + '/account'}>
-            <Profile title="Profile" />
-          </Route>
-          <Route path={routes.AUTH.ROOT}>
-            <Authorization title="Authorization" />
-          </Route>
-          <Route>
-            <Page404 title="No Page" />
-          </Route>
-        </Switch>
-      </Router>
+      <Alerter>
+        <Router>
+          <Switch>
+            <Route path={routes.HOME} exact>
+              <Home title="Home" />
+            </Route>
+            <Route path={routes.QUIZES.ROOT}>
+              <Quizes title="Quizes" />
+            </Route>
+            <Route path={routes.PROFILE + '/account'}>
+              <Profile title="Profile" />
+            </Route>
+            <Route path={routes.AUTH.ROOT}>
+              <Authorization title="Authorization" />
+            </Route>
+            <Route>
+              <Page404 title="No Page" />
+            </Route>
+          </Switch>
+        </Router>
+      </Alerter>
     </Provider>
   );
 }
