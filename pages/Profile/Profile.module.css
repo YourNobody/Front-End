@@ -24,6 +24,7 @@
   color: var(--white);
   padding: 20px 15px;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .navList a:nth-of-type(3) li {

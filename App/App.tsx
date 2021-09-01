@@ -24,7 +24,7 @@ function App(): JSX.Element {
             <Route path={routes.QUIZES.ROOT}>
               <Quizes title="Quizes" />
             </Route>
-            <Route path={routes.PROFILE + '/account'}>
+            <Route path={routes.PROFILE.ACCOUNT}>
               <Profile title="Profile" />
             </Route>
             <Route path={routes.AUTH.ROOT}>

@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileProps } from './Profile.props';
 import styles from './Profile.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, useHistory } from 'react-router-dom';
 import { routes } from '../../constants/routes';
 import { AccountInfo } from './AccountInfo/AccountInfo';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
+import { useActions } from '../../hooks/useActions.hook';
+import { useRequest } from '../../hooks/useRequest';
+import { statuses } from '../../constants/app';
 
 export const Profile = (props: ProfileProps): JSX.Element => {
+  const history = useHistory();
+  const { user } = useTypedSelector(state => state.user);
+  const { userLogOut, setAppAlert } = useActions();
+  const { error, clearError, request, data, clearData } = useRequest();
+  console.log('profile');
+  
+
+  const handleLogOut = async (): Promise<void> => {
+    request('logout', 'POST');
+    userLogOut();
+  };
+
+  useEffect(() => {
+    if (error) {
+      setAppAlert(error, statuses.ERROR);
+      clearError();
+    }
+    if (data) {
+      setAppAlert(data.message, statuses.SUCCESS);
+      clearData();
+      history.push(routes.HOME);
+    }
+  }, [error, data]);
+
   return (
     <div {...props} className={styles.profile}>
       <ul className={styles.navList}>
@@ -16,15 +44,12 @@ export const Profile = (props: ProfileProps): JSX.Element => {
         <Link to={routes.PROFILE + '/questions'}>
           <li>My Questions</li>
         </Link>
-        <Link to={routes.PROFILE + '/logout'}>
-          <li>Log Out</li>
-        </Link>
+        <a>
+          <li onClick={handleLogOut}>Log Out</li>
+        </a>
       </ul>
       <Route path={routes.HOME}>
-        <AccountInfo firstName="Pavel" email="p@mail.ru" />
-      </Route>
-      <Route path={routes.PROFILE + '/questions'}>
-        questions
+        <AccountInfo firstName={user.firstName} lastName={user.lastName} email={user.email} />
       </Route>
     </div>
   );

@@ -4,7 +4,11 @@ export const routes = {
     ROOT: '/quizes',
     CREATE: '/quizes/create'
   },
-  PROFILE: '/profile',
+  PROFILE: {
+    ROOT: '/profile',
+    ACCOUNT: '/profile/account',
+    QUESTIONS: '/profile/account/questions',
+  },
   AUTH: {
     ROOT: '/auth',
     LOGIN: '/auth/login',

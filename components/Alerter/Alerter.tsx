@@ -13,10 +13,13 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
   const handleCloseIcon = (e, id: string | number) => {
     setTimeout(() => clearAppAlert(id), 300);
   };
+  console.log('newAlertId: ', newAlertId);
+  
 
-  useEffect(() => {
-    setTimeout(() => clearAppAlert(newAlertId), ALERT_BEFORE_DISAPPEAR);
-  }, [newAlertId]);
+  // useEffect(() => {
+  //   console.log('here');
+  //   setTimeout(() => clearAppAlert(newAlertId), ALERT_BEFORE_DISAPPEAR);
+  // }, [alerts, clearAppAlert, newAlertId]);
 
   return (
     <>

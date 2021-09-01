@@ -9,12 +9,14 @@ import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
-import { getEmptyFormData } from '../../helpers/form.helper';
+import { getEmptyObject } from '../../helpers/clear.helper';
 
 const Login: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
   const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, data, clearData } = useRequest();
+  const history = useHistory();
+  
   useEffect(() => {
     if (error) {
       setAppAlert(error, statuses.ERROR);
@@ -25,13 +27,14 @@ const Login: FC<AuthorizationProps> = () => {
       setAppAlert(data.messsage, statuses.SUCCESS);
       fetchUserSuccess(data);
       clearData();
+      history.push(routes.HOME);
     }
   }, [error, data]);
 
   const onSubmit = (formData) => {
     fetchUserBegging();
     request('login', 'POST', formData);
-    reset(getEmptyFormData(formData));
+    reset(getEmptyObject(formData));
   };
   
   return (
@@ -56,7 +59,7 @@ const Login: FC<AuthorizationProps> = () => {
 };
 
 const Register: FC<AuthorizationProps> = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, reset } = useForm();
   const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, data, clearData } = useRequest();
   const history = useHistory();
@@ -77,12 +80,8 @@ const Register: FC<AuthorizationProps> = () => {
 
   const onSubmit = (formData) => {
     fetchUserBegging();
-    console.log(formData);
-    
     request('register', 'POST', formData);
-    Object.keys(formData).forEach(name => {
-      setValue(name, '');
-    });
+    reset(getEmptyObject(formData));
   };
 
   return (
