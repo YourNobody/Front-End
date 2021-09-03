@@ -24,8 +24,9 @@ const Login: FC<AuthorizationProps> = () => {
       clearError();
     }
     if (data) {
-      setAppAlert(data.messsage, statuses.SUCCESS);
-      fetchUserSuccess(data);
+      console.log('data: ', data);
+      setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess(data.user);
       clearData();
       history.push(routes.HOME);
     }
@@ -71,6 +72,8 @@ const Register: FC<AuthorizationProps> = () => {
       clearError();
     }
     if (data) {
+      console.log('data: ', data);
+      
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess(data);
       clearData();

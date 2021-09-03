@@ -5,7 +5,9 @@ const initialState: IUserState = {
   user: {
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    id: '',
+    questions: []
   },
   isAuthenticated: false,
   loading: false
