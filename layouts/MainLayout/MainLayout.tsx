@@ -1,10 +1,10 @@
-import React, {FC} from 'react';
+import React, {FC, PropsWithChildren} from 'react';
 import { Helmet } from 'react-helmet';
 import { Header, Footer } from '../../pageComponents/index';
 import { MainLayoutProps } from './MainLayout.props';
 import styles from './MainLayout.module.css';
 
-const MainLayout = ({ children, title = 'Home', ...props }: MainLayoutProps): JSX.Element => {
+const MainLayout: FC<MainLayoutProps> = ({ children, title = 'Home', ...props }): JSX.Element => {
   return (
     <div {...props}
       className={styles.layout}

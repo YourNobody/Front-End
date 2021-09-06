@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { ProfileProps } from './Profile.props';
 import styles from './Profile.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
@@ -6,7 +6,7 @@ import { Link, Route } from 'react-router-dom';
 import { routes } from '../../constants/routes';
 import { AccountInfo } from './AccountInfo/AccountInfo';
 
-export const Profile = (props: ProfileProps): JSX.Element => {
+export const Profile: FC<ProfileProps> = (props) => {
   return (
     <div {...props} className={styles.profile}>
       <ul className={styles.navList}>

@@ -1,6 +1,5 @@
-import { ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
-export interface AuthLayoutProps {
-  children?: ReactNode;
+export interface AuthLayoutProps extends PropsWithChildren<any> {
   title?: string;
 }

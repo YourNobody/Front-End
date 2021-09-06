@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { AccountInfoProps } from './AccountInfo.props';
 import styles from './AccountInfo.module.css';
 import { Image, HTag, Card, Button } from '../../../components';
 import cn from 'classnames';
 
-export const AccountInfo = ({firstName, lastName, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
+export const AccountInfo: FC<AccountInfoProps> = ({firstName, lastName, email, imageUrl, ...props}) => {
   return (
     <Card {...props} className={styles.info}>
       <div className={styles.content}>
@@ -34,8 +34,8 @@ export const AccountInfo = ({firstName, lastName, email, imageUrl, ...props}: Ac
       <div className={styles.imageWrapper}>
         {
           imageUrl 
-          ?  <Image src={imageUrl} alt="My Image" fit="contain"  className={styles.image}/>
-          :  <Image isEmpty text="Pavel" className={styles.image}/>
+          ?  <Image src={imageUrl} alt="My Image" fit="contain" className={styles.image}/>
+          :  <Image text="Pavel" className={styles.image}/>
         }
       </div>
       <div className={styles.changeInfo}>

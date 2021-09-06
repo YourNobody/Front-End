@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { HTagProps } from './HTag.props';
 import styles from './HTag.module.css';
 
-export const HTag = ({ children, size = 'm', className }: HTagProps): JSX.Element => {
+export const HTag: FC<HTagProps> = ({ children, size = 'm', className }) => {
   switch (size) {
     case 'small':
     case 's': {

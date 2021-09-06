@@ -1,9 +1,9 @@
-import React, { useState, ChangeEvent, forwardRef } from 'react';
+import React, { useState, ChangeEvent, forwardRef, FC } from 'react';
 import { InputProps } from './Input.props';
 import styles from './Input.module.css';
 import cn from 'classnames';
 
-export const Input = forwardRef(({ label, type, name, ...props}: InputProps): JSX.Element => {
+export const Input: FC<InputProps> = forwardRef(({ label, type, name, ...props}, ref) => {
   const inputId: string = label ? createId(label) : null;
 
   const [inputValue, setInputValue] = useState<string>('');
@@ -22,6 +22,7 @@ export const Input = forwardRef(({ label, type, name, ...props}: InputProps): JS
         htmlFor={inputId}
       >{label}</label>}
       <input
+        ref={ref}
         {...props}
         className={styles.input}
         type={type}

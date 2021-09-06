@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { HeaderProps } from './Header.props';
 import styles from './Header.module.css';
 import cn from 'classnames';
@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../constants/routes';
 import { Image } from '../../components/index';
 
-export const Header = ({ children, className, ...props }: HeaderProps): JSX.Element => {
+export const Header: FC<HeaderProps> = ({ className, ...props }) => {
   return (
-    <header className={cn(styles.header, className)}>
+    <header className={cn(styles.header, className)} {...props}>
       <nav className={styles.nav}>
         <ul className={styles.navList}>
           <Link to={routes.HOME}>
@@ -27,7 +27,7 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
           <div className={styles.personInfo}>
             <Link to={routes.PROFILE}>
               <div className={styles.name}>Username</div>
-              <Image isEmpty={true} isCircled={true} className={styles.image}/>
+              <Image isCircled={true} className={styles.image}/>
             </Link>
           </div>
         </div>

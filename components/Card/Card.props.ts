@@ -1,4 +1,2 @@
-import { DetailedHTMLProps, HTMLAttributes, ReactNode } from "react";
-export interface CardProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  children: ReactNode;
-}
+import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from "react";
+export interface CardProps extends PropsWithChildren<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>> {}

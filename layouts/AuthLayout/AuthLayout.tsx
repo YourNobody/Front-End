@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, PropsWithChildren} from 'react';
 import { Helmet } from 'react-helmet';
 import { AuthLayoutProps } from './AuthLayout.props';
 
-const AuthLayout = ({ children, title = 'Authorization' }: AuthLayoutProps): JSX.Element => {
+const AuthLayout: FC<AuthLayoutProps> = ({ children, title = 'Authorization' }): JSX.Element => {
   return (
     <>
       <Helmet>

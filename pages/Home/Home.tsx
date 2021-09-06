@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import { HTag, Button } from '../../components';
@@ -6,7 +6,7 @@ import { HomeProps } from './Home.props';
 import styles from './Home.module.css';
 import { routes } from '../../constants/routes';
 
-const Home = (props: HomeProps): JSX.Element => {
+const Home: FC<HomeProps> = (props: HomeProps) => {
   const history: RouteComponentProps['history'] = useHistory<RouteComponentProps>();
 
   const clickRedirectHandler = (route: string): void => {

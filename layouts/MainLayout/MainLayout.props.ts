@@ -1,6 +1,5 @@
-import { DetailedHTMLProps, HTMLAttributes, ReactNode } from "react";
+import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from "react";
 
-export interface MainLayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  children?: ReactNode;
+export interface MainLayoutProps {
   title?: string;
 }

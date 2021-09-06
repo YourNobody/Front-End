@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { AlerterProps } from './Alerter.props';
 import styles from './Alerter.module.css';
 import { statuses } from '../../constants/vars';
 import cn from 'classnames';
 
-export const Alerter = ({ message = '', status, ...props }: AlerterProps): JSX.Element => {
+export const Alerter: FC<AlerterProps> = ({ message = '', status, ...props }) => {
   if (message ?? status) {
     return (
       <div
