@@ -1,17 +1,14 @@
-import React, { FC } from 'react';
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
+import React, { FC, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import { HTag, Button } from '../../components';
 import { HomeProps } from './Home.props';
 import styles from './Home.module.css';
 import { routes } from '../../constants/routes';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
-const Home: FC<HomeProps> = (props: HomeProps) => {
-  const history: RouteComponentProps['history'] = useHistory<RouteComponentProps>();
-
-  const clickRedirectHandler = (route: string): void => {
-    history.push(route);
-  };
+const Home: FC<HomeProps> = (props) => {
+  const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
 
   return (
     <div {...props} className={styles.home}>
@@ -22,9 +19,10 @@ const Home: FC<HomeProps> = (props: HomeProps) => {
         Also you can create anonymous questions!
       </div>
       <div className={styles.actions}>
-          <Link to={routes.AUTH.LOGIN}>          
-            <Button>Log In</Button>
-          </Link>
+          {!isAuthenticated && <Link to={routes.AUTH.LOGIN}>          
+              <Button>Log In</Button>
+            </Link>
+          }
           <Link to={routes.QUIZES.ROOT}>
             <Button>To Questions!</Button>
           </Link>

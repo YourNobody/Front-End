@@ -1,23 +1,16 @@
-import React, { useState, ChangeEvent, forwardRef, FC } from 'react';
+import React, { FC, forwardRef } from 'react';
 import { InputProps } from './Input.props';
 import styles from './Input.module.css';
 import cn from 'classnames';
 
-export const Input: FC<InputProps> = forwardRef(({ label, type, name, ...props}, ref) => {
+export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(({ label, type, name, value, ...props}, ref) => {
   const inputId: string = label ? createId(label) : null;
-
-  const [inputValue, setInputValue] = useState<string>('');
-
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const value: string = e.target.value.trim();
-    setInputValue(value);
-  };
 
   return (
     <>
       {label && <label
         className={cn(styles.label, {
-          [styles.has]: inputValue.length
+          [styles.has]: String(value).length
         })}
         htmlFor={inputId}
       >{label}</label>}
@@ -28,8 +21,7 @@ export const Input: FC<InputProps> = forwardRef(({ label, type, name, ...props},
         type={type}
         name={name}
         id={inputId}
-        value={inputValue}
-        onChange={handleOnChange}
+        value={value}
       />
     </>
   );

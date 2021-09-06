@@ -45,7 +45,7 @@ const config = {
     proxy: {
       context: ['/'],
       '/': {
-        target: 'http://localhost:4000',
+        target: 'http://localhost:7000',
         bypass: function (req, res, proxyOptions) {
           if (req.headers.accept.indexOf('text/html') !== -1) {
             console.log('Skipping proxy for browser request');

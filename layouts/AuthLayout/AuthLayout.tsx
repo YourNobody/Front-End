@@ -1,4 +1,4 @@
-import React, {FC, PropsWithChildren} from 'react';
+import { FC } from 'react';
 import { Helmet } from 'react-helmet';
 import { AuthLayoutProps } from './AuthLayout.props';
 
@@ -20,9 +20,9 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children, title = 'Authorization' }):
 export function withAuthLayout<T extends AuthLayoutProps>(Component: FC<T>) {
   return function(props: T): JSX.Element {
     return (
-      <AuthLayout title={props.title}>
-        <Component {...props}/>
-      </AuthLayout>
-    )  
+        <AuthLayout title={props.title}>
+          <Component {...props}/>
+        </AuthLayout>
+    );  
   };
 }

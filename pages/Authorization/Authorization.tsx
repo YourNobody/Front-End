@@ -1,19 +1,41 @@
-import React, { FC, FormEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FC, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
 import styles from './Authorization.module.css';
 import { HTag, Input, Button } from '../../components';
 import { routes } from '../../constants/routes';
-import { Link, Route, Switch } from 'react-router-dom';
-import { useRequest } from '../../hooks/request.hook';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { useActions } from '../../hooks/useActions.hook';
+import { useRequest } from '../../hooks/useRequest';
+import { statuses } from '../../constants/app';
+import { getEmptyObject } from '../../helpers/clear.helper';
 
 const Login: FC<AuthorizationProps> = () => {
-  const { loading, error, request, clearError } = useRequest();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const { error, clearError, request, data, clearData } = useRequest();
+  const history = useHistory();
+  
+  useEffect(() => {
+    if (error) {
+      setAppAlert(error, statuses.ERROR);
+      fetchUserError();
+      clearError();
+    }
+    if (data) {
+      console.log('data: ', data);
+      setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess(data.user);
+      clearData();
+      history.push(routes.HOME);
+    }
+  }, [error, data]);
 
-  const onSubmit = (data) => {
-    request('login', 'POST', data, {});
+  const onSubmit = (formData) => {
+    fetchUserBegging();
+    request('login', 'POST', formData);
+    reset(getEmptyObject(formData));
   };
   
   return (
@@ -22,10 +44,10 @@ const Login: FC<AuthorizationProps> = () => {
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
-            <Input type="email" name="email" label="Email" {...register('email')}/>
+          <Input type="email" label="Email" name="email" {...register('email')}/>
         </div>
         <div className={styles.inputBlock}>
-            <Input type="password" name="password" label="Password" {...register('password')}/>
+          <Input type="password" name="password" label="Password" {...register('password')}/>
         </div>
         <Button className={styles.button}>Log In</Button>
         <div className={styles.info}>
@@ -38,20 +60,40 @@ const Login: FC<AuthorizationProps> = () => {
 };
 
 const Register: FC<AuthorizationProps> = () => {
-  console.log('HERE')
-  const { loading, error, request, clearError } = useRequest();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue, reset } = useForm();
+  const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const { error, clearError, request, data, clearData } = useRequest();
+  const history = useHistory();
 
-  const onSubmit = (data) => {
-    request('register', 'POST', data, {});
+  useEffect(() => {
+    if (error) {
+      setAppAlert(error, statuses.ERROR);
+      fetchUserError();
+      clearError();
+    }
+    if (data) {
+      console.log('data: ', data);
+      
+      setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess(data);
+      clearData();
+      history.push(routes.AUTH.LOGIN);
+    }
+  }, [error, data]);
+
+  const onSubmit = (formData) => {
+    fetchUserBegging();
+    request('register', 'POST', formData);
+    reset(getEmptyObject(formData));
   };
+
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Registration</HTag>
         <div className={styles.inputBlock}>
-          <Input type="email" label="Email" {...register('email')}/>
+          <Input type="email" label="Email" name="email" {...register('email')}/>
         </div>
         <div className={styles.inputBlock}>
           <Input type="password" label="Password" {...register('password')}/>
