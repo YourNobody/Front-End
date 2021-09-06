@@ -3,12 +3,7 @@ import { ImageProps } from './Image.props';
 import styles from './Image.module.css';
 import cn from 'classnames';
 
-export const Image = ({ isEmpty = true, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
-  if (src) {
-    isEmpty = false;
-  } else {
-    isEmpty = true;
-  }
+export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
   const getFirstLetters = (initials: string): string => {
     if (!initials) return 'YOU';
     const splitted: string[] = initials.split(' ');
@@ -55,7 +50,7 @@ export const Image = ({ isEmpty = true, text, src, alt, fit = 'contain', isCircl
     );
   };
 
-  if (isEmpty) {
+  if (!src) {
     return buildNoImage();
   }
   return buildImage();

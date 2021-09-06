@@ -31,7 +31,7 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
             <div className={styles.personInfo}>
               <Link to={routes.PROFILE.ACCOUNT}>
                 <div className={styles.name}>{user ? user.firstName + ' ' + user.lastName : 'Username'}</div>
-                <Image isEmpty={true} isCircled={true} className={styles.image}/>
+                <Image isCircled={true} className={styles.image}/>
               </Link>
             </div>
           </div>
