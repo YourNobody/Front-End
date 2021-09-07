@@ -1,15 +1,21 @@
 .quizPage {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-items: center;
   gap: 20px;
 }
 
 .card {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 15px;
-  cursor: pointer;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr 300px;
+  gap: 18px;
+  height: 100%;
+  padding: 22px 15px;
+  text-align: center;
+  color: var(--white) !important;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -17,21 +23,12 @@
 }
 
 .image {
-  height: 120px;
-  width: 120px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.image:hover .card {
-  box-shadow: 0 0 4px var(--blue);
+  background-color: var(--mega-white-transparent);
 }
 
 .description {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 22px;
-}
-
-.button {
-  justify-self: right;
+  opacity: 1;
+  transition: all 0s 0.2s ease-in-out;
 }

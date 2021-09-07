@@ -21,7 +21,6 @@ export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, clas
         className={cn(styles.imageWrapper, className, {
           [styles.circle]: isCircled
         })}
-        style={{ backgroundColor: getRandomColor() }}
       >
         <img src={src} alt={alt} className={cn(styles.image, {
           [styles.cover]: fit === 'cover',
@@ -32,8 +31,6 @@ export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, clas
       </div>
     );
   };
-
-  console.log(className);
 
   const buildNoImage = (): JSX.Element => {
     return (

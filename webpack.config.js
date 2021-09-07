@@ -111,7 +111,7 @@ const config = {
         },
       },
       {
-        test: /\.(svg|png|gif|jpg|ico)$/,
+        test: /\.(svg|png|gif|jpg|ico|jpeg|jfif)$/,
         exclude: /node_modules/,
         use: ['file-loader'],
       },

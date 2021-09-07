@@ -35,7 +35,7 @@ export const AccountInfo = ({firstName, lastName, email, imageUrl, ...props}: Ac
         {
           imageUrl 
           ?  <Image src={imageUrl} alt="My Image" fit="contain"  className={styles.image}/>
-          :  <Image isEmpty text="Pavel" className={styles.image}/>
+          :  <Image text="Pavel" className={styles.image}/>
         }
       </div>
       <div className={styles.changeInfo}>
