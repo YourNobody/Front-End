@@ -5,6 +5,11 @@
   gap: 20px;
 }
 
+/* .quizPage.choosen .card .description, .quizPage.choosen .card .image{
+  height: 0;
+  opacity: 0;
+} */
+
 .card {
   display: grid;
   grid-template-columns: 1fr;
@@ -19,8 +24,21 @@
 }
 
 .card:hover {
-  box-shadow: 0 0 5px var(--blue);
+  box-shadow: 0 0 6px var(--blue);
 }
+
+.card.selected:hover {
+  box-shadow: 0 0 8px 1px var(--blue);
+}
+
+.card.selected {
+  box-shadow: 0 0 7px 1px var(--blue);
+}
+
+.card.selected .title {
+  color: var(--blue);
+}
+
 
 .image {
   background-color: var(--mega-white-transparent);
