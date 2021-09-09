@@ -1,0 +1,10 @@
+.questionWrraper {}
+
+.question {
+  padding: 15px 0;
+  color: var(--blue-hover);
+}
+
+.answerTitle {
+  padding-bottom: 20px;
+}

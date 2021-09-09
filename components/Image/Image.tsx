@@ -2,6 +2,7 @@ import React from 'react';
 import { ImageProps } from './Image.props';
 import styles from './Image.module.css';
 import cn from 'classnames';
+import { getRandomColor } from '../../helpers/css.helper';
 
 export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
   const getFirstLetters = (initials: string): string => {
@@ -52,7 +53,3 @@ export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, clas
   }
   return buildImage();
 };
-
-function getRandomColor(): string {
-  return '#' + (Math.random().toString(16) + '000000').substring(2,8).toUpperCase();
-}

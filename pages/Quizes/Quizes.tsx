@@ -9,22 +9,28 @@ import { Link, Route, useLocation, useParams } from 'react-router-dom';
 import { routes } from './../../constants/routes';
 import { QuestionParamsTypes, QuestionTypes } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
-
+import { useTypedSelector } from './../../hooks/useTypedSelector.hook';
+import URL from '../../src/assets/quiz-page/ra.jfif';
 
 const Question: FC<any> = () => {
   const { qType } = useParams<QuestionParamsTypes>();
   
   switch (qType.toUpperCase()) {
-    case 'SA': return <SA_Question />;
-    case 'TA': return <TA_Question />;
-    case 'RA': return <RA_Question />;
-    case 'AB': return <AB_Question />;
+    case 'SA': return <SA_Question
+      question="How are you?"
+      answers={['I\'m finfwfwefewfewfewfewfewfewfwv2324325432g2g42tg2vresbnhrwbtj4hrnyefwefewfe', 'Bad', 'It goeswefewfewewfewfewfewfewewfewfewfwefewf well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well']}
+    />;
+    case 'TA': return <TA_Question/>;
+    case 'RA': return <RA_Question target="image" content={URL}/>;
+    case 'AB': return <AB_Question/>;
     default: return <></>;
   }
 };
 
 export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const { pathname } = useLocation();
+
+  const user = useTypedSelector(state => state.user.user);
 
   const [selected, setSelected] = useState<QuestionTypes>(null);
 
@@ -62,7 +68,13 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
           {buildQuizes()}
       </Route>
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
-        <Question />
+        <div className={styles.allWrapper}>
+          <Question />
+          <Question />
+          <Question />
+          <Question />
+          <Question />
+        </div>
       </Route>
     </div>
   );

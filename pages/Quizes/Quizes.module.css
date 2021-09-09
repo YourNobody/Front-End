@@ -1,8 +1,16 @@
 .quizPage {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: [start] 1fr 1fr 1fr 1fr [end];
   justify-items: center;
   gap: 20px;
+}
+
+.allWrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  grid-column: start / end;
+  width: 100%;
 }
 
 /* .quizPage.choosen .card .description, .quizPage.choosen .card .image{

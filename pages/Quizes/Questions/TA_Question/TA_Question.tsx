@@ -1,9 +1,14 @@
 import React, { FC } from 'react';
 import { TA_QuestionProps } from './TA_Question.props';
 import styles from './TA_Question.module.css';
+import { HTag, Editor, Card } from '../../../../components/index'; 
 
 export const TA_Question: FC<TA_QuestionProps> = () => {
   return (
-    <h1>TA</h1>
+    <Card className={styles.questionWrapper}>
+      <HTag size="m" className={styles.question}>How are you?</HTag>
+      <HTag size="s" className={styles.answerTitle}>Your answer:</HTag>
+      <Editor />
+    </Card>
   );
 };

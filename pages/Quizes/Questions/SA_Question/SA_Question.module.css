@@ -1,0 +1,24 @@
+.questionWrraper {
+
+}
+
+.question {
+  padding: 15px 0;
+  color: var(--blue-hover);
+}
+
+.answers {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.single {
+  margin: 10px 10px 0 0;
+  color: black;
+}
+
+.info {
+  padding: 25px 0 10px 0;
+  display: flex;
+  justify-content: space-between;
+}

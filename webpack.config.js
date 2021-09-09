@@ -75,7 +75,7 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: [
           { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader', options: { modules: true }},

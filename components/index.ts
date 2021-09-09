@@ -4,3 +4,5 @@ export * from './Button/Button';
 export * from './Card/Card';
 export * from './Image/Image';
 export * from './Alerter/Alerter';
+export * from './Tagger/Tagger';
+export * from './Editor/Editor';

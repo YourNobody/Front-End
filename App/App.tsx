@@ -1,6 +1,9 @@
 import React from "react";
 import './App.module.css';
 
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 import {
   BrowserRouter as Router,
   Switch, Link, Route
