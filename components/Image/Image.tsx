@@ -3,19 +3,9 @@ import { ImageProps } from './Image.props';
 import styles from './Image.module.css';
 import cn from 'classnames';
 import { getRandomColor } from '../../helpers/css.helper';
+import { getFirstLetters } from '../../helpers/custom.helper';
 
-export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
-  const getFirstLetters = (initials: string): string => {
-    if (!initials) return 'YOU';
-    const splitted: string[] = initials.split(' ');
-    if (splitted.length > 1) {
-      return splitted[0][0].toUpperCase() + splitted[1][0].toUpperCase();
-    } else if (splitted.length === 1) {
-      return splitted[0][0].toUpperCase();
-    }
-    return 'YOU';
-  };
-
+export const Image = ({ fully = false, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
   const buildImage = (): JSX.Element => {
     return (
       <div {...props}
@@ -35,15 +25,15 @@ export const Image = ({ text, src, alt, fit = 'contain', isCircled = false, clas
 
   const buildNoImage = (): JSX.Element => {
     return (
-      <div 
+      <div
+        {...props}
         className={cn(styles.template, className, {
           [styles.circle]: isCircled
         })}
-        style={{ backgroundColor: getRandomColor() }}
       >
         <span 
           className={styles.templateInitials}
-        >{getFirstLetters(text)}</span>
+        >{fully ? text : getFirstLetters(text)}</span>
       </div>
     );
   };

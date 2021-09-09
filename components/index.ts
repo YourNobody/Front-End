@@ -6,3 +6,4 @@ export * from './Image/Image';
 export * from './Alerter/Alerter';
 export * from './Tagger/Tagger';
 export * from './Editor/Editor';
+export * from './HR/HR';

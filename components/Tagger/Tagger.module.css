@@ -5,20 +5,4 @@
   border-radius: 20px;
   cursor: pointer;
   background-color: var(--white);
-  transition: border 0.2s;
-  transition: background-color 0.2s;
-  transition: box-shadow 0.2s;
-  transition: background-color 0.2s;
-}
-
-.tagger:hover {
-  background-color: var(--blue) !important;
-  color: black;
-  transform: scale(1.02);
-  border: 1px solid var(--blue);
-  box-shadow: 0 0 3px var(--blue);
-}
-
-.tagger:active {
-  transition: transform 0s;
 }

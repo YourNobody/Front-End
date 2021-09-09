@@ -3,7 +3,6 @@ import { EditorProps } from './Editor.props';
 import styles from './Editor.module.css';
 import {EditorState, convertToRaw} from 'draft-js';
 import {Editor as DraftEditor} from "react-draft-wysiwyg";
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 

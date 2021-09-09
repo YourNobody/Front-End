@@ -5,4 +5,5 @@ export interface ImageProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElem
   fit?: 'contain' | 'cover' | 'fill' | 'none';
   text?: string;
   isCircled?: boolean;
+  fully?: boolean;
 }

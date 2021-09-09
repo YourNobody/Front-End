@@ -22,7 +22,7 @@ const Question: FC<any> = () => {
     />;
     case 'TA': return <TA_Question/>;
     case 'RA': return <RA_Question target="image" content={URL}/>;
-    case 'AB': return <AB_Question/>;
+    case 'AB': return <AB_Question question="How are you?" answers={['fine', 'very bad']}/>;
     default: return <></>;
   }
 };
