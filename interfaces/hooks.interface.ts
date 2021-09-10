@@ -3,3 +3,9 @@ export interface IUseRequest {
   request: <T>(url: string, method: string, body: null | BodyInit, headers: HeadersInit) => Promise<T>;
   clearError: () => void;
 }
+
+export interface IUseInput {
+  getValue: (name: string) => string;
+  clearValue: (name: string) => void;
+  onChange: (event: any) => void;
+}

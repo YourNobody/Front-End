@@ -9,32 +9,26 @@ import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
-import { getEmptyObject } from '../../helpers/clear.helper';
+import { getEmptyObject } from '../../helpers/custom.helper';
 
 const Login: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
   const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request, data, clearData } = useRequest();
+  const { error, clearError, request } = useRequest();
   const history = useHistory();
-  
-  useEffect(() => {
-    if (error) {
+
+  const onSubmit = async (formData) => {
+    try {
+      fetchUserBegging();
+      const data: any = await request('login', 'POST', formData);
+      setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess(data.user);
+      history.push(routes.HOME);
+    } catch (err) {
       setAppAlert(error, statuses.ERROR);
       fetchUserError();
       clearError();
     }
-    if (data) {
-      console.log('data: ', data);
-      setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess(data.user);
-      clearData();
-      history.push(routes.HOME);
-    }
-  }, [error, data]);
-
-  const onSubmit = (formData) => {
-    fetchUserBegging();
-    request('login', 'POST', formData);
     reset(getEmptyObject(formData));
   };
   
@@ -49,7 +43,7 @@ const Login: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="password" name="password" label="Password" {...register('password')}/>
         </div>
-        <Button className={styles.button}>Log In</Button>
+        <Button className={styles.button} type="submit">Log In</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.REGISTER}>No account?</Link>
           <Link to={routes.AUTH.REGISTER}>Forgot password?</Link>
@@ -101,7 +95,7 @@ const Register: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="password" label="Confirm Password" {...register('confirm')}/>
         </div>
-        <Button className={styles.button}>Register</Button>
+        <Button className={styles.button} type="submit">Register</Button>
       </form>
     </div>
   );

@@ -1,0 +1,36 @@
+.ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.li {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.li::before {
+  content: '\1405';
+  margin-right: 15px;
+  color: var(--blue);
+}
+
+.close {
+  position: relative;
+  top: -4px;
+  left: 10px;
+  display: inline-block;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 18px;
+  padding: 8px 10px 12px 10px;
+  background-color: var(--red-transparent);
+  border: 1px solid var(--red);
+  color: var(--white) !important;
+}
+
+.close:hover {
+  background-color: var(--red);
+  color: var(--black) !important;
+}

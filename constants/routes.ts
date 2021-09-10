@@ -2,7 +2,13 @@ export const routes = {
   HOME: '/',
   QUIZES: {
     ROOT: '/quizes',
-    CREATE: '/quizes/create'
+    CREATE: '/quizes/create',
+    TYPES: {
+      TA: '/quizes/ta',
+      SA: '/quizes/sa',
+      RA: '/quizes/ra',
+      AB: '/quizes/ab'
+    }
   },
   PROFILE: {
     ROOT: '/profile',

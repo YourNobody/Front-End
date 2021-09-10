@@ -34,7 +34,7 @@ export const AccountInfo: FC<AccountInfoProps> = ({firstName, lastName, email, i
       <div className={styles.imageWrapper}>
         {
           imageUrl 
-          ?  <Image src={imageUrl} alt="My Image" fit="contain" className={styles.image}/>
+          ?  <Image src={imageUrl} alt="My Image" fit="contain"  className={styles.image}/>
           :  <Image text="Pavel" className={styles.image}/>
         }
       </div>

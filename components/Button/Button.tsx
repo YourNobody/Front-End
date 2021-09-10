@@ -3,9 +3,11 @@ import { ButtonProps } from './Button.props';
 import styles from './Button.module.css';
 import cn from 'classnames';
 
-export const Button: FC<ButtonProps> = ({ children, className, color = 'primary', ...props }) => {
+export const Button: FC<ButtonProps> = ({ children, className, type = 'button', color = 'primary', ...props }) => {
   return (
-    <button {...props}
+    <button
+      {...props}
+      type={type}
       className={cn(styles.button, className, {
         [styles.primary]: color === 'primary',
         [styles.ghost]: color === 'ghost'

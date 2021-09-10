@@ -75,7 +75,7 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: [
           { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader', options: { modules: true }},
@@ -111,7 +111,7 @@ const config = {
         },
       },
       {
-        test: /\.(svg|png|gif|jpg|ico)$/,
+        test: /\.(svg|png|gif|jpg|ico|jpeg|jfif)$/,
         exclude: /node_modules/,
         use: ['file-loader'],
       },
