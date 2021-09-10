@@ -5,6 +5,8 @@ import { appActionTypes, IAppActions } from "../interfaces-reducers/appReducer.i
 export const setAppAlert = (message: string, status: statuses) => {
   return (dispatch: Dispatch<IAppActions>): void => {
     const id = String(Date.now() * Math.random());
+    console.log('message: ', message);
+    
     dispatch({type: appActionTypes.SET_ALERT, payload: { message, status, id }});
   };
 };

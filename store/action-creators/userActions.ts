@@ -2,9 +2,16 @@ import { IUserReducer, IUserActionDefault, IUserActionFetchUser, IUserActionFetc
 
 export const fetchUserBegging = (): IUserActionFetchUser => ({ type: userTypes.FETCH_USER });
 
-export const fetchUserSuccess = (payload: IUserReducer): IUserActionFetchUserSuccess => ({ type: userTypes.FETCH_USER_SUCCESS, payload });
+export const fetchUserSuccess = (payload: IUserReducer): IUserActionFetchUserSuccess => {
+  localStorage.removeItem('user');
+  localStorage.setItem('user', JSON.stringify(payload));
+  return { type: userTypes.FETCH_USER_SUCCESS, payload };
+};
 
-export const fetchUserError = (): IUserActionFetchUserError => ({ type: userTypes.FETCH_USER_ERROR });
+export const fetchUserError = (): IUserActionFetchUserError => {
+  localStorage.setItem('user', null);
+  return { type: userTypes.FETCH_USER_ERROR };
+};
 
 export const fetchUserDefault = (): IUserActionDefault => ({ type: userTypes.DEFAULT });
 

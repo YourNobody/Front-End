@@ -2,6 +2,8 @@ export interface IUserReducer {
   firstName?: string;
   lastName?: string;
   email: string;
+  id: string;
+  questions: any[];
 }
 
 export interface IUserState {
