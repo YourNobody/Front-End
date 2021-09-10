@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { ButtonProps } from './Button.props';
 import styles from './Button.module.css';
 import cn from 'classnames';
 
-export const Button = ({ children, className, color = 'primary', ...props }: ButtonProps): JSX.Element => {
+export const Button: FC<ButtonProps> = ({ children, className, type = 'button', color = 'primary', ...props }) => {
   return (
-    <button {...props}
+    <button
+      {...props}
+      type={type}
       className={cn(styles.button, className, {
         [styles.primary]: color === 'primary',
         [styles.ghost]: color === 'ghost'

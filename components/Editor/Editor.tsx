@@ -1,27 +1,15 @@
-import React, { FC, useState } from 'react';
-import { EditorProps } from './Editor.props';
+import React, { FC, forwardRef, useState } from 'react';
 import styles from './Editor.module.css';
-import {EditorState, convertToRaw} from 'draft-js';
+import { EditorProps } from './Editor.props';
 import {Editor as DraftEditor} from "react-draft-wysiwyg";
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
 
-export const Editor: FC<EditorProps> = ({ placeholder = 'Enter text here...' }) => {
-  const [editorState, setEditorState] = React.useState(
-    () => EditorState.createEmpty(),
-  );
-
-  const handleEditorOnChange = (state: EditorState) => {
-    setEditorState(state);
-  };
-
+export const Editor: FC<EditorProps> = (props) => {
   return (
     <div className={styles.editor}>
       <DraftEditor
-        editorState={editorState}
+        {...props}
         wrapperClassName="demo-wrapper"
         editorClassName="editer-content"
-        onEditorStateChange={handleEditorOnChange}
       />
     </div>
   );

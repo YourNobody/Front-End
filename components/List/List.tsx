@@ -12,14 +12,14 @@ export const List: FC<ListProps> = ({ list, onClose, className,  ...props }) => 
       className={cn(className, styles.ul)}
     >
       {
-        list.map(item => {
+        list.map((item, index) => {
           return (
             <li
               key={item + Math.random()}
               className={styles.li}
             >
               <span>{item}</span>
-              {onClose && <Button className={styles.close}>&#215;</Button>}
+              {onClose && <Button className={styles.close} onClick={() => onClose(index)}>&#215;</Button>}
             </li>
           );
         })

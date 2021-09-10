@@ -48,7 +48,7 @@ const Login: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="password" name="password" label="Password" {...register('password')}/>
         </div>
-        <Button className={styles.button}>Log In</Button>
+        <Button className={styles.button} type="submit">Log In</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.REGISTER}>No account?</Link>
           <Link to={routes.AUTH.REGISTER}>Forgot password?</Link>
@@ -98,7 +98,7 @@ const Register: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="password" label="Confirm Password" {...register('confirm')}/>
         </div>
-        <Button className={styles.button}>Register</Button>
+        <Button className={styles.button} type="submit">Register</Button>
       </form>
     </div>
   );

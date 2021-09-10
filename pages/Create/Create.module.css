@@ -13,7 +13,7 @@
   justify-items: left;
   grid-template-rows: auto;
   gap: 10px;
-  margin-top: 10px;
+  margin: 0 0 30px 0;
 }
 
 .tagger {
@@ -34,6 +34,7 @@
 
 .tagger:hover {
   background-color: var(--blue);
+  margin-left: 10px;
 }
 
 .saAnswers {
@@ -48,9 +49,13 @@
   ;
   grid-template-columns: 1fr auto;
   gap: 0 20px;
+  margin: 20px 0 15px 0;
 }
 
 .addAnswer label {
+  padding: 10px 0 12px 0;
+  font-size: 20px;
+  font-weight: bold;
   grid-area: label;
 }
 
@@ -69,9 +74,31 @@
 
 .list li {
   font-size: 18px;
-  margin: 18px 0;
+  margin: 15px 0;
 }
 
 .suggested {
+  padding: 0 0 10px 0;
   font-weight: 400;
+}
+
+.selectTypeTitle {
+  padding: 10px 0 20px 0;
+}
+
+.writeQuestionTitle {
+  padding: 0 0 20px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reset {
+  background-color: var(--red);
+}
+
+.reset:hover {
+  background-color: var(--red-hover);
 }

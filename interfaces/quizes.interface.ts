@@ -1,6 +1,6 @@
 export enum QuestionTypes {
   SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
-};
+}
 
 export type QuestionParamsTypes = {
   qType: QuestionTypes;
