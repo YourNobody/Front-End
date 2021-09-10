@@ -3,8 +3,8 @@
 }
 
 .question {
-  padding: 15px 0;
-  color: var(--blue-hover);
+  font-size: 18px;
+  margin: 15px 0px 25px 0;
 }
 
 .answers {

@@ -7,10 +7,13 @@ import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { useInput } from './../../hooks/useInput.hook';
 import cn from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
-import { convertFromRaw, EditorState } from 'draft-js';
+import { EditorState } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import { routes } from '../../constants/routes';
 import { useRequest } from '../../hooks/useRequest';
+import { useActions } from '../../hooks/useActions.hook';
+import { statuses } from '../../constants/app';
+import { useHistory } from 'react-router';
+import { routes } from '../../constants/routes';
 
 const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.SA, 'Select Question', 'User can choose one of the answers that you provide'], 
@@ -19,17 +22,15 @@ const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.AB, 'A/B Question', 'User can choose only one of two answers']
 ];
 
-const getEditorStateAsHTML = (state: EditorState) => {
-  return stateToHTML(state.getCurrentContent());
-};
-
 const Create: FC<CreateProps> = (): JSX.Element => {
-  const {data, error, clearData, clearError, request} = useRequest();
+  const { error, clearError, request, loading} = useRequest();
+  const { setAppAlert } = useActions();
   const { control, handleSubmit, setValue } = useForm();
   const { getValue, clearValue, onChange } = useInput();
-  const [selectedType, setSelectedType] = useState<QuestionTypes | null>(QuestionTypes.SA);
+  const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const formRef = useRef<HTMLFormElement>(null);
+  const history = useHistory();
 
   const handleAnswerAdd = (type: QuestionTypes): void => {
     const value = getValue(type).trim();
@@ -45,7 +46,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     }
   };
 
-  const handleQuestionCreation = (formData) => {
+  const handleQuestionCreation = async (formData) => {
     const body: any = {};
     Object.keys(QuestionTypes).forEach(key => {
       if (formData[key + '_editor']) {
@@ -53,13 +54,16 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       }
     });
     body.type = selectedType;
-    body.answers = answers[selectedType + '_answers'];
-    console.log('body: ', body);
+    body.answers = answers[selectedType + '_answers'] && answers[selectedType + '_answers'].length ? answers[selectedType + '_answers'] : [];
     
     try {
-      request('create', 'POST', body, {});
-    } catch (error) {
-      console.error('HERE: ', error);
+      const data: any = await request(routes.QUIZES.CREATE, 'POST', body, {});
+      setAppAlert(data.message, statuses.SUCCESS);
+      handleResetForm();
+      history.push(routes.QUIZES.TYPES[selectedType]);
+    } catch (err) {
+      setAppAlert(error, statuses.ERROR);
+      clearError();
     }
   };
 

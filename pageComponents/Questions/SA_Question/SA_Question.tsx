@@ -2,6 +2,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { SA_QuestionProps } from './SA_Question.props';
 import styles from './SA_Question.module.css';
 import { Card, HTag, Tagger, Button, HR } from '../../../components/index';
+import parse from 'html-react-parser';
 import cn from 'classnames';
 
 export const SA_Question: FC<SA_QuestionProps> = ({ question, answers }) => {
@@ -11,12 +12,12 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, answers }) => {
     setSelected(index);
   }, []);
 
-  if (!answers.length) return <></>;
+  if (!answers || !answers.length) return <></>;
   return (
     <Card
       className={styles.questionWrapper}
     >
-      <HTag size="m" className={styles.question}>{question}</HTag>
+      <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answers}>
         {
           answers.reduce((tags: JSX.Element[], answer: string, index) => {

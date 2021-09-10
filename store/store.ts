@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 import { rootReducer } from "./reducers/all";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { IUserReducer } from "./interfaces-reducers/userReducer.interface";
-import { getEmptyObject } from "../helpers/clear.helper";
+import { getEmptyObject } from "../helpers/custom.helper";
 
 const preloadState = () => {  
   if (localStorage.getItem('user') && localStorage.getItem('user') !== 'null') {    

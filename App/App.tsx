@@ -24,11 +24,11 @@ function App(): JSX.Element {
             <Route path={routes.HOME} exact>
               <Home title="Home" />
             </Route>
-            <Route path={routes.QUIZES.ROOT} exact>
-              <Quizes title="Quizes" />
-            </Route>
             <Route path={routes.QUIZES.CREATE} exact>
               <Create title="Create Question" />
+            </Route>
+            <Route path={routes.QUIZES.ROOT}>
+              <Quizes title="Quizes" />
             </Route>
             <Route path={routes.PROFILE.ACCOUNT}>
               <Profile title="Profile" />

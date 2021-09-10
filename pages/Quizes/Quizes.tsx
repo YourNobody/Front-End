@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { QuizesProps } from './Quizes.props';
 import styles from './Quizes.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
@@ -11,15 +11,15 @@ import { QuestionParamsTypes, QuestionTypes } from '../../interfaces/quizes.inte
 import { quizesData } from '../../constants/data';
 import { useTypedSelector } from './../../hooks/useTypedSelector.hook';
 import URL from '../../src/assets/quiz-page/ra.jfif';
+import { useRequest } from '../../hooks/useRequest';
+import { setAppAlert } from '../../store/action-creators/appActions';
+import { statuses } from '../../constants/app';
 
-const Question: FC<any> = () => {
+const Question: FC<any> = ({dataQuestion}) => {
   const { qType } = useParams<QuestionParamsTypes>();
   
   switch (qType.toUpperCase()) {
-    case 'SA': return <SA_Question
-      question="How are you?"
-      answers={['I\'m finfwfwefewfewfewfewfewfewfwv2324325432g2g42tg2vresbnhrwbtj4hrnyefwefewfe', 'Bad', 'It goeswefewfewewfewfewfewfewewfewfewfwefewf well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well','I\'m fine', 'Bad', 'It goes well']}
-    />;
+    case 'SA': return <SA_Question {...dataQuestion} />;
     case 'TA': return <TA_Question/>;
     case 'RA': return <RA_Question target="image" content={URL}/>;
     case 'AB': return <AB_Question question="How are you?" answers={['fine', 'very bad']}/>;
@@ -29,14 +29,36 @@ const Question: FC<any> = () => {
 
 export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const { pathname } = useLocation();
-
-  const user = useTypedSelector(state => state.user.user);
-
-  const [selected, setSelected] = useState<QuestionTypes>(null);
+  let alreadySelected: QuestionTypes = null;
+  if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
+    const pathSplitted = pathname.split('/');
+    if (pathSplitted.length) {
+      alreadySelected = pathSplitted[pathSplitted.length - 1].toUpperCase() as QuestionTypes;
+    }
+  }
+  
+  const { error, clearError, request, loading } = useRequest();
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [selectedType, setSelectedType] = useState<QuestionTypes>(alreadySelected);
   const [wrapped, setWrapped] = useState<boolean>(false);
 
-  const handleCardClick = (type) => {
-    setSelected(type);
+  useEffect(() => {
+    const realizingFetch = async () => {
+      try {
+        const data: any = await request(routes.QUIZES.ROOT, 'POST', { type: selectedType });
+        setAppAlert(data.message, statuses.SUCCESS);
+        setQuestions(data.questions ? data.questions : []);
+      } catch (err) {
+        setAppAlert(error, statuses.ERROR);
+        clearError();
+      }
+    };
+
+    realizingFetch();
+  }, [selectedType]);
+
+  const handleCardClick = async (type: QuestionTypes) => {
+    setSelectedType(type);
     setWrapped(true);
   };
 
@@ -54,15 +76,15 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
           >
             {!wrapped
               ? <Card className={cn(styles.card, {
-                  [styles.selected]: selected === item.type
+                  [styles.selected]: selectedType === item.type
                 })} data-target="card">
-                  <HTag className={styles.title}>{item.title}</HTag>
-                  <p className={styles.description}>{item.description}</p>
-                  <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
-              </Card>
+                <HTag className={styles.title}>{item.title}</HTag>
+                <p className={styles.description}>{item.description}</p>
+                <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
+                </Card>
               : <Card className={cn(styles.cardText, {
-                [styles.selectedCartExactly]: selected === item.type && wrapped
-              })} data-target="card">
+                  [styles.selectedCartExactly]: selectedType === item.type && wrapped
+                })} data-target="card">
                 <HTag className={styles.title}>{item.title}</HTag>
               </Card>
             }
@@ -72,6 +94,22 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
     }) || [<></>];
   };
 
+  const buildQuestions = (): JSX.Element | JSX.Element[] => {
+    if (!questions) return <></>;
+    if (questions.length) {
+      return questions.map(q => {
+        const quest = {
+          answers: q.answers.map(answer => answer.answer),
+          question: q.question
+        };
+
+        return <Question dataQuestion={quest} key={Math.random().toString()}/>;
+      });
+    }
+    return <HTag size="m">No questions of the selected type</HTag>;
+  };
+
+  console.log('q: ', questions);
   return (
     <div {...props}
       className={cn(styles.quizPage, className, {
@@ -83,8 +121,8 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
       </Route>
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
         <div className={styles.allWrapper}>
-          <Question />
-          <Question />
+          {loading ? <HTag size="m">Loading...</HTag> : <></>}
+          {!loading ? buildQuestions() : <></>}
         </div>
       </Route>
     </div>

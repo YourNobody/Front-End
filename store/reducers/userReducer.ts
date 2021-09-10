@@ -1,4 +1,4 @@
-import { getEmptyObject } from "../../helpers/clear.helper";
+import { getEmptyObject } from "../../helpers/custom.helper";
 import { IUserActions, IUserReducer, IUserState, userTypes } from "../interfaces-reducers/userReducer.interface";
 
 const initialState: IUserState = {
