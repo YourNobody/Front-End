@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useState } from 'react';
 import { AB_QuestionProps } from './AB_Question.props';
 import styles from './AB_Question.module.css';
-import { HTag, Button, HR, Card, Image } from '../../../../components/index';
-import { checkForValideImageLink } from '../../../../helpers/custom.helper';
+import { HTag, Button, HR, Card, Image } from '../../../components/index';
+import { checkForValideImageLink } from '../../../helpers/custom.helper';
 import cn from 'classnames';
 
 export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props}) => {

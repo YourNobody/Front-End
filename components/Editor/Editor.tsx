@@ -11,7 +11,7 @@ export const Editor: FC<EditorProps> = ({ placeholder = 'Enter text here...' }) 
     () => EditorState.createEmpty(),
   );
 
-  const handleEditorOnChange = (state) => {
+  const handleEditorOnChange = (state: EditorState) => {
     setEditorState(state);
   };
 

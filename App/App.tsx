@@ -9,7 +9,7 @@ import {
   Switch, Link, Route
 } from 'react-router-dom';
 
-import { Home, Quizes, Profile, Authorization, Page404 } from '..//pages/pages';
+import { Home, Quizes, Profile, Authorization, Page404, Create } from '..//pages/pages';
 import { routes } from "../constants/routes";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
@@ -24,8 +24,11 @@ function App(): JSX.Element {
             <Route path={routes.HOME} exact>
               <Home title="Home" />
             </Route>
-            <Route path={routes.QUIZES.ROOT}>
+            <Route path={routes.QUIZES.ROOT} exact>
               <Quizes title="Quizes" />
+            </Route>
+            <Route path={routes.QUIZES.CREATE} exact>
+              <Create title="Create Question" />
             </Route>
             <Route path={routes.PROFILE.ACCOUNT}>
               <Profile title="Profile" />

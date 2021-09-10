@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { RA_QuestionProps } from './RA_Question.props';
 import styles from './RA_Question.module.css';
-import { HTag, Image, Card, Button, HR } from '../../../../components/index';
+import { HTag, Image, Card, Button, HR } from '../../../components/index';
 import { useState } from 'react';
-import { checkForValideImageLink } from '../../../../helpers/custom.helper';
+import { checkForValideImageLink } from '../../../helpers/custom.helper';
 
 export const RA_Question: FC<RA_QuestionProps> = ({ target, content }) => {
   const [sliderValue, setSliderValue] = useState<string | number>(0);

@@ -3,8 +3,8 @@ import { QuizesProps } from './Quizes.props';
 import styles from './Quizes.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import cn from 'classnames';
-import { Card, Image, HTag } from '../../components';
-import { AB_Question, SA_Question, RA_Question, TA_Question } from './Questions/index';
+import { Card, Image, HTag, Button } from '../../components';
+import { AB_Question, SA_Question, RA_Question, TA_Question } from '../../pageComponents/Questions/index';
 import { Link, Route, useLocation, useParams } from 'react-router-dom';
 import { routes } from './../../constants/routes';
 import { QuestionParamsTypes, QuestionTypes } from '../../interfaces/quizes.interface';
@@ -33,27 +33,41 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const user = useTypedSelector(state => state.user.user);
 
   const [selected, setSelected] = useState<QuestionTypes>(null);
+  const [wrapped, setWrapped] = useState<boolean>(false);
 
   const handleCardClick = (type) => {
     setSelected(type);
+    setWrapped(true);
   };
 
   const buildQuizes = (): JSX.Element[] => {
     return quizesData.map((item) => {
       return (
-        <Link 
-          to={routes.QUIZES.TYPES[item.type]}
-          onClick={() => handleCardClick(item.type)}
-          key={item.type}
-        >
-          <Card className={cn(styles.card, {
-            [styles.selected]: selected === item.type
-          })} data-target="card">
-            <HTag className={styles.title}>{item.title}</HTag>
-            <p className={styles.description}>{item.description}</p>
-            <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
-          </Card>
-        </Link>
+        <>
+          <Link 
+            to={routes.QUIZES.TYPES[item.type]}
+            onClick={() => handleCardClick(item.type)}
+            key={item.type}
+            className={cn(styles.link, {
+              [styles.selectedCard]: wrapped
+            })}
+          >
+            {!wrapped
+              ? <Card className={cn(styles.card, {
+                  [styles.selected]: selected === item.type
+                })} data-target="card">
+                  <HTag className={styles.title}>{item.title}</HTag>
+                  <p className={styles.description}>{item.description}</p>
+                  <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
+              </Card>
+              : <Card className={cn(styles.cardText, {
+                [styles.selectedCartExactly]: selected === item.type && wrapped
+              })} data-target="card">
+                <HTag className={styles.title}>{item.title}</HTag>
+              </Card>
+            }
+          </Link>
+        </>
       );
     }) || [<></>];
   };
@@ -61,17 +75,14 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   return (
     <div {...props}
       className={cn(styles.quizPage, className, {
-        [styles.choosen]: pathname !== routes.QUIZES.ROOT,
       })}
     >
       <Route path={routes.QUIZES.ROOT}>
           {buildQuizes()}
+          {wrapped && <Button color="ghost" className={styles.buttonUnwrap} onClick={() => setWrapped(false)}>&#5171;</Button>}
       </Route>
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
         <div className={styles.allWrapper}>
-          <Question />
-          <Question />
-          <Question />
           <Question />
           <Question />
         </div>

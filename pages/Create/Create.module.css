@@ -1,0 +1,77 @@
+.createPage {
+
+}
+
+.createPageTitle {
+  text-align: center;
+  margin: 5px 0 15px 0;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: auto;
+  justify-items: left;
+  grid-template-rows: auto;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tagger {
+  display: inline-block;
+  color: var(--black);
+  border-radius: 5px;
+  transition: all 0.2s;
+  border: none;
+}
+
+.selectedType {
+  background-color: var(--blue);
+}
+
+.unselectedType {
+  background-color: var(--gray);
+}
+
+.tagger:hover {
+  background-color: var(--blue);
+}
+
+.saAnswers {
+  
+}
+
+.addAnswer {
+  display: grid;
+  grid-template-areas:
+    'label label'
+    'input button'
+  ;
+  grid-template-columns: 1fr auto;
+  gap: 0 20px;
+}
+
+.addAnswer label {
+  grid-area: label;
+}
+
+.addAnswer input {
+  grid-area: input;
+}
+
+.addAnswer button {
+  margin-top: 0;
+  grid-area: button;
+}
+
+.list {
+  padding-left: 15px;
+}
+
+.list li {
+  font-size: 18px;
+  margin: 18px 0;
+}
+
+.suggested {
+  font-weight: 400;
+}
