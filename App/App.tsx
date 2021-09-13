@@ -13,7 +13,7 @@ import { Home, Quizes, Profile, Authorization, Page404, Create } from '..//pages
 import { routes } from "../constants/routes";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
-import { Alerter } from "../components/Alerter/Alerter";
+import { Alerter } from "../pageComponents/index";
 
 function App(): JSX.Element {
   return (
