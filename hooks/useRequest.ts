@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface IUseRequest {
   error: string;
@@ -10,6 +10,10 @@ interface IUseRequest {
 export function useRequest(): IUseRequest {
   const [error, setError] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('EEEEEEE: ', error);
+  }, [error]);
 
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   const request = useCallback(async (url: string, method: string = 'GET', body: null | any = null, headers: HeadersInit = {}): Promise<any> => {

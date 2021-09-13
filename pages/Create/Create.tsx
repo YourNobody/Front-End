@@ -28,20 +28,14 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const { control, handleSubmit, setValue } = useForm();
   const { getValue, clearValue, onChange } = useInput();
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
-  const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  const [questionAnswers, setQuestionAnswers] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const history = useHistory();
 
   const handleAnswerAdd = (type: QuestionTypes): void => {
     const value = getValue(type).trim();
-    if (!answers[type + '_answers']) {
-      answers[type + '_answers'] = [];
-    }
     if (value) {
-      setAnswers({
-        ...answers,
-        [type + '_answers']: [...answers[type + '_answers'], value]
-      });
+      setQuestionAnswers([...questionAnswers, value]);
       clearValue(type);
     }
   };
@@ -54,7 +48,8 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       }
     });
     body.type = selectedType;
-    body.answers = answers[selectedType + '_answers'] && answers[selectedType + '_answers'].length ? answers[selectedType + '_answers'] : [];
+    body.title = getValue(selectedType + '_title');
+    body.questionAnswers = questionAnswers;
     
     try {
       const data: any = await request(routes.QUIZES.CREATE, 'POST', body, {});
@@ -62,17 +57,14 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       handleResetForm();
       history.push(routes.QUIZES.TYPES[selectedType]);
     } catch (err) {
-      setAppAlert(error, statuses.ERROR);
+      setAppAlert(err.message, statuses.ERROR);
       clearError();
     }
   };
 
   const handleResetForm = () => {
     if (!selectedType) return;
-    setAnswers({
-      ...answers,
-      [selectedType + '_answers']: []
-    });
+    setQuestionAnswers([]);
     clearValue(selectedType);
     setValue(selectedType + '_editor', EditorState.createEmpty());
     setSelectedType(null);
@@ -83,13 +75,19 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     switch (selectedType) {
       case QuestionTypes.SA: {
         const handleAnswerDelete = (index: number) => {
-          setAnswers({
-            ...answers,
-            [selectedType + '_answers']: answers[selectedType + '_answers'].filter((item, i) => i !== index)
-          });
+          setQuestionAnswers(questionAnswers.filter((item, i) => i !== index));
         };
         return (
           <>
+            <HTag className={styles.title}>Question Title:</HTag>
+            <Input
+              className={styles.inputTitle}
+              type="text"
+              name={selectedType + '_title'}
+              value={getValue(selectedType + '_title')}
+              onChange={onChange}
+              placeholder="Write title of your question..."
+            />
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
             <Controller
               name={selectedType + '_editor'}
@@ -112,8 +110,8 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                   onClick={() => handleAnswerAdd(selectedType)}
                 >Add</Button>
               </div>
-              {answers[selectedType + '_answers'] && answers[selectedType + '_answers'].length ? <HTag size="m" className={styles.suggested}>Suggested answers:</HTag> : <></>}
-              {answers[selectedType + '_answers'] && answers[selectedType + '_answers'].length ? <List list={answers[selectedType + '_answers']} className={styles.list} onClose={handleAnswerDelete}/> : <></>}
+              {questionAnswers && questionAnswers.length ? <HTag size="m" className={styles.suggested}>Suggested answers:</HTag> : <></>}
+              {questionAnswers && questionAnswers.length ? <List list={questionAnswers} className={styles.list} onClose={handleAnswerDelete}/> : <></>}
             </div>
           </>
         );

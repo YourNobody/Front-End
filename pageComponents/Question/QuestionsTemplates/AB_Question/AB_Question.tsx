@@ -1,18 +1,18 @@
 import React, { FC, useCallback, useState } from 'react';
 import { AB_QuestionProps } from './AB_Question.props';
 import styles from './AB_Question.module.css';
-import { HTag, Button, HR, Card, Image } from '../../../components/index';
-import { checkForValideImageLink } from '../../../helpers/custom.helper';
+import { HTag, Button, HR, Card, Image } from '../../../../components/index';
+import { checkForValideImageLink } from '../../../../helpers/custom.helper';
 import cn from 'classnames';
 
-export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props}) => {
+export const AB_Question: FC<AB_QuestionProps> = ({question, questionAnswers, usersAnswers, creator, ...props}) => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const handleSelectedClick = (index: number | null) => {
     setSelected(index);
   };
 
-  const buildAnswers = (): JSX.Element[] => {
+  const buildQuestionAnswers = (): JSX.Element[] => {
     function classNameWithSelected(index: number, ...classNames: string[]) {
       return cn(...classNames, {
         [styles.selected]: selected === index,
@@ -20,7 +20,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
 
     function renderImages(type: 'text' | 'image'): JSX.Element[] {
-      return answers.map((answer, index) => {
+      return questionAnswers.map((answer, index) => {
         if (type === 'text') return <Image
           key={answer}
           onClick={() => handleSelectedClick(index)}
@@ -40,7 +40,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
 
     let isImagesValid = true;
-    answers.forEach(answer => {
+    questionAnswers.forEach(answer => {
       if (!checkForValideImageLink(answer)) isImagesValid = false;
     });
     
@@ -51,16 +51,16 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
   };
   
-  if (!question || answers.length < 2) return <></>;
+  if (!question || questionAnswers.length < 2) return <></>;
   return (
     <Card className={styles.questionWrapper} {...props}>
-      <HTag size="m" className={styles.question}>{question}</HTag>
+      <div className={styles.question}>{question}</div>
       <div className={styles.answersWrraper}>
-        {buildAnswers()}
+        {buildQuestionAnswers()}
       </div>
       <HR color="gray" className={styles.hr}/>
       <div className={styles.info}>
-        <HTag size="s" className={styles.allAnswers}>Answers:&nbsp;43</HTag>
+        <HTag size="s" className={styles.allAnswers}>Answers:&nbsp;{usersAnswers.length}</HTag>
         <Button className={styles.reset} onClick={() => handleSelectedClick(null)}>Reset</Button>
         <Button color="primary">Save answer</Button>
       </div>

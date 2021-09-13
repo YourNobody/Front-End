@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import { RA_QuestionProps } from './RA_Question.props';
 import styles from './RA_Question.module.css';
-import { HTag, Image, Card, Button, HR } from '../../../components/index';
+import { HTag, Image, Card, Button, HR } from '../../../../components/index';
 import { useState } from 'react';
-import { checkForValideImageLink } from '../../../helpers/custom.helper';
+import { checkForValideImageLink } from '../../../../helpers/custom.helper';
 
-export const RA_Question: FC<RA_QuestionProps> = ({ target, content }) => {
+export const RA_Question: FC<RA_QuestionProps> = ({ content, usersAnswers, question, creator, ...props }) => {
   const [sliderValue, setSliderValue] = useState<string | number>(0);
 
   const handleSliderChange = (e) => {
@@ -13,21 +13,20 @@ export const RA_Question: FC<RA_QuestionProps> = ({ target, content }) => {
   };
 
   const buildAccordingToTarget = () => {
-    switch (target) {
-      case 'question': {
-        if (checkForValideImageLink(content)) return <></>;
-        return <HTag>{content}</HTag>;
-      }
-      case 'image': {
-        if (checkForValideImageLink(content)) return <Image src={content} className={styles.image}/>;
-        return <></>;
-      }
-      default: return <></>;
+    if (checkForValideImageLink(content)) {
+      return (
+        <>
+          {question ? <div className={styles.question}>{question}</div> : <></>}
+          <Image src={content} className={styles.image}/>
+        </>
+      );
+    } else {
+      return <div className={styles.question}>{question}</div>;
     }
   };
 
   return (
-    <Card className={styles.questionWrapper}>
+    <Card className={styles.questionWrapper} {...props}>
       {buildAccordingToTarget()}
       <HR color="gray" className={styles.hr}/>
       <div className={styles.answerWrapper}>

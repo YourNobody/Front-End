@@ -20,3 +20,15 @@ export const getEmptyObject = <T>(data: T): T => {
     return R;
   }, {}) as T || {} as T;
 };
+
+export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string) => {
+  if (typeof keys === 'string') {
+    keys = keys.split(' ');
+  }
+  return keys.reduce((output, key) => {
+    if (initial[key]) {
+      output[key] = initial[key];
+    }
+    return output;
+  }, {});
+};

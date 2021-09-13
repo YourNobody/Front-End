@@ -40,7 +40,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
           <li>My Questions</li>
         </Link>
         <a>
-          <li onClick={handleLogOut}>Log Out</li>
+          <li onClick={() => {}}>Log Out</li>
         </a>
       </ul>
       <Route path={routes.HOME}>
