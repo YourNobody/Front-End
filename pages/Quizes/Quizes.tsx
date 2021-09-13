@@ -4,28 +4,14 @@ import styles from './Quizes.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import cn from 'classnames';
 import { Card, Image, HTag, Button } from '../../components';
-import { AB_Question, SA_Question, RA_Question, TA_Question } from '../../pageComponents/Questions/index';
-import { Link, Route, useLocation, useParams } from 'react-router-dom';
+import { Link, Route, useLocation } from 'react-router-dom';
 import { routes } from './../../constants/routes';
-import { QuestionParamsTypes, QuestionTypes } from '../../interfaces/quizes.interface';
+import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
-import { useTypedSelector } from './../../hooks/useTypedSelector.hook';
-import URL from '../../src/assets/quiz-page/ra.jfif';
 import { useRequest } from '../../hooks/useRequest';
-import { setAppAlert } from '../../store/action-creators/appActions';
 import { statuses } from '../../constants/app';
-
-const Question: FC<any> = ({dataQuestion}) => {
-  const { qType } = useParams<QuestionParamsTypes>();
-  
-  switch (qType.toUpperCase()) {
-    case 'SA': return <SA_Question {...dataQuestion} />;
-    case 'TA': return <TA_Question/>;
-    case 'RA': return <RA_Question target="image" content={URL}/>;
-    case 'AB': return <AB_Question question="How are you?" answers={['fine', 'very bad']}/>;
-    default: return <></>;
-  }
-};
+import { Question } from '../../pageComponents/Question/Question';
+import { useActions } from './../../hooks/useActions.hook';
 
 export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const { pathname } = useLocation();
@@ -37,6 +23,7 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
     }
   }
   
+  const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const [questions, setQuestions] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<QuestionTypes>(alreadySelected);
@@ -99,7 +86,10 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
     if (questions.length) {
       return questions.map(q => {
         const quest = {
-          answers: q.answers.map(answer => answer.answer),
+          title: q.title,
+          usersAnswers: [],
+          creator: '',
+          questionAnswers: q.questionAnswers.map(answer => answer.answer),
           question: q.question
         };
 
@@ -109,7 +99,6 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
     return <HTag size="m">No questions of the selected type</HTag>;
   };
 
-  console.log('q: ', questions);
   return (
     <div {...props}
       className={cn(styles.quizPage, className, {

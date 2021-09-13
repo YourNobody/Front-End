@@ -3,7 +3,7 @@ import { InputProps } from './Input.props';
 import styles from './Input.module.css';
 import cn from 'classnames';
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, type, name, value, ...props}, ref): JSX.Element => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, className, type, name, value, ...props}, ref): JSX.Element => {
   const inputId: string = label ? createId(label) : null;
 
   return (
@@ -15,9 +15,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, type, na
         htmlFor={inputId}
       >{label}</label>}
       <input
-        ref={ref}
         {...props}
-        className={styles.input}
+        ref={ref}
+        className={cn(styles.input, className)}
         type={type}
         name={name}
         id={inputId}

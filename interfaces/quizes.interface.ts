@@ -12,3 +12,10 @@ export interface IQuizData {
   description: string;
   type: QuestionTypes;
 }
+
+export interface MainQuestionsProps {
+  title?: string;
+  question?: string;
+  usersAnswers?: any[];
+  creator?: string;
+}

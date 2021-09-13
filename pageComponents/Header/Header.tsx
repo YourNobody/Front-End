@@ -22,6 +22,15 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
             <li>Quizes</li>
           </Link>
         </ul>
+        {
+          !isAuthenticated && <div className={styles.person}>
+            <Link to={routes.AUTH.LOGIN}>
+            <div className={cn(styles.question, styles.login)}>
+                <p>Log In</p>
+              </div>
+            </Link>
+          </div>
+        }
         {isAuthenticated && <div className={styles.person}>
             <Link to={routes.QUIZES.CREATE}>
               <div className={styles.question}>

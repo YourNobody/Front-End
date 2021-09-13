@@ -14,26 +14,26 @@ export const Profile = (props: ProfileProps): JSX.Element => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
   const { userLogOut, setAppAlert } = useActions();
-  const { error, clearError, request, data, clearData } = useRequest();
+  const { error, clearError, request } = useRequest();
   console.log('profile');
   
 
-  const handleLogOut = async (): Promise<void> => {
-    request('logout', 'POST');
-    userLogOut();
-  };
+  // const handleLogOut = async (): Promise<void> => {
+  //   request('logout', 'POST');
+  //   userLogOut();
+  // };
 
-  useEffect(() => {
-    if (error) {
-      setAppAlert(error, statuses.ERROR);
-      clearError();
-    }
-    if (data) {
-      setAppAlert(data.message, statuses.SUCCESS);
-      clearData();
-      history.push(routes.HOME);
-    }
-  }, [error, data]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setAppAlert(error, statuses.ERROR);
+  //     clearError();
+  //   }
+  //   if (data) {
+  //     setAppAlert(data.message, statuses.SUCCESS);
+  //     clearData();
+  //     history.push(routes.HOME);
+  //   }
+  // }, [error, data]);
 
   return (
     <div {...props} className={styles.profile}>
@@ -45,7 +45,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
           <li>My Questions</li>
         </Link>
         <a>
-          <li onClick={handleLogOut}>Log Out</li>
+          <li onClick={() => {}}>Log Out</li>
         </a>
       </ul>
       <Route path={routes.HOME}>

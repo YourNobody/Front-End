@@ -56,24 +56,24 @@ const Login: FC<AuthorizationProps> = () => {
 const Register: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const { fetchUserBegging, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request, data, clearData } = useRequest();
+  const { error, clearError, request } = useRequest();
   const history = useHistory();
 
-  useEffect(() => {
-    if (error) {
-      setAppAlert(error, statuses.ERROR);
-      fetchUserError();
-      clearError();
-    }
-    if (data) {
-      console.log('data: ', data);
+  // useEffect(() => {
+  //   if (error) {
+  //     setAppAlert(error, statuses.ERROR);
+  //     fetchUserError();
+  //     clearError();
+  //   }
+  //   if (data) {
+  //     console.log('data: ', data);
       
-      setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess(data);
-      clearData();
-      history.push(routes.AUTH.LOGIN);
-    }
-  }, [error, data]);
+  //     setAppAlert(data.message, statuses.SUCCESS);
+  //     fetchUserSuccess(data);
+  //     clearData();
+  //     history.push(routes.AUTH.LOGIN);
+  //   }
+  // }, [error, data]);
 
   const onSubmit = (formData) => {
     fetchUserBegging();

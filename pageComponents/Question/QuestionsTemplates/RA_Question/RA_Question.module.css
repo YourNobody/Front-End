@@ -4,6 +4,11 @@
   grid-template-rows: minmax(175px, 1fr) auto;
 }
 
+.question {
+  font-size: 18px;
+  margin: 15px 0px 25px 0;
+}
+
 .answerWrapper {
   display: grid;
   grid-template-columns: auto auto 1fr;
