@@ -5,7 +5,7 @@ import { Card, HTag, Tagger, Button, HR } from '../../../../components/index';
 import parse from 'html-react-parser';
 import cn from 'classnames';
 
-export const SA_Question: FC<SA_QuestionProps> = ({ question, questionAnswers, usersAnswers, ...props }) => {
+export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAnswers, usersAnswers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const handleTaggerClick = useCallback((index: number) => {
@@ -18,6 +18,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, questionAnswers, u
       {...props}
       className={styles.questionWrapper}
     >
+      <HTag size="m" className={styles.questionTitle}>{title}</HTag>
       <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answers}>
         {

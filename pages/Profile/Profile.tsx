@@ -14,26 +14,21 @@ export const Profile = (props: ProfileProps): JSX.Element => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
   const { userLogOut, setAppAlert } = useActions();
-  const { error, clearError, request } = useRequest();
+  const { error, clearError, request, loading } = useRequest();
   console.log('profile');
   
 
-  // const handleLogOut = async (): Promise<void> => {
-  //   request('logout', 'POST');
-  //   userLogOut();
-  // };
-
-  // useEffect(() => {
-  //   if (error) {
-  //     setAppAlert(error, statuses.ERROR);
-  //     clearError();
-  //   }
-  //   if (data) {
-  //     setAppAlert(data.message, statuses.SUCCESS);
-  //     clearData();
-  //     history.push(routes.HOME);
-  //   }
-  // }, [error, data]);
+  const handleLogOut = async (): Promise<void> => {
+    try {
+      const data: any = await request('logout', 'POST');
+      setAppAlert(data.message, statuses.SUCCESS);
+      userLogOut();
+      history.push(routes.HOME);
+    } catch (err) {
+      setAppAlert(error, statuses.ERROR);
+      clearError();
+    }
+  };
 
   return (
     <div {...props} className={styles.profile}>

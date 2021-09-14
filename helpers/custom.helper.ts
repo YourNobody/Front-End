@@ -21,7 +21,7 @@ export const getEmptyObject = <T>(data: T): T => {
   }, {}) as T || {} as T;
 };
 
-export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string) => {
+export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string): any => {  
   if (typeof keys === 'string') {
     keys = keys.split(' ');
   }

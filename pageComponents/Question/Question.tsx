@@ -12,7 +12,7 @@ import { AB_QuestionProps } from './QuestionsTemplates/AB_Question/AB_Question.p
 
 export const Question: FC<any> = ({dataQuestion}) => {
   const { qType } = useParams<QuestionParamsTypes>();
-
+  
   switch (qType.toUpperCase()) {
     case QuestionTypes.SA: {
       const payload = returnAppropriatePayload(qType, dataQuestion) as SA_QuestionProps;
@@ -36,9 +36,9 @@ export const Question: FC<any> = ({dataQuestion}) => {
 
 function returnAppropriatePayload(type: QuestionTypes, data: any) {
   const mainPayload = ['question', 'usersAnswers', 'creator', 'title'];
-  let additionalKeys = [];
+  let additionalKeys: string[] = [];
   if (!type) return {};
-  switch (type) {
+  switch (type.toUpperCase()) {
     case QuestionTypes.SA:
       additionalKeys = ['questionAnswers'];
       return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]);

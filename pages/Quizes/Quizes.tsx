@@ -41,7 +41,7 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
       }
     };
 
-    realizingFetch();
+    selectedType && realizingFetch();
   }, [selectedType]);
 
   const handleCardClick = async (type: QuestionTypes) => {
@@ -84,7 +84,7 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const buildQuestions = (): JSX.Element | JSX.Element[] => {
     if (!questions) return <></>;
     if (questions.length) {
-      return questions.map(q => {
+      return questions.map(q => {        
         const quest = {
           title: q.title,
           usersAnswers: [],
