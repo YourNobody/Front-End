@@ -17,7 +17,7 @@ export interface IUserActionDefault {
 }
 
 export interface IUserActionFetchUser {
-  type: userTypes.FETCH_USER,
+  type: userTypes.FETCH_USER_BEGINING,
 }
 
 export interface IUserActionFetchUserSuccess {
@@ -37,8 +37,12 @@ export interface IUserActionLogOut {
   type: userTypes.USER_LOGOUT,
 }
 
-export enum userTypes {
-  DEFAULT = 1, FETCH_USER, FETCH_USER_SUCCESS, FETCH_USER_ERROR, CLEAR_ERROR, USER_LOGOUT
+export interface IUserActionLogIn {
+  type: userTypes.SET_AUTHENTICATED,
 }
 
-export type IUserActions = IUserActionFetchUser | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut;
+export enum userTypes {
+  DEFAULT = 1, FETCH_USER_BEGINING, FETCH_USER_SUCCESS, FETCH_USER_ERROR, CLEAR_ERROR, USER_LOGOUT, SET_AUTHENTICATED
+}
+
+export type IUserActions = IUserActionFetchUser | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut | IUserActionLogIn;

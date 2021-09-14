@@ -9,3 +9,10 @@ export interface IUseInput {
   clearValue: (name: string) => void;
   onChange: (event: any) => void;
 }
+
+export interface IUseAuth {
+  login: (userId: string, jwtToken: string) => void,
+  logout: () => void;
+  userId: string;
+  token: string;
+}
