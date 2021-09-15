@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { LOCALSTORAGE_USER_DATA_NAME } from './../constants/app';
 import { IUseAuth } from './../interfaces/hooks.interface';
 
@@ -10,9 +10,10 @@ interface LocalStorageUserData {
 export const useAuth = (): IUseAuth => {
   const [token, setToken] = useState<string>(null);
   const [userId, setUserId] = useState<string>(null);
-
+  
+  console.log('inside: ', { token, userId });
   const login = useCallback((jwtToken: string, id: string): void => {
-    setToken(token);
+    setToken(jwtToken);
     setUserId(id);
 
     localStorage.setItem(LOCALSTORAGE_USER_DATA_NAME, JSON.stringify({
@@ -28,13 +29,14 @@ export const useAuth = (): IUseAuth => {
   }, []);
 
   useEffect(() => {
+    console.log('inside totototo');
     const data: LocalStorageUserData = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-
+    
     if (data && data.token && data.userId) {
       login(data.token, data.userId);
     }
   }, [login]);
 
 
-  return { userId, token, login, logout };
+  return useMemo(() => ({ userId, token, login, logout }), [token, userId, login, logout]);
 };

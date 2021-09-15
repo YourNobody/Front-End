@@ -1,7 +1,8 @@
 import { 
   IUserReducer, 
   IUserActionDefault, 
-  IUserActionFetchUser, 
+  IUserActionFetchUserBegining,
+  IUserActionFetchUserEnding,
   IUserActionFetchUserError, 
   IUserActionFetchUserSuccess, 
   userTypes, 
@@ -10,7 +11,8 @@ import {
   IUserActionLogIn
 } from "../interfaces-reducers/userReducer.interface";
 
-export const fetchUserBegging = (): IUserActionFetchUser => ({ type: userTypes.FETCH_USER_BEGINING });
+export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
+export const fetchUserEnding = (): IUserActionFetchUserEnding => ({ type: userTypes.FETCH_USER_ENDING });
 
 export const fetchUserSuccess = (payload: IUserReducer): IUserActionFetchUserSuccess => {
   localStorage.removeItem('user');

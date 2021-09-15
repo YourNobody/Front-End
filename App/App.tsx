@@ -2,7 +2,7 @@ import { Home, Quizes, Profile, Authorization, Page404, Create } from '..//pages
 import { routes } from "../constants/routes";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
-import { Alerter } from "../components/index";
+import { Alerter } from "../pageComponents/index";
 import { Routes } from "./routes";
 import './App.module.css';
 import { BrowserRouter as Router } from 'react-router-dom';

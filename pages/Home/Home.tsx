@@ -9,7 +9,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 const Home = (props: HomeProps): JSX.Element => {
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
-
+  
   return (
     <div {...props} className={styles.home}>
       <HTag size="large" className={styles.appTitle}>Hi, you're on <span className={styles.appName}>Quiz App</span></HTag>

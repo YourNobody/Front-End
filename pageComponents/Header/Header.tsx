@@ -4,13 +4,13 @@ import styles from './Header.module.css';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { routes } from '../../constants/routes';
-import { Image } from '../../components/index';
+import { Image, HTag } from '../../components/index';
 import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export const Header = ({ children, className, ...props }: HeaderProps): JSX.Element => {
-  const {user, isAuthenticated} = useTypedSelector(state => state.user);
-  console.log( useTypedSelector(state => state));
-  
+  const {user, isAuthenticated, loading} = useTypedSelector(state => state.user);
+    console.log('loading: ', loading);
+    
   return (
     <header className={cn(styles.header, className)} {...props}>
       <nav className={styles.nav}>
@@ -37,12 +37,18 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
                 <p>Create a question?</p>
               </div>
             </Link>
-            <div className={styles.personInfo}>
-              <Link to={routes.PROFILE.ACCOUNT}>
-                <div className={styles.name}>{user ? user.firstName + ' ' + user.lastName : 'Username'}</div>
-                <Image isCircled={true} className={styles.image}/>
-              </Link>
-            </div>
+            {
+              !loading 
+              ? <div className={styles.personInfo}>
+                  <Link to={routes.PROFILE.ACCOUNT}>
+                    <div className={styles.name}>{user ? user.firstName + ' ' + user.lastName : 'Username'}</div>
+                    <Image isCircled={true} className={styles.image}/>
+                  </Link>
+                </div>
+              : <div className={styles.personInfo}>
+                  <HTag size="m">Loading...</HTag>
+                </div>
+            }
           </div>
         }
       </nav>
