@@ -13,7 +13,7 @@ import { statuses } from '../../constants/app';
 import { Question } from '../../pageComponents/Question/Question';
 import { useActions } from './../../hooks/useActions.hook';
 
-export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
+export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { pathname } = useLocation();
   let alreadySelected: QuestionTypes = null;
   if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
@@ -33,6 +33,8 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
     const realizingFetch = async () => {
       try {
         const data: any = await request(routes.QUIZES.ROOT, 'POST', { type: selectedType });
+        console.log('data: ', data);
+        
         setAppAlert(data.message, statuses.SUCCESS);
         setQuestions(data.questions ? data.questions : []);
       } catch (err) {
@@ -52,48 +54,48 @@ export const Quizes = ({ className, ...props }: QuizesProps): JSX.Element => {
   const buildQuizes = (): JSX.Element[] => {
     return quizesData.map((item) => {
       return (
-        <>
-          <Link 
-            to={routes.QUIZES.TYPES[item.type]}
-            onClick={() => handleCardClick(item.type)}
-            key={item.type}
-            className={cn(styles.link, {
-              [styles.selectedCard]: wrapped
-            })}
-          >
-            {!wrapped
-              ? <Card className={cn(styles.card, {
-                  [styles.selected]: selectedType === item.type
-                })} data-target="card">
-                <HTag className={styles.title}>{item.title}</HTag>
-                <p className={styles.description}>{item.description}</p>
-                <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
-                </Card>
-              : <Card className={cn(styles.cardText, {
-                  [styles.selectedCartExactly]: selectedType === item.type && wrapped
-                })} data-target="card">
-                <HTag className={styles.title}>{item.title}</HTag>
+        <Link 
+          to={routes.QUIZES.TYPES[item.type]}
+          onClick={() => handleCardClick(item.type)}
+          key={item.type}
+          className={cn(styles.link, {
+            [styles.selectedCard]: wrapped
+          })}
+        >
+          {!wrapped
+            ? <Card className={cn(styles.card, {
+                [styles.selected]: selectedType === item.type
+              })} data-target="card" >
+              <HTag className={styles.title}>{item.title}</HTag>
+              <p className={styles.description}>{item.description}</p>
+              <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
               </Card>
-            }
-          </Link>
-        </>
+            : <Card className={cn(styles.cardText, {
+                [styles.selectedCartExactly]: selectedType === item.type && wrapped
+              })} data-target="card">
+              <HTag className={styles.title}>{item.title}</HTag>
+            </Card>
+          }
+        </Link>
       );
     }) || [<></>];
   };
 
   const buildQuestions = (): JSX.Element | JSX.Element[] => {
+    console.log('questions: ', questions);
+    
     if (!questions) return <></>;
     if (questions.length) {
       return questions.map(q => {        
         const quest = {
-          title: q.title,
+          title: q?.title,
           usersAnswers: [],
           creator: '',
-          questionAnswers: q.questionAnswers.map(answer => answer.answer),
+          questionAnswers: q?.questionAnswers?.map((a: any) => a.answer),
           question: q.question
         };
 
-        return <Question dataQuestion={quest} key={Math.random().toString()}/>;
+        return <Question dataQuestion={quest} key={Math.random()}/>;
       });
     }
     return <HTag size="m">No questions of the selected type</HTag>;

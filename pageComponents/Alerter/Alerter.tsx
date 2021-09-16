@@ -15,7 +15,9 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
   };
 
   useEffect(() => {
-    setTimeout(() => clearAppAlert(newAlertId), 3000);
+    if (newAlertId) {
+      setTimeout(() => clearAppAlert(newAlertId), 3000);
+    }
   }, [newAlertId]);
 
   return (

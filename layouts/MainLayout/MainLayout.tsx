@@ -3,8 +3,6 @@ import { Helmet } from 'react-helmet';
 import { Header, Footer } from '../../pageComponents/index';
 import { MainLayoutProps } from './MainLayout.props';
 import styles from './MainLayout.module.css';
-import { useAuth } from './../../hooks/useAuth.hooks';
-import { useActions } from '../../hooks/useActions.hook';
 
 const MainLayout = ({ children, title = 'Home', ...props }: MainLayoutProps): JSX.Element => {
   return (

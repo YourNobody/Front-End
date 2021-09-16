@@ -15,14 +15,10 @@ const initialState: IUserState = {
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {
   switch (action.type) {
-    case userTypes.SET_AUTHENTICATED:
-      return {...state, isAuthenticated: true};
     case userTypes.FETCH_USER_BEGINING:
       return {...state, loading: true};
-    case userTypes.FETCH_USER_ENDING:
-      return {...state, loading: false};
     case userTypes.FETCH_USER_SUCCESS:
-      return {...state,  user: action.payload};
+      return {...state, user: action.payload, isAuthenticated: true, loading: false};
     case userTypes.USER_LOGOUT:
       return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false};
     case userTypes.FETCH_USER_ERROR:

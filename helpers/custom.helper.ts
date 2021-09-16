@@ -16,7 +16,15 @@ export const getFirstLetters = (initials: string): string => {
 export const getEmptyObject = <T>(data: T): T => {
   if (!data) return {} as T;
   return Object.keys(data).reduce((R, key) => {
-    R[key] = '';
+    if (typeof data[key] === 'function') {
+      R[key] = null;
+    } else if (data[key] instanceof Array) {
+      R[key] = [];
+    } else if (data[key] instanceof Object) {
+      R[key] = {};
+    } else {
+      R[key] = '';
+    }
     return R;
   }, {}) as T || {} as T;
 };

@@ -15,8 +15,6 @@ export const Profile = (props: ProfileProps): JSX.Element => {
   const { user } = useTypedSelector(state => state.user);
   const { userLogOut, setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
-  console.log('profile');
-  
 
   const handleLogOut = async (): Promise<void> => {
     try {
@@ -40,11 +38,11 @@ export const Profile = (props: ProfileProps): JSX.Element => {
           <li>My Questions</li>
         </Link>
         <a>
-          <li onClick={() => {}}>Log Out</li>
+          <li onClick={handleLogOut}>Log Out</li>
         </a>
       </ul>
       <Route path={routes.HOME}>
-        <AccountInfo firstName={user.firstName} lastName={user.lastName} email={user.email} />
+        <AccountInfo firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
       </Route>
     </div>
   );

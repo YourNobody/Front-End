@@ -1,5 +1,4 @@
 import { useActions } from "../hooks/useActions.hook";
-import { useAuth } from "../hooks/useAuth.hooks";
 import { FC } from 'react';
 import { Route, Switch } from "react-router-dom";
 import { Home, Quizes, Profile, Authorization, Page404, Create } from '..//pages/pages';
@@ -48,20 +47,6 @@ const buildAllRoutes = (): JSX.Element => (
 );
 
 export const Routes: FC<any> = () => {
-  const {token, userId} = useAuth();
-  const {userLogIn, fetchUserBegining, fetchUserEnding} = useActions();
-
-  console.log('render: ', { token, userId });
-  
-  useEffect(() => {
-    fetchUserBegining();
-    if (token && userId) {
-      userLogIn();
-      fetchUserEnding();
-    }
-  }, [token, userId, userLogIn]);
-  
-
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
 
   if (isAuthenticated) {

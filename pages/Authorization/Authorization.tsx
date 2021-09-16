@@ -10,10 +10,8 @@ import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
 import { getEmptyObject } from '../../helpers/custom.helper';
-import { useAuth } from './../../hooks/useAuth.hooks';
 
 const Login: FC<AuthorizationProps> = () => {
-  const auth = useAuth();
   const { register, handleSubmit, reset } = useForm();
   const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess, fetchUserEnding } = useActions();
   const { error, clearError, request } = useRequest();
@@ -23,9 +21,10 @@ const Login: FC<AuthorizationProps> = () => {
     try {
       fetchUserBegining();
       const data: any = await request('login', 'POST', formData);
-      auth.login(data.token, data.user.id);
+      console.log('data: ', data);
+      
       setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess(data.user);
+      fetchUserSuccess({ user: data.user, token: data.token });
       fetchUserEnding();
       history.push(routes.HOME);
     } catch (err) {
@@ -59,14 +58,17 @@ const Login: FC<AuthorizationProps> = () => {
 
 const Register: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess, fetchUserEnding } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
   const onSubmit = async (formData) => {
     try {
+      fetchUserBegining();
       const data: any = await request('register', 'POST', formData);
       setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess(data.user);
+      fetchUserEnding();
       history.push(routes.HOME);
     } catch (err) {
       setAppAlert(error, statuses.ERROR);
