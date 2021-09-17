@@ -13,18 +13,6 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
   const {user, isAuthenticated, loading} = useTypedSelector(state => state.user);
   const {setAppAlert} = useActions();
 
-  const getUserInitials = () => {
-    const { firstName, lastName } = user;
-    if (firstName && lastName) {
-      return firstName + ' ' + lastName;
-    } else if (firstName && !lastName) {
-      return firstName;
-    } else if (!firstName && lastName) {
-      return lastName;
-    }
-    return 'Username';
-  };
-
   // useEffect(() => {
   //   if (loading) {
   //     setAppAlert('User data is loading', statuses.WARNING);
@@ -54,15 +42,15 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
         {isAuthenticated && <div className={styles.person}>
             <Link to={routes.QUIZES.CREATE}>
               <div className={styles.question}>
-                <p>Create a question?</p>
+                <p>Create Quiz?</p>
               </div>
             </Link>
             {
               !loading 
               ? <div className={styles.personInfo}>
                   <Link to={routes.PROFILE.ACCOUNT}>
-                    <div className={styles.name}>{getUserInitials()}</div>
-                    <Image isCircled={true} className={styles.image}/>
+                    <div className={styles.name}>{user.nickname}</div>
+                    <Image isCircled={true} text={user.nickname} className={styles.image}/>
                   </Link>
                 </div>
               : <></>

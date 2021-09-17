@@ -42,7 +42,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
         </a>
       </ul>
       <Route path={routes.HOME}>
-        <AccountInfo firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
+        <AccountInfo nickname={user?.nickname} email={user?.email} />
       </Route>
     </div>
   );

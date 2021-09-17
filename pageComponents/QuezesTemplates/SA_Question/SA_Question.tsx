@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from 'react';
 import { SA_QuestionProps } from './SA_Question.props';
 import styles from './SA_Question.module.css';
-import { Card, HTag, Tagger, Button, HR } from '../../../../components/index';
+import { Card, HTag, Tagger, Button, HR } from '../../../components/index';
 import parse from 'html-react-parser';
 import cn from 'classnames';
 

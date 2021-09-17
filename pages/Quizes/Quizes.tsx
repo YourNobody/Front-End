@@ -9,8 +9,7 @@ import { routes } from './../../constants/routes';
 import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
 import { useRequest } from '../../hooks/useRequest';
-import { statuses } from '../../constants/app';
-import { Question } from '../../pageComponents/Question/Question';
+import { LOCALSTORAGE_QUIZ_DATA_NAME, statuses } from '../../constants/app';
 import { useActions } from './../../hooks/useActions.hook';
 
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
@@ -22,6 +21,13 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
       alreadySelected = pathSplitted[pathSplitted.length - 1].toUpperCase() as QuestionTypes;
     }
   }
+
+  const generateRouteAndRedirect = (quiz: any) => {
+    const titled = quiz.title.toLowerCase().replace(/\s/ig, '-');
+    localStorage.setItem(LOCALSTORAGE_QUIZ_DATA_NAME, JSON.stringify(quiz));
+    history.push(routes.QUIZES.ROOT + `/${quiz.type.toLowerCase()}/${titled}`);
+  };
+
   const history = useHistory();
   const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
@@ -83,19 +89,21 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
 
   const buildQuestionsLinks = (): JSX.Element | JSX.Element[] => {
     console.log('questions: ', questions);
-    
     if (!questions) return <></>;
     if (questions.length) {
       return questions.filter(q => !!q.title).map(q => {
 
         return (
-          <Card key={Math.random()}>
-            <HTag size="m">{q.title}</HTag>
-            <Button color="primary" onClick={() => {
-              const titled = q.title.toLowerCase().replace(/\s/ig, '-');
-              sessionStorage.setItem('questionData', JSON.stringify(q));
-              history.push(routes.QUIZES.ROOT + `/${q.type.toLowerCase()}/${titled}`);
-            }}>Go to Quiz</Button>
+          <Card key={Math.random()} className={styles.quizLinkWrapper}>
+            <HTag size="m" className={styles.quizTitle}>{q.title}</HTag>
+            <div className={styles.quizInfo}>
+              <Button
+                color="primary"
+                onClick={() => generateRouteAndRedirect(q)}
+                className={styles.quizGoTo}
+              >Go to Quiz</Button>
+              <HTag size="s">Creator:{q.creator}</HTag>
+            </div>
           </Card>
         );
       })
@@ -110,7 +118,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
     >
       <Route path={routes.QUIZES.ROOT}>
           {buildQuizes()}
-          {wrapped && <Button color="ghost" className={styles.buttonUnwrap} onClick={() => setWrapped(false)}>&#5171;</Button>}
+          {/* {wrapped && <Button color="ghost" className={styles.buttonUnwrap} onClick={() => setWrapped(false)}>&#5171;</Button>} */}
       </Route>
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
         <div className={styles.allWrapper}>

@@ -3,8 +3,7 @@ import { IUserActions, IUserReducer, IUserState, userTypes } from "../interfaces
 
 const initialState: IUserState = {
   user: {
-    firstName: '',
-    lastName: '',
+    nickname: '',
     email: '',
     id: '',
     questions: []

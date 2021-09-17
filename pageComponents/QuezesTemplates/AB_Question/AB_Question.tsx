@@ -1,11 +1,12 @@
 import React, { FC, useCallback, useState } from 'react';
 import { AB_QuestionProps } from './AB_Question.props';
 import styles from './AB_Question.module.css';
-import { HTag, Button, HR, Card, Image } from '../../../../components/index';
-import { checkForValideImageLink } from '../../../../helpers/custom.helper';
+import { HTag, Button, HR, Card, Image } from '../../../components/index';
+import { checkForValideImageLink } from '../../../helpers/custom.helper';
+import parse from 'html-react-parser';
 import cn from 'classnames';
 
-export const AB_Question: FC<AB_QuestionProps> = ({question, questionAnswers, usersAnswers, creator, ...props}) => {
+export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnswers, usersAnswers, creator, ...props}) => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const handleSelectedClick = (index: number | null) => {
@@ -20,18 +21,18 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, questionAnswers, us
     }
 
     function renderImages(type: 'text' | 'image'): JSX.Element[] {
-      return questionAnswers.map((answer, index) => {
+      return questionAnswers.map((answer: any, index) => {
         if (type === 'text') return <Image
-          key={answer}
+          key={Math.random()}
           onClick={() => handleSelectedClick(index)}
           fully
-          text={answer}
+          text={answer.answer}
           className={classNameWithSelected(index, styles.imageText)}
         />;
         if (type === 'image') return <Image
-          key={answer}
+          key={Math.random()}
           onClick={() => handleSelectedClick(index)}
-          src={answer}
+          src={answer.answer}
           className={classNameWithSelected(index, styles.image)}
           fit="contain"
         />;
@@ -40,8 +41,8 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, questionAnswers, us
     }
 
     let isImagesValid = true;
-    questionAnswers.forEach(answer => {
-      if (!checkForValideImageLink(answer)) isImagesValid = false;
+    questionAnswers.forEach((answer: any) => {
+      if (!checkForValideImageLink(answer.answer)) isImagesValid = false;
     });
     
     if (isImagesValid) {
@@ -53,8 +54,9 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, questionAnswers, us
   
   if (!question || questionAnswers.length < 2) return <></>;
   return (
-    <Card className={styles.questionWrapper} {...props}>
-      <div className={styles.question}>{question}</div>
+    <Card className={styles.questionWrapper} {...props}>\
+      <HTag size="m" className={styles.questionTitle}>{title}</HTag>
+      <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answersWrraper}>
         {buildQuestionAnswers()}
       </div>

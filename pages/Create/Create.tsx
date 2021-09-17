@@ -29,13 +29,14 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const { getValue, clearValue, onChange } = useInput();
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
   const [questionAnswers, setQuestionAnswers] = useState<string[]>([]);
+  const [content] = useState<string>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const history = useHistory();
 
   const handleAnswerAdd = (type: QuestionTypes): void => {
     const value = getValue(type).trim();
     if (value) {
-      setQuestionAnswers([...questionAnswers, value]);
+      QuestionTypes.SA && setQuestionAnswers([...questionAnswers, value]);
       clearValue(type);
     }
   };
@@ -47,10 +48,10 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         body.question = stateToHTML(formData[key + '_editor'].getCurrentContent());
       }
     });
+    body.content = getValue(selectedType + '_content');
     body.type = selectedType;
     body.title = getValue(selectedType + '_title');
     body.questionAnswers = questionAnswers;
-    
     try {
       const data: any = await request(routes.QUIZES.CREATE, 'POST', body, {});
       setAppAlert(data.message, statuses.SUCCESS);
@@ -72,22 +73,13 @@ const Create: FC<CreateProps> = (): JSX.Element => {
 
   const buildQuesionCreatorAccordingToType = (): JSX.Element => {
     if (!selectedType) return <></>;
+    const handleAnswerDelete = (index: number) => {
+      setQuestionAnswers(questionAnswers.filter((item, i) => i !== index));
+    };
     switch (selectedType) {
       case QuestionTypes.SA: {
-        const handleAnswerDelete = (index: number) => {
-          setQuestionAnswers(questionAnswers.filter((item, i) => i !== index));
-        };
         return (
           <>
-            <HTag className={styles.title}>Question Title:</HTag>
-            <Input
-              className={styles.inputTitle}
-              type="text"
-              name={selectedType + '_title'}
-              value={getValue(selectedType + '_title')}
-              onChange={onChange}
-              placeholder="Write title of your question..."
-            />
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
             <Controller
               name={selectedType + '_editor'}
@@ -118,26 +110,79 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       }
       case QuestionTypes.TA:
         return (
-          <></>
+          <>
+            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
+            <Controller
+              name={selectedType + '_editor'}
+              control={control}
+              render={({ field: {value, onChange} }) => (
+                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
+              )}
+            />
+          </>
         );
       case QuestionTypes.RA:
         return (
-          <></>
+          <>
+            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
+            <Controller
+              name={selectedType + '_editor'}
+              control={control}
+              render={({ field: {value, onChange} }) => (
+                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
+              )}
+            />
+            <Input
+              label="Or just paste the image URL that you want to be estimated:"
+              name={selectedType + '_content'}
+              type="text"
+              placeholder="Paste an URL of an image..."
+              value={getValue(selectedType + '_content')}
+              onChange={onChange}
+            />
+          </>
         );
       case QuestionTypes.AB:
         return (
-          <></>
+          <>
+            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
+            <Controller
+              name={selectedType + '_editor'}
+              control={control}
+              render={({ field: {value, onChange} }) => (
+                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
+              )}
+            />
+            <div className={styles.saAnswers}>
+              <div className={styles.addAnswer}>
+                <Input
+                  label="Write 2 answers for your question or paste 2 URLs to the images that you want to compare"
+                  name={selectedType}
+                  type="text"
+                  placeholder="Write an answer variant to your question"
+                  value={getValue(selectedType)}
+                  onChange={onChange}
+                />
+                <Button
+                  disabled={questionAnswers.length > 2}
+                  onClick={() => handleAnswerAdd(selectedType)}
+                >Add</Button>
+              </div>
+              {questionAnswers && questionAnswers.length ? <HTag size="m" className={styles.suggested}>Suggested answers:</HTag> : <></>}
+              {questionAnswers && questionAnswers.length ? <List list={questionAnswers} className={styles.list} onClose={handleAnswerDelete}/> : <></>}
+            </div>
+          </>
         );
       default: return <></>;
     }
   };
   return (
     <div className={styles.createPage}>
-      <HTag size="l" className={styles.createPageTitle}>Create a question!</HTag>
+      <HTag size="l" className={styles.createPageTitle}>Create Quiz!</HTag>
       <Card>
         <form onSubmit={handleSubmit(handleQuestionCreation)} ref={formRef}>
           <div className={styles.selecType}>
-            <HTag size="m" className={styles.selectTypeTitle}>Select your a type of a question:</HTag>
+            <HTag size="m" className={styles.selectTypeTitle}>Select your a type of a Quiz:</HTag>
             <div className={styles.types}>
               {
                 questionTypesWithDescription.map(type => {
@@ -150,15 +195,27 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                         [styles.unselectedType]: selectedType !== type[0] && selectedType !== null
                       })}>
                       <HTag size="s">Type:&nbsp;{type[1]}</HTag>
-                      <p>Description:&nbsp;{type[2]}</p>
+                      <p style={{paddingTop: '5px'}}>Description:&nbsp;{type[2]}</p>
                     </Tagger>
                   );
                 })
               }
             </div>
           </div>
+          {selectedType ? <>
+              <Input
+                label="Quiz Title:"
+                className={styles.inputTitle}
+                type="text"
+                name={selectedType + '_title'}
+                value={getValue(selectedType + '_title')}
+                onChange={onChange}
+                placeholder="Write title of your question..."
+              />
+            </> : <></>
+          }
           {buildQuesionCreatorAccordingToType()}
-          <HR />
+          <HR className={styles.mainHr}/>
           <div className={styles.actions}>
             <Button className={styles.reset} onClick={handleResetForm}>Reset</Button>
             <Button color="primary" className={styles.create} type="submit">Create</Button>

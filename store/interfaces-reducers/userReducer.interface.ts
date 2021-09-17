@@ -1,6 +1,5 @@
 export interface IUserReducer {
-  firstName?: string;
-  lastName?: string;
+  nickname: string;
   email: string;
   id: string;
   questions: any[];

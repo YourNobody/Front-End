@@ -2,6 +2,12 @@
 
 }
 
+.createPage label {
+  font-size: 20px;
+  padding: 10px 0 0 0;
+  font-weight: bold;
+}
+
 .inputTitle {
   margin: 10px 0 15px 0;
 }
@@ -105,4 +111,8 @@
 
 .reset:hover {
   background-color: var(--red-hover);
+}
+
+.mainHr {
+  margin-top: 15px;
 }

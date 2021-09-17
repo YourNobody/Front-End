@@ -14,7 +14,7 @@ import { getEmptyObject } from '../../helpers/custom.helper';
 const Login: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
   const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request } = useRequest();
+  const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
   const onSubmit = async (formData) => {
@@ -40,10 +40,18 @@ const Login: FC<AuthorizationProps> = () => {
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
-          <Input type="email" label="Email" name="email" {...register('email')}/>
+          <Input type="email" label="Email" name="email" {...register('email', {
+            required: true,
+            disabled: loading
+          })}/>
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" name="password" label="Password" {...register('password')}/>
+          <Input type="password" name="password" label="Password" {...register('password', {
+            required: true,
+            minLength: 6,
+            maxLength: 18,
+            disabled: loading
+          })}/>
         </div>
         <Button className={styles.button} type="submit">Log In</Button>
         <div className={styles.info}>
@@ -62,12 +70,14 @@ const Register: FC<AuthorizationProps> = () => {
   const history = useHistory();
 
   const onSubmit = async (formData) => {
+    console.log(formData);
+    
     try {
       fetchUserBegining();
       const data: any = await request('register', 'POST', formData);
+      history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess(data.user);
-      history.push(routes.HOME);
     } catch (err) {
       setAppAlert(error, statuses.ERROR);
       fetchUserError();
@@ -82,13 +92,36 @@ const Register: FC<AuthorizationProps> = () => {
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Registration</HTag>
         <div className={styles.inputBlock}>
-          <Input type="email" label="Email" name="email" {...register('email')}/>
+          <Input type="text" label="Nickname" name="nickname" {...register('nickname', {
+            required: true,
+            minLength: 4,
+            maxLength: 16,
+            // pattern: '/^[a-zA-Z][a-zA-Z\s]{1,16}$/',
+            // onInvalid: (e: any) => e.target.setCustomValidity('Only latin letters and spaces are acceptable'),
+            disabled: loading
+          })}/>
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" label="Password" {...register('password')}/>
+          <Input type="email" label="Email" name="email" {...register('email', {
+            required: true,
+            disabled: loading
+          })}/>
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" label="Confirm Password" {...register('confirm')}/>
+          <Input type="password" label="Password" {...register('password', {
+            required: true,
+            minLength: 6,
+            maxLength: 18,
+            disabled: loading
+          })}/>
+        </div>
+        <div className={styles.inputBlock}>
+          <Input type="password" label="Confirm Password" {...register('confirm', {
+            required: true,
+            minLength: 6,
+            maxLength: 18,
+            disabled: loading
+          })}/>
         </div>
         <Button className={styles.button} type="submit">Register</Button>
       </form>

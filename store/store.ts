@@ -7,9 +7,9 @@ import { IUserReducer, IUserState } from "./interfaces-reducers/userReducer.inte
 import { getEmptyObject } from "../helpers/custom.helper";
 
 const preloadState = () => {  
-    const userData: IUserReducer & { token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+    const userData: { user: IUserReducer, token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
     const userInitial: IUserState = {
-      user: getEmptyObject<IUserReducer>({ id: '', firstName: '', lastName: '', email: '', questions: [] }),
+      user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '', questions: [] }),
       isAuthenticated: false,
       loading: false
     };
@@ -18,11 +18,10 @@ const preloadState = () => {
       return {
         ...userInitial,
         user: {
-          id: userData?.id,
-          firstName: userData?.firstName,
-          lastName: userData?.lastName,
-          email: userData?.email,
-          questions: userData?.questions
+          id: userData.user.id,
+          nickname: userData.user.nickname,
+          email: userData.user.email,
+          questions: userData.user.questions
         },
         isAuthenticated: !!userData.token,
       };

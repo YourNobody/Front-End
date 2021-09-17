@@ -17,7 +17,8 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     }
   }, [inputsState]);
 
-  const getValue = useCallback((name: string): string => {
+  const getValue = useCallback((name?: string): any => {
+    if (!name) return inputsState;
     if (inputsState[name]) return inputsState[name];
     return '';
   }, [inputsState]);
