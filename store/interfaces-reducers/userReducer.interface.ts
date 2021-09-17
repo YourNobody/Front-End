@@ -38,7 +38,12 @@ export interface IUserActionLogOut {
 }
 
 export enum userTypes {
-  DEFAULT = 1, FETCH_USER_BEGINING, FETCH_USER_SUCCESS, FETCH_USER_ERROR, CLEAR_ERROR, USER_LOGOUT
+  DEFAULT = 'DEFAULT',
+  FETCH_USER_BEGINING = 'FETCH_USER_BEGINING',
+  FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
+  FETCH_USER_ERROR = 'FETCH_USER_ERROR',
+  CLEAR_ERROR = 'CLEAR_ERROR',
+  USER_LOGOUT = 'USER_LOGOUT'
 }
 
 export type IUserActions = IUserActionFetchUserBegining | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut;

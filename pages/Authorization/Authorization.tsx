@@ -13,7 +13,7 @@ import { getEmptyObject } from '../../helpers/custom.helper';
 
 const Login: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess, fetchUserEnding } = useActions();
+  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request } = useRequest();
   const history = useHistory();
 
@@ -25,7 +25,6 @@ const Login: FC<AuthorizationProps> = () => {
       
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess({ user: data.user, token: data.token });
-      fetchUserEnding();
       history.push(routes.HOME);
     } catch (err) {
       setAppAlert(error, statuses.ERROR);
@@ -58,7 +57,7 @@ const Login: FC<AuthorizationProps> = () => {
 
 const Register: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess, fetchUserEnding } = useActions();
+  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
@@ -68,7 +67,6 @@ const Register: FC<AuthorizationProps> = () => {
       const data: any = await request('register', 'POST', formData);
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess(data.user);
-      fetchUserEnding();
       history.push(routes.HOME);
     } catch (err) {
       setAppAlert(error, statuses.ERROR);

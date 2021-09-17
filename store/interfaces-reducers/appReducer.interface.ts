@@ -13,7 +13,9 @@ export interface IAppState {
 }
 
 export enum appActionTypes {
-  DEFAULT = 1, SET_ALERT, CLEAR_ALERT,
+  DEFAULT = 'DEFAULT',
+  SET_ALERT = 'SET_ALERT',
+  CLEAR_ALERT = 'CLEAR_ALERT',
 }
 
 export interface IAppDefault {

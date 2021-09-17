@@ -22,8 +22,9 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAns
       <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answers}>
         {
-          questionAnswers.reduce((tags: JSX.Element[], answer: string, index) => {
-            if (answer.trim()) {
+          questionAnswers.reduce((tags: JSX.Element[], answer: any, index) => {
+            console.log('a: ', answer);
+            if (answer.answer && answer.answer.trim()) {
               tags.push(<Tagger
                 key={index}
                 onClick={() => handleTaggerClick(index)}
@@ -31,7 +32,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAns
                   [styles.unselected]: selected !== index && selected !== null,
                   [styles.selected]: selected === index
                 })}
-              >{answer}</Tagger>);
+              >{answer.answer}</Tagger>);
               return tags;
             }
             return tags;

@@ -4,7 +4,7 @@ import styles from './Quizes.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import cn from 'classnames';
 import { Card, Image, HTag, Button } from '../../components';
-import { Link, Route, useLocation } from 'react-router-dom';
+import { Link, Route, useHistory, useLocation } from 'react-router-dom';
 import { routes } from './../../constants/routes';
 import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
@@ -22,7 +22,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
       alreadySelected = pathSplitted[pathSplitted.length - 1].toUpperCase() as QuestionTypes;
     }
   }
-  
+  const history = useHistory();
   const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const [questions, setQuestions] = useState<any[]>([]);
@@ -81,22 +81,24 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
     }) || [<></>];
   };
 
-  const buildQuestions = (): JSX.Element | JSX.Element[] => {
+  const buildQuestionsLinks = (): JSX.Element | JSX.Element[] => {
     console.log('questions: ', questions);
     
     if (!questions) return <></>;
     if (questions.length) {
-      return questions.map(q => {        
-        const quest = {
-          title: q?.title,
-          usersAnswers: [],
-          creator: '',
-          questionAnswers: q?.questionAnswers?.map((a: any) => a.answer),
-          question: q.question
-        };
+      return questions.filter(q => !!q.title).map(q => {
 
-        return <Question dataQuestion={quest} key={Math.random()}/>;
-      });
+        return (
+          <Card key={Math.random()}>
+            <HTag size="m">{q.title}</HTag>
+            <Button color="primary" onClick={() => {
+              const titled = q.title.toLowerCase().replace(/\s/ig, '-');
+              sessionStorage.setItem('questionData', JSON.stringify(q));
+              history.push(routes.QUIZES.ROOT + `/${q.type.toLowerCase()}/${titled}`);
+            }}>Go to Quiz</Button>
+          </Card>
+        );
+      })
     }
     return <HTag size="m">No questions of the selected type</HTag>;
   };
@@ -113,7 +115,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
         <div className={styles.allWrapper}>
           {loading ? <HTag size="m">Loading...</HTag> : <></>}
-          {!loading ? buildQuestions() : <></>}
+          {!loading ? buildQuestionsLinks() : <></>}
         </div>
       </Route>
     </div>

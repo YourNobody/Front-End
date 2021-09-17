@@ -4,6 +4,7 @@ export enum QuestionTypes {
 
 export type QuestionParamsTypes = {
   qType: QuestionTypes;
+  title: string;
 };
 
 export interface IQuizData {

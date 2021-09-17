@@ -20,7 +20,7 @@ export const userReducer = (state = initialState, action: IUserActions): IUserSt
     case userTypes.FETCH_USER_SUCCESS:
       return {...state, user: action.payload, isAuthenticated: true, loading: false};
     case userTypes.USER_LOGOUT:
-      return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false};
+      return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false, loading: false};
     case userTypes.FETCH_USER_ERROR:
       return {...state, loading: false};
     default: return state;

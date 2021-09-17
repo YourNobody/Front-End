@@ -25,11 +25,11 @@ export const Header = ({ children, className, ...props }: HeaderProps): JSX.Elem
     return 'Username';
   };
 
-  useEffect(() => {
-    if (loading) {
-      setAppAlert('User data is loading', statuses.WARNING);
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (loading) {
+  //     setAppAlert('User data is loading', statuses.WARNING);
+  //   }
+  // }, [loading]);
   
   return (
     <header className={cn(styles.header, className)} {...props}>

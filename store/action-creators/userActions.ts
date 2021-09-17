@@ -30,4 +30,7 @@ export const fetchUserDefault = (): IUserActionDefault => ({ type: userTypes.DEF
 
 export const clearError = (): IUserActionClearError => ({ type: userTypes.CLEAR_ERROR });
 
-export const userLogOut = (): IUserActionLogOut => ({ type: userTypes.USER_LOGOUT });
+export const userLogOut = (): IUserActionLogOut => {
+  localStorage.removeItem(LOCALSTORAGE_USER_DATA_NAME);
+  return { type: userTypes.USER_LOGOUT };
+};
