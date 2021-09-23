@@ -24,7 +24,7 @@ const Home = (props: HomeProps): JSX.Element => {
             </Link>
           }
           <Link to={routes.QUIZES.ROOT}>
-            <Button>To Questions!</Button>
+            <Button>To Quizes!</Button>
           </Link>
       </div>
     </div>

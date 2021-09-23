@@ -20,7 +20,13 @@
 }
 
 .image {
+  background-color: var(--mega-white-transparent);
+  transition: all 0.2s;
   cursor: pointer;
+}
+
+.image:hover {
+  box-shadow: 0 0 5px var(--blue);
 }
 
 .imageText {
@@ -41,7 +47,11 @@
 }
 
 .selected {
-  box-shadow: 0 0 5px var(--blue);
+  box-shadow: 0 0 7px 1px var(--blue);
+}
+
+.selected:hover {
+  box-shadow: 0 0 7px 1px var(--blue);
 }
 
 .selected span {

@@ -9,7 +9,8 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
-import { HTag, Button } from '../../components/index';
+import { HTag, Button } from '../../components';
+import { QuizStats } from './QuizStats/QuizStats';
 
 export const Profile = (props: ProfileProps): JSX.Element => {
   const history = useHistory();
@@ -58,7 +59,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
           <AccountInfo nickname={user?.nickname} email={user?.email} />
         </Route>
         <Route path={routes.PROFILE.QUESTIONS} exact>
-          
+          <QuizStats/>
         </Route>
       </Switch>
     </div>

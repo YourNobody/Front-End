@@ -74,7 +74,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
               })} data-target="card" >
               <HTag className={styles.title}>{item.title}</HTag>
               <p className={styles.description}>{item.description}</p>
-              <Image src={item.src} text="Select Questions" fit="cover" className={styles.image}/>
+              <Image src={item.src} text={item.title} fit="cover" className={styles.image}/>
               </Card>
             : <Card className={cn(styles.cardText, {
                 [styles.selectedCartExactly]: selectedType === item.type && wrapped
@@ -88,7 +88,6 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   };
 
   const buildQuestionsLinks = (): JSX.Element | JSX.Element[] => {
-    console.log('questions: ', questions);
     if (!questions) return <></>;
     if (questions.length) {
       return questions.filter(q => !!q.title).map(q => {

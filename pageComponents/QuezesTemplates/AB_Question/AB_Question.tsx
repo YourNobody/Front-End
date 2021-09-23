@@ -54,7 +54,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, title, quizAnswers,
   
   if (!question || quizAnswers.length < 2) return <></>;
   return (
-    <Card className={styles.questionWrapper} {...props}>\
+    <Card className={styles.questionWrapper} {...props}>
       <HTag size="m" className={styles.questionTitle}>{title}</HTag>
       <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answersWrraper}>

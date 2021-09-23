@@ -1,0 +1,22 @@
+.myCard {
+  margin: 0 0 20px 0;
+}
+
+.infoActions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.statistics {
+  overflow: hidden;
+  padding: 20px 0 0 0;
+  opacity: 1;
+  transition: all 0.6s 0s ease-in-out;
+}
+
+.hidden {
+  height: 0;
+  padding: 0;
+  opacity: 0;
+}
