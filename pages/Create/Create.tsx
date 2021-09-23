@@ -14,6 +14,7 @@ import { useActions } from '../../hooks/useActions.hook';
 import { statuses } from '../../constants/app';
 import { useHistory } from 'react-router';
 import { routes } from '../../constants/routes';
+import { LOCALSTORAGE_USER_DATA_NAME } from './../../constants/app';
 
 const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.SA, 'Select Question', 'User can choose one of the answers that you provide'], 
@@ -22,23 +23,40 @@ const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.AB, 'A/B Question', 'User can choose only one of two answers']
 ];
 
+//questionAnswers
 const Create: FC<CreateProps> = (): JSX.Element => {
   const { error, clearError, request, loading} = useRequest();
   const { setAppAlert } = useActions();
   const { control, handleSubmit, setValue } = useForm();
   const { getValue, clearValue, onChange } = useInput();
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
-  const [questionAnswers, setQuestionAnswers] = useState<string[]>([]);
-  const [content] = useState<string>(null);
+  const [questionAnswers, setQuestionAnswers] = useState<Record<QuestionTypes, string[]>>({} as Record<QuestionTypes, string[]>);
   const formRef = useRef<HTMLFormElement>(null);
   const history = useHistory();
 
   const handleAnswerAdd = (type: QuestionTypes): void => {
     const value = getValue(type).trim();
-    if (value) {
-      QuestionTypes.SA && setQuestionAnswers([...questionAnswers, value]);
+    if (value && selectedType) {
+      if (!questionAnswers[selectedType]) {
+        setQuestionAnswers({
+          ...questionAnswers,
+          [selectedType]: [value]
+        });  
+      } else {
+        setQuestionAnswers({
+          ...questionAnswers,
+          [selectedType]: [value, ...questionAnswers[selectedType]]
+        });
+      }
       clearValue(type);
     }
+  };
+
+  const handleAnswerDelete = (index: number) => {
+    setQuestionAnswers({
+      ...questionAnswers,
+      [selectedType]: questionAnswers[selectedType].filter((item, i) => i !== index)
+    });
   };
 
   const handleQuestionCreation = async (formData) => {
@@ -48,12 +66,18 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         body.question = stateToHTML(formData[key + '_editor'].getCurrentContent());
       }
     });
-    body.content = getValue(selectedType + '_content');
     body.type = selectedType;
     body.title = getValue(selectedType + '_title');
-    body.questionAnswers = questionAnswers;
+    body.quizAnswers = questionAnswers[selectedType];
+
+
+    const headers: Record<string, string> = {};
+    if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
+      const { token } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+      headers.authorization = token ? token : null;
+    }
     try {
-      const data: any = await request(routes.QUIZES.CREATE, 'POST', body, {});
+      const data: any = await request(routes.QUIZES.CREATE, 'POST', body, headers);
       setAppAlert(data.message, statuses.SUCCESS);
       handleResetForm();
       history.push(routes.QUIZES.TYPES[selectedType]);
@@ -65,17 +89,26 @@ const Create: FC<CreateProps> = (): JSX.Element => {
 
   const handleResetForm = () => {
     if (!selectedType) return;
-    setQuestionAnswers([]);
+    setQuestionAnswers({
+      ...questionAnswers,
+      [selectedType]: []
+    });
     clearValue(selectedType);
     setValue(selectedType + '_editor', EditorState.createEmpty());
     setSelectedType(null);
   };
 
+  const addSuggestedAnswers = (): JSX.Element => {
+    return selectedType && questionAnswers[selectedType] && questionAnswers[selectedType].length
+      ? <>
+        <HTag size="m" className={styles.suggested}>Suggested answers:</HTag>
+        <List list={questionAnswers[selectedType]} className={styles.list} onClose={handleAnswerDelete}/> 
+      </>
+      : <></>;
+  };
+
   const buildQuesionCreatorAccordingToType = (): JSX.Element => {
     if (!selectedType) return <></>;
-    const handleAnswerDelete = (index: number) => {
-      setQuestionAnswers(questionAnswers.filter((item, i) => i !== index));
-    };
     switch (selectedType) {
       case QuestionTypes.SA: {
         return (
@@ -102,8 +135,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                   onClick={() => handleAnswerAdd(selectedType)}
                 >Add</Button>
               </div>
-              {questionAnswers && questionAnswers.length ? <HTag size="m" className={styles.suggested}>Suggested answers:</HTag> : <></>}
-              {questionAnswers && questionAnswers.length ? <List list={questionAnswers} className={styles.list} onClose={handleAnswerDelete}/> : <></>}
+              {addSuggestedAnswers()}
             </div>
           </>
         );
@@ -132,14 +164,21 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                 <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
               )}
             />
-            <Input
-              label="Or just paste the image URL that you want to be estimated:"
-              name={selectedType + '_content'}
-              type="text"
-              placeholder="Paste an URL of an image..."
-              value={getValue(selectedType + '_content')}
-              onChange={onChange}
-            />
+            <div className={styles.addAnswer}>
+              <Input
+                label="Or just paste the image URL that you want to be estimated:"
+                name={selectedType}
+                type="text"
+                placeholder="Paste an URL of an image..."
+                value={getValue(selectedType)}
+                onChange={onChange}
+              />
+              <Button
+                disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 1}
+                onClick={() => handleAnswerAdd(selectedType)}
+              >Add</Button>
+            </div>
+            {addSuggestedAnswers()}
           </>
         );
       case QuestionTypes.AB:
@@ -164,12 +203,11 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                   onChange={onChange}
                 />
                 <Button
-                  disabled={questionAnswers.length > 2}
+                  disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 2}
                   onClick={() => handleAnswerAdd(selectedType)}
                 >Add</Button>
               </div>
-              {questionAnswers && questionAnswers.length ? <HTag size="m" className={styles.suggested}>Suggested answers:</HTag> : <></>}
-              {questionAnswers && questionAnswers.length ? <List list={questionAnswers} className={styles.list} onClose={handleAnswerDelete}/> : <></>}
+              {addSuggestedAnswers()}
             </div>
           </>
         );

@@ -6,9 +6,6 @@
 }
 
 .navList {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr;
   font-size: 16px;
   background-color: var(--black-light);
 }
@@ -38,4 +35,16 @@
 .navList li:hover {
   color: var(--blue);
   background-color: var(--white-transparent);
+}
+
+.modalTitle {
+  text-align: center;
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin: 25px 0 0 0;
 }

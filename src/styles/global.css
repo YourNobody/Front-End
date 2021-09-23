@@ -1,5 +1,6 @@
 :root {
 	--black: #0b0c10;
+	--black-transparent: #0b0c1088;
 	--black-light: #1f2833;
 	--gray: #c5c6c7;
 	--white: #e7e7e7;
@@ -23,13 +24,12 @@
 }
 
 html {
-  overflow-x: hidden;
-  margin-right: calc(-1 * (105vw - 100%));
+	overflow-x: hidden;
+	margin-right: calc(-1 * (100vw - 100%));
 }
 
 body {
 	color: var(--white);
 	background-color: var(--black);
-
 	font-family: 'Roboto', sans-serif;
 }

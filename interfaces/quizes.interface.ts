@@ -1,3 +1,4 @@
+import { ANONYMOUS_NAME } from './../../Back-End/src/constants/app';
 export enum QuestionTypes {
   SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
 }
@@ -19,4 +20,10 @@ export interface MainQuestionsProps {
   question?: string;
   usersAnswers?: any[];
   creator?: string;
+  _id?: string; 
+}
+
+export interface IUserAnswer {
+  quizId?: string;
+  answer?: string;
 }

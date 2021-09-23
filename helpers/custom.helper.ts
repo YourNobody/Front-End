@@ -1,4 +1,5 @@
 export const checkForValideImageLink = (src: string): boolean => {
+  if (!src) return false;
   return !!src.match(/(\.jpg|\.png|\.jpeg|\.jfif|\.gif)$/);
 };
 

@@ -35,20 +35,20 @@ export const Quiz: FC<any> = () => {
 export default withMainLayout(Quiz);
 
 function returnAppropriatePayload(type: QuestionTypes, data: any) {
-  const mainPayload = ['question', 'usersAnswers', 'creator', 'title'];
+  const mainPayload = ['question', 'usersAnswers', 'creator', 'title', '_id'];
   let additionalKeys: string[] = [];
   if (!type) return {};
   switch (type.toUpperCase()) {
     case QuestionTypes.SA:
-      additionalKeys = ['questionAnswers'];
+      additionalKeys = ['quizAnswers'];
       return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]);
     case QuestionTypes.TA:
       return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]);
     case QuestionTypes.RA:
-      additionalKeys = ['content'];
+      additionalKeys = ['quizAnswers'];
       return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]);
     case QuestionTypes.AB:
-      additionalKeys = ['questionAnswers'];
+      additionalKeys = ['quizAnswers'];
       return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]); 
     default: return getObjectWithDefinedKeys(data, [...mainPayload, ...additionalKeys]);
   }

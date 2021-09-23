@@ -6,7 +6,7 @@ import { checkForValideImageLink } from '../../../helpers/custom.helper';
 import parse from 'html-react-parser';
 import cn from 'classnames';
 
-export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnswers, usersAnswers, creator, ...props}) => {
+export const AB_Question: FC<AB_QuestionProps> = ({question, title, quizAnswers, usersAnswers, creator, ...props}) => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const handleSelectedClick = (index: number | null) => {
@@ -21,7 +21,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnsw
     }
 
     function renderImages(type: 'text' | 'image'): JSX.Element[] {
-      return questionAnswers.map((answer: any, index) => {
+      return quizAnswers.map((answer: any, index) => {
         if (type === 'text') return <Image
           key={Math.random()}
           onClick={() => handleSelectedClick(index)}
@@ -41,7 +41,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnsw
     }
 
     let isImagesValid = true;
-    questionAnswers.forEach((answer: any) => {
+    quizAnswers.forEach((answer: any) => {
       if (!checkForValideImageLink(answer.answer)) isImagesValid = false;
     });
     
@@ -52,7 +52,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnsw
     }
   };
   
-  if (!question || questionAnswers.length < 2) return <></>;
+  if (!question || quizAnswers.length < 2) return <></>;
   return (
     <Card className={styles.questionWrapper} {...props}>\
       <HTag size="m" className={styles.questionTitle}>{title}</HTag>
@@ -63,7 +63,7 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, title, questionAnsw
       <HR color="gray" className={styles.hr}/>
       <div className={styles.info}>
         <HTag size="s" className={styles.allAnswers}>Answers:&nbsp;{usersAnswers.length}</HTag>
-        <Button className={styles.reset} onClick={() => handleSelectedClick(null)}>Reset</Button>
+        {(selected === 0 || selected) && <Button className={styles.reset} onClick={() => handleSelectedClick(null)}>Reset</Button>}
         <Button color="primary">Save answer</Button>
       </div>
     </Card>

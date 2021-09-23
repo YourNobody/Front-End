@@ -90,7 +90,7 @@ const Register: FC<AuthorizationProps> = () => {
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
-        <HTag size="large" className={styles.title}>Registration</HTag>
+        <HTag size="large" className={styles.title}>Sign Up</HTag>
         <div className={styles.inputBlock}>
           <Input type="text" label="Nickname" name="nickname" {...register('nickname', {
             required: true,
@@ -123,7 +123,7 @@ const Register: FC<AuthorizationProps> = () => {
             disabled: loading
           })}/>
         </div>
-        <Button className={styles.button} type="submit">Register</Button>
+        <Button className={styles.button} type="submit">Sign Up</Button>
       </form>
     </div>
   );

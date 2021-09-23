@@ -12,6 +12,9 @@ const buildBaseRoutes = (): JSX.Element => (
     <Route path={routes.HOME} exact>
     <Home title="Home" />
     </Route>
+    <Route path={routes.QUIZES.ROOT + '/:qType' + '/:title'} exact>
+      <Quiz title="Quiz" />
+    </Route>
     <Route path={routes.QUIZES.ROOT}>
       <Quizes title="Quizes" />
     </Route>

@@ -10,12 +10,15 @@ export interface IAppState {
   alerts: IAppStatus[];
   newAlertId: string | number;
   loading: boolean;
+  modalTemplate: JSX.Element
 }
 
 export enum appActionTypes {
   DEFAULT = 'DEFAULT',
   SET_ALERT = 'SET_ALERT',
   CLEAR_ALERT = 'CLEAR_ALERT',
+  OPEN_MODAL = 'OPEN_MODAL',
+  CLOSE_MODAL = 'CLOSE_MODAL'
 }
 
 export interface IAppDefault {
@@ -32,4 +35,13 @@ export interface IAppClearAlert {
   payload: string | number;
 }
 
-export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert;
+export interface IAppOpenModal {
+  type: appActionTypes.OPEN_MODAL;
+  payload: JSX.Element;
+}
+
+export interface IAppCloseModal {
+  type: appActionTypes.CLOSE_MODAL;
+}
+
+export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal;

@@ -33,7 +33,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { error, clearError, request, loading } = useRequest();
   const [questions, setQuestions] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<QuestionTypes>(alreadySelected);
-  const [wrapped, setWrapped] = useState<boolean>(false);
+  const [wrapped, setWrapped] = useState<boolean>(!!selectedType);
 
   useEffect(() => {
     const realizingFetch = async () => {
@@ -42,7 +42,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
         console.log('data: ', data);
         
         setAppAlert(data.message, statuses.SUCCESS);
-        setQuestions(data.questions ? data.questions : []);
+        setQuestions(data.quizes ? data.quizes : []);
       } catch (err) {
         setAppAlert(error, statuses.ERROR);
         clearError();
@@ -102,11 +102,11 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
                 onClick={() => generateRouteAndRedirect(q)}
                 className={styles.quizGoTo}
               >Go to Quiz</Button>
-              <HTag size="s">Creator:{q.creator}</HTag>
+              <HTag size="s">Creator:&nbsp;{q.creator.nickname}</HTag>
             </div>
           </Card>
         );
-      })
+      });
     }
     return <HTag size="m">No questions of the selected type</HTag>;
   };

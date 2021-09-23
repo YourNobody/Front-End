@@ -4,15 +4,32 @@ import styles from './SA_Question.module.css';
 import { Card, HTag, Tagger, Button, HR } from '../../../components/index';
 import parse from 'html-react-parser';
 import cn from 'classnames';
+import { useRequest } from './../../../hooks/useRequest';
+import { useTypedSelector } from './../../../hooks/useTypedSelector.hook';
+import { IUserAnswer } from './../../../interfaces/quizes.interface';
 
-export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAnswers, usersAnswers, ...props }) => {
+export const SA_Question: FC<SA_QuestionProps> = ({ _id, question, title, quizAnswers, usersAnswers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
+  const user = useTypedSelector(state => state.user.user)
+  const { error, clearError, loading, request } = useRequest();
 
   const handleTaggerClick = useCallback((index: number) => {
     setSelected(index);
   }, []);
 
-  if (!questionAnswers || !questionAnswers.length) return <></>;
+  const handleUserAnswerSave = async () => {
+    const body: IUserAnswer = {};
+    body.quizId = _id;
+    body.answer = quizAnswers[selected];
+    try {
+      const data: any = await request('/quizes/save', 'POST', body, {});
+      console.log(data.message);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (!quizAnswers || !quizAnswers.length) return <></>;
   return (
     <Card
       {...props}
@@ -22,7 +39,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAns
       <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answers}>
         {
-          questionAnswers.reduce((tags: JSX.Element[], answer: any, index) => {
+          quizAnswers.reduce((tags: JSX.Element[], answer: any, index) => {
             console.log('a: ', answer);
             if (answer.answer && answer.answer.trim()) {
               tags.push(<Tagger
@@ -44,7 +61,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ question, title, questionAns
         <HTag size="s">Answers:&nbsp;{usersAnswers.length}</HTag>
         <div>
           {(selected !== null) ? <Button className={styles.reset} onClick={() => handleTaggerClick(null)}>Reset</Button> : <></>}
-          <Button color="primary">Save answer</Button>
+          <Button color="primary" onClick={handleUserAnswerSave}>Save answer</Button>
         </div>
       </div>
     </Card>

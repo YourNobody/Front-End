@@ -6,23 +6,23 @@ import { useState } from 'react';
 import { checkForValideImageLink } from '../../../helpers/custom.helper';
 import parse from 'html-react-parser';
 
-export const RA_Question: FC<RA_QuestionProps> = ({ content, usersAnswers, title, question, creator, ...props }) => {
+export const RA_Question: FC<RA_QuestionProps> = ({ quizAnswers, usersAnswers, title, question, creator, ...props }) => {
   const [sliderValue, setSliderValue] = useState<string | number>(0);
 
   const handleSliderChange = (e) => {
     setSliderValue(e.target.value);
   };
-
+  
   const buildAccordingToTarget = () => {
-    if (checkForValideImageLink(content)) {
+    if (checkForValideImageLink(quizAnswers[0].answer)) {
       return (
-        <>
+        <div>
           {question ? <div className={styles.question}>{parse(question)}</div> : <></>}
-          <Image src={content} className={styles.image}/>
-        </>
+          <Image src={quizAnswers[0].answer} className={styles.image}/>
+        </div>
       );
     } else {
-      return <div className={styles.question}>{question}</div>;
+      return <div className={styles.question}>{parse(question)}</div>;
     }
   };
 
