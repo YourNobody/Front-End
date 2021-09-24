@@ -8,7 +8,10 @@ interface IAppStatus {
 
 export interface IAppState {
   alerts: IAppStatus[];
-  newAlertId: string | number;
+  newAlert: {
+    id: string | number;
+    isAutoDeleted: boolean;
+  };
   loading: boolean;
   modalTemplate: JSX.Element
 }
@@ -27,7 +30,7 @@ export interface IAppDefault {
 
 export interface IAppSetAlert {
   type: appActionTypes.SET_ALERT;
-  payload: IAppStatus;
+  payload: IAppStatus & { isAutoDeleted?: boolean; };
 }
 
 export interface IAppClearAlert {

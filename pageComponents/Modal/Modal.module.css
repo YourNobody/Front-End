@@ -18,3 +18,15 @@
   padding: 20px;
   box-shadow: 0 0 4px var(--blue);
 }
+
+.modalTitle {
+  text-align: center;
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin: 25px 0 0 0;
+}

@@ -2,7 +2,10 @@ import { appActionTypes, IAppActions, IAppState } from "../interfaces-reducers/a
 
 const initialAppState: IAppState = {
   alerts: [],
-  newAlertId: null,
+  newAlert: {
+    id: null,
+    isAutoDeleted: true
+  },
   loading: false,
   modalTemplate: null
 };
@@ -14,7 +17,7 @@ export const appReducer = (state: IAppState = initialAppState, action: IAppActio
       return {
         ...state,
         alerts: [...state.alerts, { message: action.payload.message, status: action.payload.status, id: action.payload.id}],
-        newAlertId: action.payload.id
+        newAlert: { ...state.newAlert, id: action.payload.id, isAutoDeleted: action.payload.isAutoDeleted }
       };
     case appActionTypes.CLEAR_ALERT:
       if (!action.payload) return state;

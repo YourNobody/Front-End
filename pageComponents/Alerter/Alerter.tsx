@@ -7,7 +7,7 @@ import { ALERT_BEFORE_DISAPPEAR, statuses } from '../../constants/app';
 import { useActions } from '../../hooks/useActions.hook';
 
 export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
-  const { alerts, newAlertId } = useTypedSelector(state => state.app);
+  const { alerts, newAlert } = useTypedSelector(state => state.app);
   const { clearAppAlert } = useActions();
   
   const handleCloseIcon = (e, id: string | number) => {
@@ -15,10 +15,10 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
   };
 
   useEffect(() => {
-    if (newAlertId) {
-      setTimeout(() => clearAppAlert(newAlertId), 3000);
+    if (newAlert && newAlert.id && newAlert.isAutoDeleted) {
+      setTimeout(() => clearAppAlert(newAlert.id), ALERT_BEFORE_DISAPPEAR);
     }
-  }, [newAlertId]);
+  }, [newAlert]);
 
   return (
     <>

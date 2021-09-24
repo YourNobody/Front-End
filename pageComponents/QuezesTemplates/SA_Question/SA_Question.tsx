@@ -18,8 +18,9 @@ export const SA_Question: FC<SA_QuestionProps> = ({ _id, question, title, quizAn
   }, []);
 
   const handleUserAnswerSave = async () => {
-    const body: IUserAnswer = {};
+    const body: IUserAnswer & { quizAnswerId?: string } = {};
     body.quizId = _id;
+    body.quizAnswerId = quizAnswers.find((_, index) => selected === index)?._id;
     body.answer = quizAnswers[selected];
     try {
       const data: any = await request('/quizes/save', 'POST', body, {});

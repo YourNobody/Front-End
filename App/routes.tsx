@@ -77,7 +77,7 @@ export const Routes: FC<any> = () => {
       // }
 
       if (diff < 0) {
-        setAppAlert('Your session has expired', statuses.WARNING);
+        setAppAlert('Your session has expired', statuses.WARNING, false);
         userLogOut();
       }
     } catch (error) {

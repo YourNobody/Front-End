@@ -23,6 +23,7 @@ export const Profile = (props: ProfileProps): JSX.Element => {
       const data: any = await request('logout', 'POST');
       setAppAlert(data.message, statuses.SUCCESS);
       userLogOut();
+      closeModal();
       history.push(routes.HOME);
     } catch (err) {
       setAppAlert(error, statuses.ERROR);
