@@ -46,14 +46,19 @@
   flex-direction: column;
   justify-content: flex-end;
   grid-area: change;
+  overflow: hidden;
+}
+
+.changeInfo > div:not(:last-of-type) {
+  margin-bottom: 15px;
 }
 
 .change{
   padding: 20px 10px;
   background-color: var(--mega-white-transparent);
-  margin-bottom: 15px;
   cursor: pointer;
   transition: all 0.2s;
+  overflow: hidden;
 }
 
 .change:hover {
@@ -68,4 +73,24 @@
 .unfilled {
   color: var(--red);
   cursor: pointer;
+}
+
+.changeBlock {
+  background-color: var(--white-transparent);
+  padding-left: 20px;
+  padding-right: 20px;
+  opacity: 0;
+  height: 0;
+  box-shadow: none;
+  transition: all 0.2s;
+}
+
+.changeOpened {
+  color: var(--blue);
+}
+
+.changeBlockOpened {
+  padding: 20px;
+  opacity: 1;
+  height: auto;
 }

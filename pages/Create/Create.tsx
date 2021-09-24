@@ -34,8 +34,12 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const formRef = useRef<HTMLFormElement>(null);
   const history = useHistory();
 
-  const handleAnswerAdd = (type: QuestionTypes): void => {
-    const value = getValue(type).trim();
+  const handleAnswerAdd = (): void => {
+    const value = getValue(selectedType).trim();
+    if (value && questionAnswers[selectedType] && questionAnswers[selectedType].find(a => a === value)) {
+      clearValue(selectedType);
+      return;
+    }
     if (value && selectedType) {
       if (!questionAnswers[selectedType]) {
         setQuestionAnswers({
@@ -48,7 +52,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
           [selectedType]: [value, ...questionAnswers[selectedType]]
         });
       }
-      clearValue(type);
+      clearValue(selectedType);
     }
   };
 
@@ -132,7 +136,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                   onChange={onChange}
                 />
                 <Button
-                  onClick={() => handleAnswerAdd(selectedType)}
+                  onClick={handleAnswerAdd}
                 >Add</Button>
               </div>
               {addSuggestedAnswers()}
@@ -172,10 +176,11 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                 placeholder="Paste an URL of an image..."
                 value={getValue(selectedType)}
                 onChange={onChange}
+                onKeyDown={() => console.log('СОСАТЬ')}
               />
               <Button
                 disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 1}
-                onClick={() => handleAnswerAdd(selectedType)}
+                onClick={handleAnswerAdd}
               >Add</Button>
             </div>
             {addSuggestedAnswers()}
@@ -204,7 +209,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                 />
                 <Button
                   disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 2}
-                  onClick={() => handleAnswerAdd(selectedType)}
+                  onClick={handleAnswerAdd}
                 >Add</Button>
               </div>
               {addSuggestedAnswers()}

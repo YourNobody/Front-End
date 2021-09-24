@@ -5,7 +5,7 @@ import { HTag, Card, Button } from '../../../components';
 import { useActions } from '../../../hooks/useActions.hook';
 import { statuses } from '../../../constants/app';
 import cn from 'classnames';
-import { formatDate } from '../../../helpers/custom.helper';
+import { changeStatisticsTooltipLabel, formatDate } from '../../../helpers/custom.helper';
 import { useRequest } from '../../../hooks/useRequest';
 import {
   ResponsiveContainer,
@@ -27,7 +27,8 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   const [usersAnswersStats, setUsersAnswersStats] = useState<any[]>([]);
   const { request, error, clearError, loading } = useRequest();
   const { openModal, closeModal, setAppAlert } = useActions();
-  
+    console.log('usersAnswersStats: ', usersAnswersStats);
+    
   const handleShowStats = async (id: string | number) => {
     setHidden(false);
     try {
@@ -87,7 +88,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis type="number"/>
           <YAxis dataKey="answer" type="category" scale="band" />
-          <Tooltip separator="" formatter={(value, name, props) => { if (name === 'amount') { props.name = 'Amount: ' + value; }}}/>
+          <Tooltip separator="" formatter={(value, name, props) => changeStatisticsTooltipLabel(value, name, props)('amount', 'Amount')}/>
           <Legend
             payload={[{
               value: 'Amount of questions',

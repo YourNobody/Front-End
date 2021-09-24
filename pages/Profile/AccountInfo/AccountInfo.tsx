@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AccountInfoProps } from './AccountInfo.props';
 import styles from './AccountInfo.module.css';
-import { Image, HTag, Card, Button } from '../../../components';
+import { Image, HTag, Card, Button, Input } from '../../../components';
 import cn from 'classnames';
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
+  const [theOpened, setTheOpened] = useState<boolean>(false);
   const getNickname = (nick: string) => {
     const splitted = nick.split(/\s/g);
     
@@ -15,6 +16,15 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
     }
     return 'YOU';
   };
+
+  // const handleChangingOpening = (e) => {
+  //   const target = e.target;
+    
+  //   if (target.dataset.change) {
+  //     setTheOpened(target.dataset.change);
+
+  //   }
+  // };
 
   return (
     <Card {...props} className={styles.info}>
@@ -40,11 +50,34 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
         }
       </div>
       <div className={styles.changeInfo}>
-      <hr className={styles.hr} />
-        <div className={styles.change} data-change="name">Change Nickname</div>
-        <div className={styles.change} data-change="email">Change Email</div>
-        <div className={styles.change} data-change="password">Change Password</div>
-        <div className={styles.change} data-change="input">Change Image</div>
+        <hr className={styles.hr} />
+        <div data-change="nickname">
+          <div className={cn(styles.change, { [styles.changeOpened]: theOpened })} data-change="name" onClick={() => setTheOpened(true)}>Change Nickname</div>
+          <div className={cn(styles.changeBlock, {
+            [styles.changeBlockOpened]: theOpened
+          })}>
+            <Input name="nickname"/>
+            <Button color="ghost">Change</Button>
+          </div>
+        </div>
+        <div data-change="email">
+          <div className={styles.change} data-change="email">Change Email</div>
+          <div className={styles.changeBlok}>
+
+          </div>
+        </div>
+        <div data-change="password">
+          <div className={styles.change} data-change="password">Change Password</div>
+          <div className={styles.changeBlok}>
+
+          </div>
+        </div>
+        <div data-change="image">
+          <div className={styles.change} data-change="input">Change Image</div>
+          <div className={styles.changeBlok}>
+
+          </div>
+        </div>
       </div>
     </Card>
   );

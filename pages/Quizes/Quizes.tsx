@@ -9,22 +9,24 @@ import { routes } from './../../constants/routes';
 import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
 import { useRequest } from '../../hooks/useRequest';
-import { LOCALSTORAGE_QUIZ_DATA_NAME, statuses } from '../../constants/app';
+import { statuses } from '../../constants/app';
 import { useActions } from './../../hooks/useActions.hook';
+import { quizesNames } from '../../../Back-End/src/constants/app';
 
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
+  const { setQuizSelected } = useActions();
   const { pathname } = useLocation();
-  let alreadySelected: QuestionTypes = null;
+  let alreadySelected: any = null;
   if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
     const pathSplitted = pathname.split('/');
-    if (pathSplitted.length) {
-      alreadySelected = pathSplitted[pathSplitted.length - 1].toUpperCase() as QuestionTypes;
+    if (pathSplitted.length && quizesNames[pathSplitted[pathSplitted.length - 1].toUpperCase()]) {
+      alreadySelected = pathSplitted[pathSplitted.length - 1].toUpperCase();
     }
   }
 
   const generateRouteAndRedirect = (quiz: any) => {
     const titled = quiz.title.toLowerCase().replace(/\s/ig, '-');
-    localStorage.setItem(LOCALSTORAGE_QUIZ_DATA_NAME, JSON.stringify(quiz));
+    setQuizSelected(quiz);
     history.push(routes.QUIZES.ROOT + `/${quiz.type.toLowerCase()}/${titled}`);
   };
 
@@ -39,8 +41,6 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
     const realizingFetch = async () => {
       try {
         const data: any = await request(routes.QUIZES.ROOT, 'POST', { type: selectedType });
-        console.log('data: ', data);
-        
         setAppAlert(data.message, statuses.SUCCESS);
         setQuestions(data.quizes ? data.quizes : []);
       } catch (err) {
@@ -107,7 +107,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
         );
       });
     }
-    return <HTag size="m">No questions of the selected type</HTag>;
+    return selectedType ? <HTag size="m">No questions of the selected type</HTag> : <></>;
   };
 
   return (
