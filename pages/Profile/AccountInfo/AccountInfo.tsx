@@ -1,30 +1,66 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AccountInfoProps } from './AccountInfo.props';
 import styles from './AccountInfo.module.css';
 import { Image, HTag, Card, Button, Input } from '../../../components';
 import cn from 'classnames';
+import { profileChangeKeys, profileChangeOptions } from '../../../constants/data';
+import { useInput } from '../../../hooks/useInput.hook';
+import { WithMessage } from '../../../interfaces/quizes.interface';
+import { useRequest } from '../../../hooks/useRequest';
+import { useActions } from '../../../hooks/useActions.hook';
+import { LOCALSTORAGE_USER_DATA_NAME, statuses } from '../../../constants/app';
+import { useTypedSelector } from '../../../hooks/useTypedSelector.hook';
+import { IUserLocalStorage } from '../../../interfaces/user.interface';
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
-  const [theOpened, setTheOpened] = useState<boolean>(false);
-  const getNickname = (nick: string) => {
-    const splitted = nick.split(/\s/g);
-    
-    if (splitted.length >= 2) {
-      return splitted[0].substring(0, 1).toUpperCase() + splitted[1].substring(0, 1).toUpperCase();
-    } else if (splitted.length === 1) {
-      return splitted[0].substring(0, 1).toUpperCase();
-    }
-    return 'YOU';
+  const [openBlocks, setOpenBlocks] = useState<string[]>([]);
+  const { setAppAlert, fetchUserSuccess } = useActions();
+  const { request, loading } = useRequest();
+  const { getValue, onChange, clearValue } = useInput();
+
+  const handleBlockToggling = (key: profileChangeKeys): void => {
+    if (openBlocks.includes(key)) return setOpenBlocks(openBlocks.filter(k => k !== key));
+    return setOpenBlocks([...openBlocks, key]);
   };
 
-  // const handleChangingOpening = (e) => {
-  //   const target = e.target;
+  const handleChange = async (key: profileChangeKeys) => {
+    console.log('key: ', key);
     
-  //   if (target.dataset.change) {
-  //     setTheOpened(target.dataset.change);
+    const body: any = { key };
+    switch(key) {
+      case 'nickname': {
+        body.nickname = getValue(key);
+        break;
+      }
+      case 'email': {
+        body.email = getValue(key);
+        break;
+      }
+      case 'password': {
+        body.oldPassword = getValue('oldPassword');
+        body.password = getValue(key);
+        body.confirm = getValue('confirm');
+        break;
+      }
+    }
 
-  //   }
-  // };
+    try {
+      const data: WithMessage = await request('/profile/change', 'POST', body);
+      const userData: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+      delete body.key;
+      (key === 'email' || key === 'nickname') && fetchUserSuccess({
+        user: {
+          ...userData.user,
+          ...body
+        },
+        token: userData.token,
+      });
+      setAppAlert(data.message, statuses.SUCCESS);
+      clearValue();
+    } catch (err) {
+      setAppAlert(err.message, statuses.ERROR);
+    }
+  };
 
   return (
     <Card {...props} className={styles.info}>
@@ -51,33 +87,34 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
       </div>
       <div className={styles.changeInfo}>
         <hr className={styles.hr} />
-        <div data-change="nickname">
-          <div className={cn(styles.change, { [styles.changeOpened]: theOpened })} data-change="name" onClick={() => setTheOpened(true)}>Change Nickname</div>
-          <div className={cn(styles.changeBlock, {
-            [styles.changeBlockOpened]: theOpened
-          })}>
-            <Input name="nickname"/>
-            <Button color="ghost">Change</Button>
-          </div>
-        </div>
-        <div data-change="email">
-          <div className={styles.change} data-change="email">Change Email</div>
-          <div className={styles.changeBlok}>
+        {
+          Object.entries(profileChangeOptions).map(opt => {
+            const name = opt[0] as profileChangeKeys;
+            const data = opt[1];
 
-          </div>
-        </div>
-        <div data-change="password">
-          <div className={styles.change} data-change="password">Change Password</div>
-          <div className={styles.changeBlok}>
-
-          </div>
-        </div>
-        <div data-change="image">
-          <div className={styles.change} data-change="input">Change Image</div>
-          <div className={styles.changeBlok}>
-
-          </div>
-        </div>
+            return (
+              <div data-change="nickname" key={name}>
+                <div className={cn(styles.change, { [styles.changeOpened]: openBlocks.includes(name) })} data-change={name} onClick={() => handleBlockToggling(name)}>
+                  Change {name[0].toUpperCase() + name.slice(1)}
+                </div>
+                <div className={cn(styles.changeBlock, {
+                  [styles.changeBlockOpened]: openBlocks.includes(name)
+                })}>
+                  {
+                    data.inputs.map((props, i) => <Input
+                      key={i}
+                      {...props}
+                      onChange={onChange}
+                      autoComplete="off"
+                      value={getValue(props.name)}
+                    />)
+                  }
+                  <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
+                </div>
+              </div>
+            );
+          })
+        }
       </div>
     </Card>
   );

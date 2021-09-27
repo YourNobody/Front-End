@@ -18,7 +18,7 @@ import {
   Legend,
 } from "recharts";
 import './rechart.css';
-import { ModalBoilerplate } from '../../../pageComponents';
+import { getModalBoilerplate } from '../../../pageComponents';
 import { IQuiz, IQuizStatistic, IQuizResponse, IResponseQuiz, WithMessage } from '../../../interfaces/quizes.interface';
 
 const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData, onRemove, ...props }) => {
@@ -42,7 +42,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   const deleteQuiz = async () => {
     try {
       const body = {} as { quizId: string; };
-      body.quizId = quizData._id;
+      body.quizId = quizData.id;
       const data: WithMessage = await request('/quizes/remove', 'POST', body, {});
       setAppAlert(data.message, statuses.SUCCESS);
       onRemove();
@@ -53,7 +53,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   };
 
   const handleRemoveQuiz = () => {
-    openModal(ModalBoilerplate('Do you want to delete this quiz?', closeModal, deleteQuiz, 'Delete'));
+    openModal(getModalBoilerplate(`Do you want to delete this quiz?\nTitle: ${quizData.title} and type: ${quizData.type}`, deleteQuiz, 'Delete', closeModal));
   };
 
   if (!quizData) return <></>;
@@ -61,7 +61,8 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     {...props}
     className={styles.myCard}
   >
-    <HTag size="m">{quizData.title}</HTag>
+    <HTag size="m">Title: {quizData.title}</HTag>
+    <HTag size="s" className={styles.typeQuziStat}>Type: {quizData.type}</HTag>
     <Button color="danger" className={styles.closeCard} onClick={handleRemoveQuiz}>&#215;</Button>
     <div className={styles.infoActions}>
       <HTag size="s">Created at: {formatDate(quizData.createdAt)}</HTag>
@@ -111,13 +112,14 @@ export const QuizStats: FC<any> = () => {
   const { error, loading, request, clearError } = useRequest();
   const { setAppAlert } = useActions();
   const [quizes, setQuizes] = useState<IQuiz[]>([]);
-    
+  console.log('quizes: ', quizes);
+  
   useEffect(() => {
     const getSelfQuizes = async () => {
       try {
         const data = await request<IResponseQuiz>('/quizes', 'GET');
         data.message && setAppAlert(data.message, statuses.SUCCESS);
-        setQuizes(data.quizes);
+        setQuizes(data.quizes || []);
       } catch (err) {
         setAppAlert(err.message, statuses.ERROR);
       }

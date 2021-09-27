@@ -175,7 +175,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
                 placeholder="Paste an URL of an image..."
                 value={getValue(selectedType)}
                 onChange={onChange}
-                onKeyDown={() => console.log('СОСАТЬ')}
+                onKeyDown={() => console.log('key down')}
               />
               <Button
                 disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 1}

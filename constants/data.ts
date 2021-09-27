@@ -16,3 +16,46 @@ export const quizesData: IQuizData[] = [
   { title: quizesNames.RA, description: 'You can set a "Rating" as an answe', src: RA_Image, type: QuestionTypes.RA },
   { title: quizesNames.AB, description: 'It\'s questions that provide you for only two answer', src: AB_Image, type: QuestionTypes.AB }
 ];
+
+export type profileChangeKeys = 'nickname' | 'email' | 'password';
+
+export const profileChangeOptions = {
+  nickname: {
+    inputs: [{
+      name: 'nickname',
+      type: 'text',
+      label: 'New nickname',
+      placeholder: 'Enter your new nickname'
+    }],
+  },
+  email: {
+    inputs: [{
+      name: 'email',
+      type: 'email',
+      label: 'New email',
+      placeholder: 'Enter your new email'
+    }]
+  },
+  password: {
+    inputs: [
+      {
+        name: 'oldPassword',
+        type: 'password',
+        label: 'Old password',
+        placeholder: 'Enter your old password'
+      },
+      {
+        name: 'password',
+        type: 'password',
+        label: 'New password',
+        placeholder: 'Enter your new password'
+      },
+      {
+        name: 'confirm',
+        type: 'password',
+        label: 'Confirm new password',
+        placeholder: 'Confirm your new password'
+      }
+    ]
+  }
+};

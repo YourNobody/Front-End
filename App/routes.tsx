@@ -59,55 +59,35 @@ export const Routes: FC<any> = () => {
   const { userLogOut, setAppAlert } = useActions();
   const { request, loading, error, clearError } = useRequest();
 
-
-  const checkForAuthed = async (token: string): Promise<boolean> => {
+  const checkForAuthed = async (): Promise<void> => {
     try {
-      const { isAuthenticated } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token }, {});
-      return isAuthenticated;
-    } catch (err) { 
-      console.log(err);
-      return false;
-    }
-  };
+      if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
+        const data: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+        const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
 
-  if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-    try {
-      const data: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-      const expirationData = JSON.parse(atob(data.token.split('.')[1]));
+        if (!isAuthed) {
+          userLogOut();
+        } else {
+          const expirationData = JSON.parse(atob(data.token.split('.')[1]));
           const { expiresIn, expiresAt } = expirationData;
           const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
           const now = Date.now();
           const diff = expiresAt - now;
-          // if (minutesBeforeExpiration > 5) {
-          //   setTimeout(() => {
-          //     setAppAlert('Your session expires in 5 minutes', statuses.WARNING);
-          //   }, minutesBeforeExpiration - 5);
-          // }
-    
-          // if (diff > 0) {
-          //   setTimeout(() => {
-          //     setAppAlert('Your session has expired', statuses.WARNING);
-          //     userLogOut();
-          //   }, diff);
-          // }
-    
           if (diff < 0) {
             setAppAlert('Your session has expired', statuses.WARNING, false);
             userLogOut();
           }
-      // checkForAuthed(data.token || null)
-      //   .then(isAuthenticated => {
-      //     if (!isAuthenticated) {
-      //       userLogOut();
-      //     }
-      //   })
-      //   .then(() => {
-      //     // 
-      //   });
-    } catch (error) {
+        }
+      }
+    } catch (err) { 
+      console.log(err);
       userLogOut();
     }
-  }
+  };
+
+  useEffect(() => {
+    checkForAuthed();
+  }, []);
 
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
   

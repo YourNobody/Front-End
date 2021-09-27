@@ -19,7 +19,7 @@
   height: 500px;
   padding: 20px 0 0 0;
   opacity: 1;
-  transition: all 0.6s 0s ease-in-out;
+  transition: all 0.6s 0s cubic-bezier(.57,.21,.69,1.25);
 }
 
 .hidden {
@@ -30,8 +30,13 @@
 
 .closeCard {
   position: absolute;
-  top: 0px;
+  top: -4px;
   right: 10px;
-  padding: 9px;
-  line-height: 14px;
+  padding: 12px;
+  line-height: 12px;
+  font-size: 24px;
+}
+
+.typeQuziStat {
+  margin-top: 12px;
 }

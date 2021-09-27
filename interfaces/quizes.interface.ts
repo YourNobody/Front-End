@@ -31,6 +31,8 @@ export interface IUserAnswer {
   userId?: string; 
   isAnonimous?: boolean;
   id: string;
+  createdAt?: Date;
+  updated?: Date;
 }
 
 export interface IQuizAnswer {
@@ -46,6 +48,8 @@ export interface IQuiz {
   usersAnswers: IUserAnswer[];
   userId: string;
   id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IResponseQuiz extends WithMessage {

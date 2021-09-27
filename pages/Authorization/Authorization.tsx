@@ -23,8 +23,8 @@ const Login: FC<AuthorizationProps> = () => {
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess({ user: data.user, token: data.token });
       history.push(routes.HOME);
-    } catch (err) {
-      setAppAlert(error, statuses.ERROR);
+    } catch (err: any) {
+      setAppAlert(err.message, statuses.ERROR);
       fetchUserError();
       clearError();
     }

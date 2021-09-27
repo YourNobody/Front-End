@@ -53,7 +53,7 @@
   margin-bottom: 15px;
 }
 
-.change{
+.change {
   padding: 20px 10px;
   background-color: var(--mega-white-transparent);
   cursor: pointer;
@@ -70,6 +70,14 @@
   margin-bottom: 0;
 }
 
+.changeOpened {
+  color: var(--blue);
+}
+
+.changeOpened:hover {
+  background-color: var(--black);
+}
+
 .unfilled {
   color: var(--red);
   cursor: pointer;
@@ -79,18 +87,15 @@
   background-color: var(--white-transparent);
   padding-left: 20px;
   padding-right: 20px;
-  opacity: 0;
-  height: 0;
-  box-shadow: none;
+  display: none;
   transition: all 0.2s;
 }
 
-.changeOpened {
-  color: var(--blue);
+.changeBlockOpened {
+  display: block;
+  padding: 20px;
 }
 
-.changeBlockOpened {
-  padding: 20px;
-  opacity: 1;
-  height: auto;
+.changeBlock input {
+  margin-bottom: 10px;
 }

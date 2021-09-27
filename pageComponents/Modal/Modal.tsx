@@ -6,12 +6,12 @@ import cn from 'classnames';
 import { useTypedSelector } from './../../hooks/useTypedSelector.hook';
 import { useActions } from '../../hooks/useActions.hook';
 
-export const ModalBoilerplate = (question: string, closeModal, actionFunc: () => void, actionTitle: string) => {
+export const getModalBoilerplate = (question: string, actionFunc: () => void, actionTitle: string, closeFunc: () => void, closeTitle?: string): JSX.Element => {
   return (
     <>
       <HTag size="m" className={styles.modalTitle}>{question}</HTag>
       <div className={styles.modalActions}>
-        <Button color="ghost" onClick={closeModal}>No</Button>
+        <Button color="ghost" onClick={closeFunc}>{closeTitle || 'No'}</Button>
         <Button color="danger" onClick={actionFunc}>{actionTitle}</Button>
       </div>
     </>

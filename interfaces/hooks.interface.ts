@@ -6,7 +6,7 @@ export interface IUseRequest {
 
 export interface IUseInput {
   getValue: (name?: string) => any;
-  clearValue: (name: string) => void;
+  clearValue: (name?: string) => void;
   onChange: (event: any) => void;
 }
 
