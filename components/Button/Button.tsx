@@ -10,7 +10,8 @@ export const Button: FC<ButtonProps> = ({ children, className, type = 'button', 
       type={type}
       className={cn(styles.button, className, {
         [styles.primary]: color === 'primary',
-        [styles.ghost]: color === 'ghost'
+        [styles.ghost]: color === 'ghost',
+        [styles.danger]: color === 'danger'
       })}
     >{children}</button>
   );

@@ -2,28 +2,34 @@ import { applyMiddleware, createStore } from "redux";
 import thunk from "redux-thunk";
 import { rootReducer } from "./reducers/all";
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { IUserReducer } from "./interfaces-reducers/userReducer.interface";
+import { LOCALSTORAGE_USER_DATA_NAME } from "../constants/app";
+import { IUserReducer, IUserState } from "./interfaces-reducers/userReducer.interface";
 import { getEmptyObject } from "../helpers/custom.helper";
 
 const preloadState = () => {  
-  if (localStorage.getItem('user') && localStorage.getItem('user') !== 'null') {    
-    const user: IUserReducer = JSON.parse(localStorage.getItem('user'));
-    const { id, firstName, lastName, email, questions } = user;
-    if (!id && !email) return {
-      user: getEmptyObject({ ...user }),
+    const userData: { user: IUserReducer, token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+    const userInitial: IUserState = {
+      user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '', questions: [] }),
       isAuthenticated: false,
-      loading: false,
+      loading: false
     };
-    return {
-      user: {
-        id, firstName, lastName, email, questions
-      },
-      isAuthenticated: true,
-      loading: false,
-    };
-  }
+
+    if (userData && userData.token) {
+      return {
+        ...userInitial,
+        user: {
+          id: userData.user.id,
+          nickname: userData.user.nickname,
+          email: userData.user.email,
+          questions: userData.user.questions
+        },
+        isAuthenticated: !!userData.token,
+      };
+    }
+
+    return userInitial;
 };
 
 export const store = createStore(rootReducer, {
   user: preloadState()
-}, composeWithDevTools(applyMiddleware(thunk)));
+}, composeWithDevTools(applyMiddleware(thunk))); 

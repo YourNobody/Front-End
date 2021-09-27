@@ -1,6 +1,5 @@
 export interface IUser {
-  firstName?: string;
-  lastName?: string;
+  nickname: string;
   email: string;
   isAuthenticated: boolean;
 }
@@ -8,4 +7,13 @@ export interface IUser {
 export interface IUserError {
   message: string;
   isAuthenticated: boolean;
+}
+
+export interface IUserLocalStorage {
+  token: string;
+  user: {
+    email: string;
+    id: string;
+    nickname: string;
+  }
 }

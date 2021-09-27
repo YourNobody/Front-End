@@ -121,3 +121,15 @@
   transition: transform 0s;
   transform: rotate(-90deg);
 }
+
+.quizLinkWrapper {
+  display: grid;
+  grid-column: 1fr;
+  gap: 20px;
+}
+
+.quizInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}

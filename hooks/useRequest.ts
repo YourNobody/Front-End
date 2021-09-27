@@ -1,8 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface IUseRequest {
   error: string;
-  request: (url: string, method?: string, body?: null | any, headers?: HeadersInit) => void;
+  request: <T>(url: string, method?: string, body?: null | any, headers?: HeadersInit) => Promise<T>;
   clearError: () => void;
   loading: boolean;
 }
@@ -12,7 +12,7 @@ export function useRequest(): IUseRequest {
   const [loading, setLoading] = useState<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  const request = useCallback(async (url: string, method: string = 'GET', body: null | any = null, headers: HeadersInit = {}): Promise<any> => {
+  const request = useCallback(async <T>(url: string, method: string = 'GET', body: null | any = null, headers: HeadersInit = {}): Promise<T> => {
     setLoading(true);
     
     try {

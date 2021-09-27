@@ -6,6 +6,17 @@ import { getRandomColor } from '../../helpers/css.helper';
 import { getFirstLetters } from '../../helpers/custom.helper';
 
 export const Image = ({ fully = false, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
+  const formatText = (textToFormat: string) => {
+    const splitted = textToFormat.split(/\s/g);
+    
+    if (splitted.length >= 2) {
+      return splitted[0].substring(0, 1).toUpperCase() + splitted[1].substring(0, 1).toUpperCase();
+    } else if (splitted.length === 1) {
+      return splitted[0].substring(0, 1).toUpperCase();
+    }
+    return 'YOU';
+  };
+
   const buildImage = (): JSX.Element => {
     return (
       <div {...props}
@@ -33,7 +44,7 @@ export const Image = ({ fully = false, text, src, alt, fit = 'contain', isCircle
       >
         <span 
           className={styles.templateInitials}
-        >{fully ? text : getFirstLetters(text)}</span>
+        >{fully ? text : formatText(text)}</span>
       </div>
     );
   };

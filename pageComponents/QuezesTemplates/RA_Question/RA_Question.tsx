@@ -4,30 +4,31 @@ import styles from './RA_Question.module.css';
 import { HTag, Image, Card, Button, HR } from '../../../components/index';
 import { useState } from 'react';
 import { checkForValideImageLink } from '../../../helpers/custom.helper';
+import parse from 'html-react-parser';
 
-export const RA_Question: FC<RA_QuestionProps> = ({ target, content }) => {
+export const RA_Question: FC<RA_QuestionProps> = ({ quizAnswers, usersAnswers, title, question, creator, ...props }) => {
   const [sliderValue, setSliderValue] = useState<string | number>(0);
 
   const handleSliderChange = (e) => {
     setSliderValue(e.target.value);
   };
-
+  
   const buildAccordingToTarget = () => {
-    switch (target) {
-      case 'question': {
-        if (checkForValideImageLink(content)) return <></>;
-        return <HTag>{content}</HTag>;
-      }
-      case 'image': {
-        if (checkForValideImageLink(content)) return <Image src={content} className={styles.image}/>;
-        return <></>;
-      }
-      default: return <></>;
+    if (checkForValideImageLink(quizAnswers[0].answer)) {
+      return (
+        <div>
+          {question ? <div className={styles.question}>{parse(question)}</div> : <></>}
+          <Image src={quizAnswers[0].answer} className={styles.image}/>
+        </div>
+      );
+    } else {
+      return <div className={styles.question}>{parse(question)}</div>;
     }
   };
 
   return (
-    <Card className={styles.questionWrapper}>
+    <Card className={styles.questionWrapper} {...props}>
+      <HTag size="m" className={styles.questionTitle}>{title}</HTag>
       {buildAccordingToTarget()}
       <HR color="gray" className={styles.hr}/>
       <div className={styles.answerWrapper}>

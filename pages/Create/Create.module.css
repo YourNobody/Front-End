@@ -2,6 +2,16 @@
 
 }
 
+.createPage label {
+  font-size: 20px;
+  padding: 10px 0 0 0;
+  font-weight: bold;
+}
+
+.inputTitle {
+  margin: 10px 0 15px 0;
+}
+
 .createPageTitle {
   text-align: center;
   margin: 5px 0 15px 0;
@@ -53,7 +63,7 @@
 }
 
 .addAnswer label {
-  padding: 10px 0 12px 0;
+  padding: 10px 0 5px 0;
   font-size: 20px;
   font-weight: bold;
   grid-area: label;
@@ -101,4 +111,8 @@
 
 .reset:hover {
   background-color: var(--red-hover);
+}
+
+.mainHr {
+  margin-top: 15px;
 }

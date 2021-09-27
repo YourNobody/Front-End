@@ -3,8 +3,7 @@ import { IUserActions, IUserReducer, IUserState, userTypes } from "../interfaces
 
 const initialState: IUserState = {
   user: {
-    firstName: '',
-    lastName: '',
+    nickname: '',
     email: '',
     id: '',
     questions: []
@@ -15,12 +14,12 @@ const initialState: IUserState = {
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {
   switch (action.type) {
-    case userTypes.FETCH_USER:
+    case userTypes.FETCH_USER_BEGINING:
       return {...state, loading: true};
     case userTypes.FETCH_USER_SUCCESS:
-      return {...state, loading: false, user: action.payload, isAuthenticated: true};
+      return {...state, user: action.payload, isAuthenticated: true, loading: false};
     case userTypes.USER_LOGOUT:
-      return {...state, isAuthenticated: false, user: getEmptyObject<IUserReducer>(state.user)};
+      return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false, loading: false};
     case userTypes.FETCH_USER_ERROR:
       return {...state, loading: false};
     default: return state;

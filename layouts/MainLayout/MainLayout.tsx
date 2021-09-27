@@ -29,6 +29,6 @@ export function withMainLayout<T extends MainLayoutProps>(Component: FC<T>) {
       <MainLayout title={props.title}>
         <Component {...props}/>
       </MainLayout>
-    )  
+    );
   };
 }

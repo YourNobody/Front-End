@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { HeaderProps } from './Header.props';
 import styles from './Header.module.css';
 import cn from 'classnames';
@@ -22,16 +22,25 @@ export const Header: FC<HeaderProps> = ({ className, ...props }) => {
             <li>Quizes</li>
           </Link>
         </ul>
+        {
+          !isAuthenticated && <div className={styles.person}>
+            <Link to={routes.AUTH.LOGIN}>
+            <div className={cn(styles.question, styles.login)}>
+                <p>Log In</p>
+              </div>
+            </Link>
+          </div>
+        }
         {isAuthenticated && <div className={styles.person}>
             <Link to={routes.QUIZES.CREATE}>
               <div className={styles.question}>
-                <p>Create a question?</p>
+                <p>Create Quiz?</p>
               </div>
             </Link>
             <div className={styles.personInfo}>
               <Link to={routes.PROFILE.ACCOUNT}>
-                <div className={styles.name}>{user ? user.firstName + ' ' + user.lastName : 'Username'}</div>
-                <Image isCircled={true} className={styles.image}/>
+                <div className={styles.name}>{user.nickname}</div>
+                <Image isCircled={true} text={user.nickname} className={styles.image}/>
               </Link>
             </div>
           </div>

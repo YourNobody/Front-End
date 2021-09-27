@@ -5,6 +5,7 @@
   position: fixed;
   bottom: 0;
   right: 0;
+  z-index: 99999;
 }
 
 .alerter {
@@ -12,7 +13,8 @@
   grid-template-columns: auto 400px;
   opacity: 1;
   right: 0;
-  transition: all 0.3s
+  transition: all 0.3s;
+  white-space: pre;
 }
 
 .removing {
@@ -28,6 +30,8 @@
 }
 
 .close {
+  display: flex;
+  align-items: center;
   padding: 16px 15px 15px 15px;
   font-size: 16px;
   transition: all 0.2s;

@@ -7,19 +7,18 @@ import { ALERT_BEFORE_DISAPPEAR, statuses } from '../../constants/app';
 import { useActions } from '../../hooks/useActions.hook';
 
 export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
-  const { alerts, newAlertId } = useTypedSelector(state => state.app);
+  const { alerts, newAlert } = useTypedSelector(state => state.app);
   const { clearAppAlert } = useActions();
   
   const handleCloseIcon = (e, id: string | number) => {
     setTimeout(() => clearAppAlert(id), 300);
   };
-  console.log('newAlertId: ', newAlertId);
-  
 
-  // useEffect(() => {
-  //   console.log('here');
-  //   setTimeout(() => clearAppAlert(newAlertId), ALERT_BEFORE_DISAPPEAR);
-  // }, [alerts, clearAppAlert, newAlertId]);
+  useEffect(() => {
+    if (newAlert && newAlert.id && newAlert.isAutoDeleted) {
+      setTimeout(() => clearAppAlert(newAlert.id), ALERT_BEFORE_DISAPPEAR);
+    }
+  }, [newAlert]);
 
   return (
     <>
@@ -27,7 +26,7 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
       {
         alerts.length ? <div {...props} className={cn(styles.alerterWrapper, props.className)}>
           {
-            alerts.length && alerts.map(alert => {
+            alerts.length && alerts.filter(alert => !!alert.message).map(alert => {
               return (
                 <div
                   key={alert.id}
@@ -37,7 +36,9 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
                     [styles.error]: alert.status === statuses.ERROR
                   })}
                 >
-                  <div className={styles.close} onClick={(e) => handleCloseIcon(e, alert.id)}>&#10006;</div>
+                  <div className={styles.close} onClick={(e) => handleCloseIcon(e, alert.id)}>
+                    <div>&#10006;</div>
+                  </div>
                   <div className={styles.message}>{alert.message}</div>
                 </div>
               );

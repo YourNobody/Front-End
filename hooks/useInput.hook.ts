@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IUseInput } from "../interfaces/hooks.interface";
 
 export const useInput = (initialState: Record<string, string> = {}): IUseInput => {
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
-
+  
   const onChange = useCallback((event: any) => {
     setInputsState({
       ...inputsState,
@@ -11,13 +11,18 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     });
   }, [inputsState]);
 
-  const clearValue = useCallback((name: string) => {
+  const clearValue = useCallback((name?: string) => {
+    if (!name) setInputsState(initialState);
     if (inputsState[name]) {
-      inputsState[name] = '';
+      setInputsState({
+        ...inputsState,
+        [name]: ''
+      });
     }
   }, [inputsState]);
 
-  const getValue = useCallback((name: string): string => {
+  const getValue = useCallback((name?: string): any => {
+    if (!name) return inputsState;
     if (inputsState[name]) return inputsState[name];
     return '';
   }, [inputsState]);

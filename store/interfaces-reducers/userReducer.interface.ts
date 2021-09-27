@@ -1,6 +1,5 @@
 export interface IUserReducer {
-  firstName?: string;
-  lastName?: string;
+  nickname: string;
   email: string;
   id: string;
   questions: any[];
@@ -16,8 +15,8 @@ export interface IUserActionDefault {
   type: userTypes.DEFAULT,
 }
 
-export interface IUserActionFetchUser {
-  type: userTypes.FETCH_USER,
+export interface IUserActionFetchUserBegining {
+  type: userTypes.FETCH_USER_BEGINING,
 }
 
 export interface IUserActionFetchUserSuccess {
@@ -38,7 +37,12 @@ export interface IUserActionLogOut {
 }
 
 export enum userTypes {
-  DEFAULT = 1, FETCH_USER, FETCH_USER_SUCCESS, FETCH_USER_ERROR, CLEAR_ERROR, USER_LOGOUT
+  DEFAULT = 'DEFAULT',
+  FETCH_USER_BEGINING = 'FETCH_USER_BEGINING',
+  FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
+  FETCH_USER_ERROR = 'FETCH_USER_ERROR',
+  CLEAR_ERROR = 'CLEAR_ERROR',
+  USER_LOGOUT = 'USER_LOGOUT'
 }
 
-export type IUserActions = IUserActionFetchUser | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut;
+export type IUserActions = IUserActionFetchUserBegining | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut;

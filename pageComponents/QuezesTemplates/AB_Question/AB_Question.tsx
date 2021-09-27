@@ -3,16 +3,17 @@ import { AB_QuestionProps } from './AB_Question.props';
 import styles from './AB_Question.module.css';
 import { HTag, Button, HR, Card, Image } from '../../../components/index';
 import { checkForValideImageLink } from '../../../helpers/custom.helper';
+import parse from 'html-react-parser';
 import cn from 'classnames';
 
-export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props}) => {
+export const AB_Question: FC<AB_QuestionProps> = ({question, title, quizAnswers, usersAnswers, creator, ...props}) => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const handleSelectedClick = (index: number | null) => {
     setSelected(index);
   };
 
-  const buildAnswers = (): JSX.Element[] => {
+  const buildQuestionAnswers = (): JSX.Element[] => {
     function classNameWithSelected(index: number, ...classNames: string[]) {
       return cn(...classNames, {
         [styles.selected]: selected === index,
@@ -20,18 +21,18 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
 
     function renderImages(type: 'text' | 'image'): JSX.Element[] {
-      return answers.map((answer, index) => {
+      return quizAnswers.map((answer: any, index) => {
         if (type === 'text') return <Image
-          key={answer}
+          key={Math.random()}
           onClick={() => handleSelectedClick(index)}
           fully
-          text={answer}
+          text={answer.answer}
           className={classNameWithSelected(index, styles.imageText)}
         />;
         if (type === 'image') return <Image
-          key={answer}
+          key={Math.random()}
           onClick={() => handleSelectedClick(index)}
-          src={answer}
+          src={answer.answer}
           className={classNameWithSelected(index, styles.image)}
           fit="contain"
         />;
@@ -40,8 +41,8 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
 
     let isImagesValid = true;
-    answers.forEach(answer => {
-      if (!checkForValideImageLink(answer)) isImagesValid = false;
+    quizAnswers.forEach((answer: any) => {
+      if (!checkForValideImageLink(answer.answer)) isImagesValid = false;
     });
     
     if (isImagesValid) {
@@ -51,17 +52,18 @@ export const AB_Question: FC<AB_QuestionProps> = ({question, answers, ...props})
     }
   };
   
-  if (!question || answers.length < 2) return <></>;
+  if (!question || quizAnswers.length < 2) return <></>;
   return (
     <Card className={styles.questionWrapper} {...props}>
-      <HTag size="m" className={styles.question}>{question}</HTag>
+      <HTag size="m" className={styles.questionTitle}>{title}</HTag>
+      <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answersWrraper}>
-        {buildAnswers()}
+        {buildQuestionAnswers()}
       </div>
       <HR color="gray" className={styles.hr}/>
       <div className={styles.info}>
-        <HTag size="s" className={styles.allAnswers}>Answers:&nbsp;43</HTag>
-        <Button className={styles.reset} onClick={() => handleSelectedClick(null)}>Reset</Button>
+        <HTag size="s" className={styles.allAnswers}>Answers:&nbsp;{usersAnswers.length}</HTag>
+        {(selected === 0 || selected) && <Button className={styles.reset} onClick={() => handleSelectedClick(null)}>Reset</Button>}
         <Button color="primary">Save answer</Button>
       </div>
     </Card>

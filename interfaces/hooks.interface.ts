@@ -5,7 +5,14 @@ export interface IUseRequest {
 }
 
 export interface IUseInput {
-  getValue: (name: string) => string;
-  clearValue: (name: string) => void;
+  getValue: (name?: string) => any;
+  clearValue: (name?: string) => void;
   onChange: (event: any) => void;
+}
+
+export interface IUseAuth {
+  login: (userId: string, jwtToken: string) => void,
+  logout: () => void;
+  userId: string;
+  token: string;
 }

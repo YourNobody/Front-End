@@ -9,7 +9,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 const Home: FC<HomeProps> = (props) => {
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
-
+  
   return (
     <div {...props} className={styles.home}>
       <HTag size="large" className={styles.appTitle}>Hi, you're on <span className={styles.appName}>Quiz App</span></HTag>
@@ -24,7 +24,7 @@ const Home: FC<HomeProps> = (props) => {
             </Link>
           }
           <Link to={routes.QUIZES.ROOT}>
-            <Button>To Questions!</Button>
+            <Button>To Quizes!</Button>
           </Link>
       </div>
     </div>

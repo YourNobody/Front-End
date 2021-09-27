@@ -63,6 +63,10 @@
 	height: 100%;
 }
 
+.login {
+	font-size: 18px;
+}
+
 .question {
 	display: flex;
 	align-items: center;
