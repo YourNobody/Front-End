@@ -13,16 +13,13 @@ import { getEmptyObject } from '../../helpers/custom.helper';
 
 const Login: FC<AuthorizationProps> = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
   const onSubmit = async (formData) => {
     try {
-      fetchUserBegining();
-      const data: any = await request('login', 'POST', formData);
-      console.log('data: ', data);
-      
+      const data: any = await request('/auth/login', 'POST', formData);
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess({ user: data.user, token: data.token });
       history.push(routes.HOME);
@@ -74,7 +71,7 @@ const Register: FC<AuthorizationProps> = () => {
     
     try {
       fetchUserBegining();
-      const data: any = await request('register', 'POST', formData);
+      const data: any = await request('/auth/register', 'POST', formData);
       history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess(data.user);

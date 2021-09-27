@@ -16,23 +16,21 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  Line,
-  Area
 } from "recharts";
 import './rechart.css';
 import { ModalBoilerplate } from '../../../pageComponents';
+import { IQuiz, IQuizStatistic, IQuizResponse, IResponseQuiz, WithMessage } from '../../../interfaces/quizes.interface';
 
 const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData, onRemove, ...props }) => {
   const [hidden, setHidden] = useState<boolean>(true);
-  const [usersAnswersStats, setUsersAnswersStats] = useState<any[]>([]);
+  const [usersAnswersStats, setUsersAnswersStats] = useState<IQuizStatistic[]>([]);
   const { request, error, clearError, loading } = useRequest();
   const { openModal, closeModal, setAppAlert } = useActions();
-    console.log('usersAnswersStats: ', usersAnswersStats);
     
   const handleShowStats = async (id: string | number) => {
     setHidden(false);
     try {
-      const data: any = await request('/quizes/statistics?quizId=' + id, 'GET');
+      const data = await request<IQuizResponse>('/quizes/statistics?quizId=' + id, 'GET');
       setUsersAnswersStats(data.usersAnswers);
     } catch (err) {
       console.error(err);
@@ -42,9 +40,9 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 
   const deleteQuiz = async () => {
     try {
-      const body: any = {};
+      const body = {} as { quizId: string; };
       body.quizId = quizData._id;
-      const data: any = await request('/quizes/remove', 'POST', body, {});
+      const data: WithMessage = await request('/quizes/remove', 'POST', body, {});
       setAppAlert(data.message, statuses.SUCCESS);
       onRemove();
       closeModal();
@@ -72,32 +70,38 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     <div className={cn(styles.statistics, {
       [styles.hidden]: hidden
     })}>
-      Answers: {quizData.usersAnswers.length}
-      <ResponsiveContainer width="50%" height="90%">
-        <ComposedChart
-          layout="vertical"
-          width={500}
-          data={usersAnswersStats}
-          margin={{
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
-          }}
-        >
-          <CartesianGrid stroke="#f5f5f5" />
-          <XAxis type="number"/>
-          <YAxis dataKey="answer" type="category" scale="band" />
-          <Tooltip separator="" formatter={(value, name, props) => changeStatisticsTooltipLabel(value, name, props)('amount', 'Amount')}/>
-          <Legend
-            payload={[{
-              value: 'Amount of questions',
-              color: '#66fcf1'
-            }]}
-          />
-          <Bar dataKey="amount" barSize={15} fill="#66fcf1"/>
-        </ComposedChart>  
-      </ResponsiveContainer>
+      {
+        loading ? <HTag size="m">Loading statistics...</HTag>
+        : 
+        <>
+          <HTag size="s">Answers: {quizData.usersAnswers.length}</HTag>
+          <ResponsiveContainer width="50%" height="90%">
+            <ComposedChart
+              layout="vertical"
+              width={500}
+              data={usersAnswersStats}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
+              }}
+            >
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis type="number"/>
+              <YAxis dataKey="answer" type="category" scale="band" />
+              <Tooltip separator="" formatter={(value, name, props) => changeStatisticsTooltipLabel(value, name, props)('amount', 'Amount')}/>
+              <Legend
+                payload={[{
+                  value: 'Amount of questions',
+                  color: '#66fcf1'
+                }]}
+              />
+              <Bar dataKey="amount" barSize={15} fill="#66fcf1"/>
+            </ComposedChart>  
+          </ResponsiveContainer>
+        </>
+      }
     </div>
   </Card>;
 };
@@ -105,13 +109,13 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 export const QuizStats: FC<any> = () => {
   const { error, loading, request, clearError } = useRequest();
   const { setAppAlert } = useActions();
-  const [quizes, setQuizes] = useState<any[]>([]);
+  const [quizes, setQuizes] = useState<IQuiz[]>([]);
   
   useEffect(() => {
     const getSelfQuizes = async () => {
       try {
-        const data: any = await request('/quizes', 'GET');
-        console.log(data);
+        const data = await request<IResponseQuiz>('/quizes', 'GET');
+        data.message && setAppAlert(data.message, statuses.SUCCESS);
         setQuizes(data.quizes);
       } catch (err) {
         setAppAlert(err.message, statuses.ERROR);
@@ -122,14 +126,14 @@ export const QuizStats: FC<any> = () => {
   }, []);
 
   const handleRemoveQuizFromTheList = (id: string) => {
-    setQuizes(quizes.filter(q => q._id !== id));
+    setQuizes(quizes.filter(q => q.id !== id));
   };
       
   if (loading) return <HTag size="m">Your questions is loading...</HTag>;
   if (!quizes.length && !loading) return <HTag size="m">You haven't created any quizzes</HTag>;
   return <div>
     {
-      quizes.map(q => <QuizWithStatsBoilerplate key={q._id} quizData={q} onRemove={() => handleRemoveQuizFromTheList(q._id)}/>)
+      quizes.map(q => <QuizWithStatsBoilerplate key={q.id} quizData={q} onRemove={() => handleRemoveQuizFromTheList(q.id)}/>)
     }
   </div>;
 };

@@ -74,7 +74,6 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     body.title = getValue(selectedType + '_title');
     body.quizAnswers = questionAnswers[selectedType];
 
-
     const headers: Record<string, string> = {};
     if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
       const { token } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));

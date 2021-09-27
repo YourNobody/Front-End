@@ -6,7 +6,7 @@ import cn from 'classnames';
 import { Card, Image, HTag, Button } from '../../components';
 import { Link, Route, useHistory, useLocation } from 'react-router-dom';
 import { routes } from './../../constants/routes';
-import { QuestionTypes } from '../../interfaces/quizes.interface';
+import { QuestionTypes, IQuizResponse, IQuizWithQuizCreator } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
@@ -33,16 +33,16 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const history = useHistory();
   const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [quizes, setQuizes] = useState<IQuizWithQuizCreator[]>([]);
   const [selectedType, setSelectedType] = useState<QuestionTypes>(alreadySelected);
   const [wrapped, setWrapped] = useState<boolean>(!!selectedType);
 
   useEffect(() => {
     const realizingFetch = async () => {
       try {
-        const data: any = await request(routes.QUIZES.ROOT, 'POST', { type: selectedType });
+        const data = await request<IQuizResponse>(routes.QUIZES.ROOT, 'POST', { type: selectedType });
         setAppAlert(data.message, statuses.SUCCESS);
-        setQuestions(data.quizes ? data.quizes : []);
+        setQuizes(data.quizes);
       } catch (err) {
         setAppAlert(error, statuses.ERROR);
         clearError();
@@ -88,9 +88,9 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   };
 
   const buildQuestionsLinks = (): JSX.Element | JSX.Element[] => {
-    if (!questions) return <></>;
-    if (questions.length) {
-      return questions.filter(q => !!q.title).map(q => {
+    if (!quizes) return <></>;
+    if (quizes.length) {
+      return quizes.filter(q => !!q.title).map(q => {
 
         return (
           <Card key={Math.random()} className={styles.quizLinkWrapper}>

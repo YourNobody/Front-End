@@ -11,16 +11,23 @@ import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
 import { HTag, Button } from '../../components';
 import { QuizStats } from './QuizStats/QuizStats';
+import { WithMessage } from '../../interfaces/quizes.interface';
 
 export const Profile = (props: ProfileProps): JSX.Element => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
+  const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
   const { userLogOut, setAppAlert, openModal, closeModal } = useActions();
   const { error, clearError, request, loading } = useRequest();
 
   const handleLogOut = async (): Promise<void> => {
     try {
-      const data: any = await request('logout', 'POST');
+      setTimeout(() => {
+        if (isAuthenticated) {
+          setAppAlert('Something went wrong.\nWe are trying to log you out', statuses.WARNING, false);
+        }
+      }, 7500);
+      const data: WithMessage = await request('/auth/logout', 'POST');
       setAppAlert(data.message, statuses.SUCCESS);
       userLogOut();
       closeModal();

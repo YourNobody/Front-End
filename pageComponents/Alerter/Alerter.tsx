@@ -36,7 +36,9 @@ export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
                     [styles.error]: alert.status === statuses.ERROR
                   })}
                 >
-                  <div className={styles.close} onClick={(e) => handleCloseIcon(e, alert.id)}>&#10006;</div>
+                  <div className={styles.close} onClick={(e) => handleCloseIcon(e, alert.id)}>
+                    <div>&#10006;</div>
+                  </div>
                   <div className={styles.message}>{alert.message}</div>
                 </div>
               );

@@ -18,8 +18,8 @@ export const SA_Question: FC<SA_QuestionProps> = ({ _id, question, title, quizAn
   }, []);
 
   const handleUserAnswerSave = async () => {
-    const body: IUserAnswer & { quizAnswerId?: string } = {};
-    body.quizId = _id;
+    const body = {} as IUserAnswer & { quizAnswerId?: string };
+    body.quizAnswerId = _id;
     body.quizAnswerId = quizAnswers.find((_, index) => selected === index)?._id;
     body.answer = quizAnswers[selected];
     try {

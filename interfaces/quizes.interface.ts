@@ -1,6 +1,9 @@
-import { ANONYMOUS_NAME } from './../../Back-End/src/constants/app';
 export enum QuestionTypes {
   SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
+}
+
+export interface WithMessage {
+  message?: string;
 }
 
 export type QuestionParamsTypes = {
@@ -24,6 +27,55 @@ export interface MainQuestionsProps {
 }
 
 export interface IUserAnswer {
-  quizId?: string;
-  answer?: string;
+  answer: string | number;
+  userId?: string; 
+  isAnonimous?: boolean;
+  id: string;
+}
+
+export interface IQuizAnswer {
+  answer: string;
+  id: string;
+}
+
+export interface IQuiz {
+  question: string;
+  type: QuizesTypes;
+  title: string;
+  quizAnswers: IQuizAnswer[];
+  usersAnswers: IUserAnswer[];
+  userId: string;
+  id: string;
+}
+
+export interface IResponseQuiz extends WithMessage {
+  quizes: IQuiz[];
+}
+
+export interface IQuizStatistic {
+  amount: number;
+  answer: string;
+  users: Array<{
+    nickname: string | null;
+    email: string | null;
+    isAnonimous: boolean;
+  }>  
+}
+
+export interface IQuizResponse extends WithMessage {
+  usersAnswers?: IQuizStatistic[];
+  quizes?: IQuizWithQuizCreator[];
+}
+
+export interface WithQuizCreator {
+  creator: {
+    nickname: string | null;
+    email: string | null;
+  }
+}
+
+export interface IQuizWithQuizCreator extends Omit<IQuiz, 'userId'>, WithQuizCreator {}
+
+export enum QuizesTypes {
+  SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
 }
