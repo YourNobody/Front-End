@@ -6,6 +6,8 @@ import { routes } from "../constants/routes";
 import { useTypedSelector } from './../hooks/useTypedSelector.hook';
 import { useEffect } from 'react';
 import { LOCALSTORAGE_USER_DATA_NAME, statuses } from './../constants/app';
+import { IUserLocalStorage } from "../interfaces/user.interface";
+import { useRequest } from "../hooks/useRequest";
 
 const buildBaseRoutes = (): JSX.Element => (
   <Switch>
@@ -55,38 +57,60 @@ const buildAllRoutes = (): JSX.Element => (
 
 export const Routes: FC<any> = () => {
   const { userLogOut, setAppAlert } = useActions();
+  const { request, loading, error, clearError } = useRequest();
+
+
+  const checkForAuthed = async (token: string): Promise<boolean> => {
+    try {
+      const { isAuthenticated } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token }, {});
+      return isAuthenticated;
+    } catch (err) { 
+      console.log(err);
+      return false;
+    }
+  };
+
   if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
     try {
-      const data = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+      const data: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
       const expirationData = JSON.parse(atob(data.token.split('.')[1]));
-      const { expiresIn, expiresAt } = expirationData;
-      const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
-      const now = Date.now();
-      const diff = expiresAt - now;
-      // if (minutesBeforeExpiration > 5) {
-      //   setTimeout(() => {
-      //     setAppAlert('Your session expires in 5 minutes', statuses.WARNING);
-      //   }, minutesBeforeExpiration - 5);
-      // }
-
-      // if (diff > 0) {
-      //   setTimeout(() => {
-      //     setAppAlert('Your session has expired', statuses.WARNING);
-      //     userLogOut();
-      //   }, diff);
-      // }
-
-      if (diff < 0) {
-        setAppAlert('Your session has expired', statuses.WARNING, false);
-        userLogOut();
-      }
+          const { expiresIn, expiresAt } = expirationData;
+          const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
+          const now = Date.now();
+          const diff = expiresAt - now;
+          // if (minutesBeforeExpiration > 5) {
+          //   setTimeout(() => {
+          //     setAppAlert('Your session expires in 5 minutes', statuses.WARNING);
+          //   }, minutesBeforeExpiration - 5);
+          // }
+    
+          // if (diff > 0) {
+          //   setTimeout(() => {
+          //     setAppAlert('Your session has expired', statuses.WARNING);
+          //     userLogOut();
+          //   }, diff);
+          // }
+    
+          if (diff < 0) {
+            setAppAlert('Your session has expired', statuses.WARNING, false);
+            userLogOut();
+          }
+      // checkForAuthed(data.token || null)
+      //   .then(isAuthenticated => {
+      //     if (!isAuthenticated) {
+      //       userLogOut();
+      //     }
+      //   })
+      //   .then(() => {
+      //     // 
+      //   });
     } catch (error) {
       userLogOut();
     }
   }
 
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
-
+  
   if (isAuthenticated) {
     return buildAllRoutes();
   }

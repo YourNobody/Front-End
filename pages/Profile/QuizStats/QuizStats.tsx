@@ -30,10 +30,11 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   const handleShowStats = async (id: string | number) => {
     setHidden(false);
     try {
-      const data = await request<IQuizResponse>('/quizes/statistics?quizId=' + id, 'GET');
+      const data = await request<IQuizResponse>('/quizes/statistics?quizId=' + (id || ''), 'GET');
       setUsersAnswersStats(data.usersAnswers);
     } catch (err) {
       console.error(err);
+      setAppAlert(err.message, statuses.ERROR);
       clearError();
     }
   };
@@ -64,7 +65,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     <Button color="danger" className={styles.closeCard} onClick={handleRemoveQuiz}>&#215;</Button>
     <div className={styles.infoActions}>
       <HTag size="s">Created at: {formatDate(quizData.createdAt)}</HTag>
-      {hidden && <Button color="ghost" onClick={() => handleShowStats(quizData._id)}>Show statistics</Button>}
+      {hidden && <Button color="ghost" onClick={() => handleShowStats(quizData.id)}>Show statistics</Button>}
       {!hidden && <Button color="primary" onClick={() => setHidden(true)}>Hide</Button>}
     </div>
     <div className={cn(styles.statistics, {
@@ -110,7 +111,7 @@ export const QuizStats: FC<any> = () => {
   const { error, loading, request, clearError } = useRequest();
   const { setAppAlert } = useActions();
   const [quizes, setQuizes] = useState<IQuiz[]>([]);
-  
+    
   useEffect(() => {
     const getSelfQuizes = async () => {
       try {

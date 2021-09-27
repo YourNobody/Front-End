@@ -22,17 +22,13 @@ export const Profile = (props: ProfileProps): JSX.Element => {
 
   const handleLogOut = async (): Promise<void> => {
     try {
-      setTimeout(() => {
-        if (isAuthenticated) {
-          setAppAlert('Something went wrong.\nWe are trying to log you out', statuses.WARNING, false);
-        }
-      }, 7500);
       const data: WithMessage = await request('/auth/logout', 'POST');
       setAppAlert(data.message, statuses.SUCCESS);
       userLogOut();
       closeModal();
       history.push(routes.HOME);
     } catch (err) {
+      console.error(err);
       setAppAlert(error, statuses.ERROR);
       clearError();
     }
