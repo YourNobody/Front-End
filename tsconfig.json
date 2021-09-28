@@ -8,6 +8,8 @@
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true
   },
   "include": [
     "next-env.d.ts",
