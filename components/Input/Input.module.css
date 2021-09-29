@@ -1,3 +1,6 @@
+.wrapper {
+}
+
 .input {
 	width: 100%;
 	padding: 8px 8px;
@@ -6,6 +9,7 @@
 	background-color: var(--mega-white);
 
 	font-size: 16px;
+	margin-bottom: 8px;
 }
 
 .input:focus {
@@ -24,4 +28,24 @@
 
 .has {
 	color: var(--blue);
+}
+
+.errorInput {
+	box-shadow: 0 0 0 1px var(--red);
+}
+
+.errorInput:focus {
+	box-shadow: 0 0 0 1px var(--red);
+}
+
+.error {
+	font-size: 15px;
+	font-weight: 300;
+	position: relative;
+	color: var(--red-bright);
+}
+
+.error::before {
+	display: inline;
+  content: "⚠ ";
 }

@@ -82,6 +82,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.8",
     "@types/redux": "^3.6.0",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",

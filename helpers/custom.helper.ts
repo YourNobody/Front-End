@@ -30,15 +30,24 @@ export const getEmptyObject = <T>(data: T): T => {
   }, {}) as T || {} as T;
 };
 
-export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string): any => {  
+export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string | Record<string, unknown>): any => {  
+  if (!initial || !Object.keys(initial).length) return {};
+  if (!keys) return initial;
   if (typeof keys === 'string') {
     keys = keys.split(' ');
+  } else if (keys instanceof Array) {
+    return keys.reduce((output, key) => {
+      if (initial[key]) {
+        output[key] = initial[key];
+      }
+      return output;
+    }, {});
   }
-  return keys.reduce((output, key) => {
+  return Object.keys(keys).reduce((R, key) => {
     if (initial[key]) {
-      output[key] = initial[key];
+      R[key] = initial[key];
+      return R;
     }
-    return output;
   }, {});
 };
 

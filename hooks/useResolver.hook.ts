@@ -1,35 +1,49 @@
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import { IsAlphanumeric, IsEmail, IsNotEmpty, IsString, Length, Match } from 'class-validator';
+import { MyIsAlphanumeric, MyIsEmail, MyIsNotEmpty, MyIsString, MyMaxLength, MyMinLength } from '../constants/myValidator';
 
-const Resolver = {};
-
-export const useResolver = () => {
-  return Resolver;
-};
-
-class User{
-  @IsString()
-  @Length(2, 16)
-  @IsNotEmpty()
-  @IsAlphanumeric()
+class User {
+  @MyMaxLength(16)
+  @MyMinLength(2)
+  @MyIsAlphanumeric()
+  @MyIsString()
+  @MyIsNotEmpty()
+  // @MyNotContains('A-Za-z')
   nickname: string;
   
-  @IsString()
-  @IsNotEmpty()
-  @IsEmail()
+  @MyIsEmail()
+  @MyIsString()
+  @MyIsNotEmpty()
   email: string;
-
-  @IsString()
-  @Length(4, 20)
-  @IsNotEmpty()
+  
+  @MyIsNotEmpty()
+  @MyMinLength(4)
+  @MyIsString()
+  @MyMaxLength(20)
   password: string;
-
-  @IsString()
-  @Match('password')
+  
+  @MyMaxLength(20)
+  @MyMinLength(4)
+  @MyIsString()
+  @MyIsNotEmpty()
   confirm: string;
+
+  @MyMaxLength(20)
+  @MyMinLength(4)
+  @MyIsString()
+  @MyIsNotEmpty()
   oldPassword: string;
 }
 
 const validators = {
-  User, 
+  User: {
+    initial: User,
+    resolver: classValidatorResolver(User)
+  },
+
+};
+
+const Resolver = validators;
+
+export const useResolver = (): any => {
+  return Resolver;
 };

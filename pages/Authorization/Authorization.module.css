@@ -11,6 +11,7 @@
 	grid-template-columns: 1fr;
 	gap: 20px;
 
+	max-width: 350px;
 	min-width: 350px;
 
 	padding: 28px 30px 35px 30px;
