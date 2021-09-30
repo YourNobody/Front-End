@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
@@ -13,8 +13,7 @@ import { getEmptyObject, getObjectWithDefinedKeys } from '../../helpers/custom.h
 import { useResolver } from '../../hooks/useResolver.hook';
 
 const Login: FC<AuthorizationProps> = () => {
-  const { User: { initial, resolver } } = useResolver();
-  const { register, getValues, handleSubmit, reset, formState: { errors } } = useForm<typeof initial>({ resolver });
+  const { register, getValues, handleSubmit, reset, formState: { errors } } = useForm({ });
   const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
@@ -67,20 +66,30 @@ const Login: FC<AuthorizationProps> = () => {
 };
 
 const Register: FC<AuthorizationProps> = () => {
-  const { User } = useResolver();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: User.resolver });
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const [isValid, setIsValid] = useState<boolean>(true);
+  const { initial, resolver } = useResolver().User;
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<typeof initial>({
+    resolver,
+    context: { isValid }
+  });
+  const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions(); 
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
   
   const onSubmit = async (formData) => {
-    console.log(errors, formData, getObjectWithDefinedKeys(errors, formData));
+    console.log('here');
     
-    if (Object.keys(getObjectWithDefinedKeys(errors, formData)).length) return;
+    if (Object.keys(errors).length) {
+      console.log('regected');
+      return;
+    }
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
     try {
-      fetchUserBegining();
+      console.log('here');
+      
       const data: any = await request('/auth/register', 'POST', formData);
+      console.log('data: ', data);
+      
       history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
       fetchUserSuccess(data.user);
@@ -101,7 +110,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input type="text"
             label="Nickname"
             name="nickname"
-            error={errors['nickname'] && errors['nickname'].message}
+            error={errors['nickname']?.message}
             {...register('nickname', {
               disabled: loading,
             })}
@@ -112,7 +121,7 @@ const Register: FC<AuthorizationProps> = () => {
             type="text"
             label="Email"
             name="email"
-            error={errors['email'] && errors['email'].message}
+            error={errors['email']?.message}
             {...register('email', {
               disabled: loading
             })}
@@ -122,7 +131,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type="password"
             label="Password"
-            error={errors['password'] && errors['password'].message}
+            error={errors['password']?.message}
             {...register('password', {
               disabled: loading
             })}
@@ -132,7 +141,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type="password"
             label="Confirm Password"
-            error={errors['confirm'] && errors['confirm'].message}
+            error={errors['confirm']?.message}
             {...register('confirm', {
             disabled: loading
           })}/>

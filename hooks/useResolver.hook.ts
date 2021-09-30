@@ -15,10 +15,10 @@ class User {
   @MyIsNotEmpty()
   email: string;
   
-  @MyIsNotEmpty()
+  @MyMaxLength(20)
   @MyMinLength(4)
   @MyIsString()
-  @MyMaxLength(20)
+  @MyIsNotEmpty()
   password: string;
   
   @MyMaxLength(20)
@@ -37,13 +37,13 @@ class User {
 const validators = {
   User: {
     initial: User,
-    resolver: classValidatorResolver(User)
+    resolver: classValidatorResolver(User, { skipMissingProperties: true }, {
+      mode: 'sync',
+    })
   },
 
 };
 
-const Resolver = validators;
-
 export const useResolver = (): any => {
-  return Resolver;
+  return validators;
 };
