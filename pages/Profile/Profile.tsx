@@ -52,7 +52,7 @@ export const Profile: FC<ProfileProps> = (props) => {
           <li>Account</li>
         </Link>
         <Link to={routes.PROFILE.QUESTIONS}>
-          <li>My Questions</li>
+          <li>My Quizes</li>
         </Link>
         <a>
           <li onClick={handleOpenModal}>Log Out</li>

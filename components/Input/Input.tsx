@@ -2,6 +2,7 @@ import React, { FC, forwardRef, useRef, useState } from 'react';
 import { InputProps } from './Input.props';
 import styles from './Input.module.css';
 import cn from 'classnames';
+import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, className, type, name, ...props}, ref): JSX.Element => {
   const inputId: string = label ? createId(label) : null;
@@ -25,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, c
         id={inputId}
       />
       {
-        error && <span className={styles.error}>{error}</span>
+        error && <ErrorMessage>{error}</ErrorMessage>
       }
     </div>
   );

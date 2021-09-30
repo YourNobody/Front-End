@@ -9,11 +9,17 @@ export interface IUserError {
   isAuthenticated: boolean;
 }
 
-export interface IUserLocalStorage {
+export interface IUserWithToken {
   token: string;
   user: {
     email: string;
     id: string;
     nickname: string;
+  }
+}
+
+export interface WithQuizes {
+  user: {
+    quizes: any[];
   }
 }

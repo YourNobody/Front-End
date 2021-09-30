@@ -37,15 +37,3 @@
 .errorInput:focus {
 	box-shadow: 0 0 0 1px var(--red);
 }
-
-.error {
-	font-size: 15px;
-	font-weight: 300;
-	position: relative;
-	color: var(--red-bright);
-}
-
-.error::before {
-	display: inline;
-  content: "⚠ ";
-}

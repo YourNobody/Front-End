@@ -2,7 +2,7 @@ export interface IUserReducer {
   nickname: string;
   email: string;
   id: string;
-  questions: any[];
+  quizes: any[];
 }
 
 export interface IUserState {

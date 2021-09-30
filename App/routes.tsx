@@ -1,12 +1,12 @@
 import { useActions } from "../hooks/useActions.hook";
 import { FC } from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import { Home, Quizes, Profile, Authorization, Page404, Create, Quiz } from '..//pages/pages';
 import { routes } from "../constants/routes";
 import { useTypedSelector } from './../hooks/useTypedSelector.hook';
 import { useEffect } from 'react';
 import { LOCALSTORAGE_USER_DATA_NAME, statuses } from './../constants/app';
-import { IUserLocalStorage } from "../interfaces/user.interface";
+import { IUserWithToken } from "../interfaces/user.interface";
 import { useRequest } from "../hooks/useRequest";
 
 const buildBaseRoutes = (): JSX.Element => (
@@ -58,11 +58,16 @@ const buildAllRoutes = (): JSX.Element => (
 export const Routes: FC<any> = () => {
   const { userLogOut, setAppAlert } = useActions();
   const { request, loading, error, clearError } = useRequest();
+  const history = useHistory();
+
+    history.listen((location, action) => {
+      console.log(JSON.stringify(location, null, 2) + ' | ' + action);
+    });
 
   const checkForAuthed = async (): Promise<void> => {
     try {
       if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-        const data: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+        const data: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
         const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
 
         if (!isAuthed) {

@@ -9,9 +9,13 @@ import { WithMessage } from '../../../interfaces/quizes.interface';
 import { useRequest } from '../../../hooks/useRequest';
 import { useActions } from '../../../hooks/useActions.hook';
 import { LOCALSTORAGE_USER_DATA_NAME, statuses } from '../../../constants/app';
-import { IUserLocalStorage } from '../../../interfaces/user.interface';
+import { IUserWithToken } from '../../../interfaces/user.interface';
+import { useResolver } from '../../../hooks/useResolver.hook';
+import { useForm } from 'react-hook-form';
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
+  const Resolver = useResolver();
+  const { register, reset, formState: { errors } } = useForm({});
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
   const { setAppAlert, fetchUserSuccess } = useActions();
   const { request, loading } = useRequest();
@@ -45,7 +49,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
 
     try {
       const data: WithMessage = await request('/profile/change', 'POST', body);
-      const userData: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+      const userData: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
       delete body.key;
       (key === 'email' || key === 'nickname') && fetchUserSuccess({
         user: {
@@ -92,7 +96,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
             const data = opt[1];
 
             return (
-              <div data-change="nickname" key={name}>
+              <form data-change="nickname" key={name}>
                 <div className={cn(styles.change, { [styles.changeOpened]: openBlocks.includes(name) })} data-change={name} onClick={() => handleBlockToggling(name)}>
                   Change {name[0].toUpperCase() + name.slice(1)}
                 </div>
@@ -110,7 +114,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
                   }
                   <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
                 </div>
-              </div>
+              </form>
             );
           })
         }

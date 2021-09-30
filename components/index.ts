@@ -7,3 +7,4 @@ export * from './Tagger/Tagger';
 export * from './Editor/Editor';
 export * from './HR/HR';
 export * from './List/List';
+export * from './ErrorMessage/ErrorMessage';

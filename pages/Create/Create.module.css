@@ -53,10 +53,6 @@
 
 .addAnswer {
   display: grid;
-  grid-template-areas:
-    'label label'
-    'input button'
-  ;
   grid-template-columns: 1fr auto;
   gap: 0 20px;
   margin: 20px 0 15px 0;
@@ -66,16 +62,17 @@
   padding: 10px 0 5px 0;
   font-size: 20px;
   font-weight: bold;
-  grid-area: label;
 }
 
 .addAnswer input {
-  grid-area: input;
+  margin-bottom: 0;
 }
 
 .addAnswer button {
-  margin-top: 0;
-  grid-area: button;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-top: auto;
+  align-content: flex-end;
 }
 
 .list {

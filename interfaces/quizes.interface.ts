@@ -21,7 +21,7 @@ export interface IQuizData {
 export interface MainQuestionsProps {
   title?: string;
   question?: string;
-  usersAnswers?: any[];
+  usersAnswers?: IUserAnswer[];
   creator?: string;
   _id?: string; 
 }

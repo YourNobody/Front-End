@@ -11,29 +11,32 @@ import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
 import { getEmptyObject, getObjectWithDefinedKeys } from '../../helpers/custom.helper';
 import { useResolver } from '../../hooks/useResolver.hook';
+import { WithMessage } from '../../interfaces/quizes.interface';
+import { IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
 
 const Login: FC<AuthorizationProps> = () => {
-  const { register, getValues, handleSubmit, reset, formState: { errors } } = useForm({ });
+  const [isValid, setIsValid] = useState<boolean>(true);
+  const { initial, resolver } = useResolver().User;
+  const { register, getValues, handleSubmit, reset, formState: { errors } } = useForm({ 
+    resolver,
+    context: { isValid }
+  });
   const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
-  const onSubmit = (formData) => {
-    console.log('here');
-    
-    console.log('erros: ', errors);
-    
-    // try {
-    //   const data: any = await request('/auth/login', 'POST', formData);
-    //   setAppAlert(data.message, statuses.SUCCESS);
-    //   fetchUserSuccess({ user: data.user, token: data.token });
-    //   history.push(routes.HOME);
-    // } catch (err: any) {
-    //   setAppAlert(err.message, statuses.ERROR);
-    //   fetchUserError();
-    //   clearError();
-    // }
-    // reset(getEmptyObject(formData));
+  const onSubmit = async (formData) => {
+    try {
+      const data = await request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', formData);
+      setAppAlert(data.message, statuses.SUCCESS);
+      fetchUserSuccess({ user: data.user, token: data.token });
+      history.push(routes.HOME);
+    } catch (err: any) {
+      setAppAlert(err.message, statuses.ERROR);
+      fetchUserError();
+      clearError();
+    }
+    reset(getEmptyObject(formData));
   };
   
   return (
@@ -42,18 +45,25 @@ const Login: FC<AuthorizationProps> = () => {
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
-          <Input type="text" label="Email" name="email" {...register('email', {
-            required: true,
-            disabled: loading
-          })}/>
+          <Input type="text"
+            label="Email"
+            name="email"
+            error={errors['email']?.message}
+            {...register('email', {
+              disabled: loading
+            })}
+          />
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" name="password" label="Password" {...register('password', {
-            required: true,
-            minLength: 6,
-            maxLength: 18,
-            disabled: loading
-          })}/>
+          <Input
+            type="password"
+            name="password"
+            label="Password"
+            error={errors['password']?.message}
+            {...register('password', {
+              disabled: loading
+            })}
+          />
         </div>
         <Button className={styles.button} type="submit">Log In</Button>
         <div className={styles.info}>
@@ -72,7 +82,7 @@ const Register: FC<AuthorizationProps> = () => {
     resolver,
     context: { isValid }
   });
-  const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions(); 
+  const { setAppAlert } = useActions(); 
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
   
@@ -85,17 +95,13 @@ const Register: FC<AuthorizationProps> = () => {
     }
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
     try {
-      console.log('here');
-      
-      const data: any = await request('/auth/register', 'POST', formData);
+      const data: WithMessage = await request('/auth/register', 'POST', formData);
       console.log('data: ', data);
       
       history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess(data.user);
     } catch (err) {
-      setAppAlert(error, statuses.ERROR);
-      fetchUserError();
+      setAppAlert(err, statuses.ERROR);
       clearError();
     }
     reset(getEmptyObject(formData));
@@ -147,6 +153,9 @@ const Register: FC<AuthorizationProps> = () => {
           })}/>
         </div>
         <Button className={styles.button} type="submit">Sign Up</Button>
+        <div className={styles.info}>
+          <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+        </div>
       </form>
     </div>
   );
