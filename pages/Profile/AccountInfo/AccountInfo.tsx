@@ -19,7 +19,8 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
   const { setAppAlert, fetchUserSuccess } = useActions();
   const { request, loading } = useRequest();
-  const { getValue, onChange, clearValue } = useInput();
+  const { getValue, onChange, clearValue, validationErrors, bindEvents } = useInput();
+  const [ confirmed, setConfirmed ] = useState<Record<string, boolean>>({});
 
   const handleBlockToggling = (key: profileChangeKeys): void => {
     if (openBlocks.includes(key)) return setOpenBlocks(openBlocks.filter(k => k !== key));
@@ -27,8 +28,6 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
   };
 
   const handleChange = async (key: profileChangeKeys) => {
-    console.log('key: ', key);
-    
     const body: any = { key };
     switch(key) {
       case 'nickname': {
@@ -46,7 +45,19 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
         break;
       }
     }
-
+    let isValid = true;
+    Object.keys(body).forEach(field => {
+      const input: HTMLInputElement = document.querySelector(`[name=${field}]`);
+      if (input) {
+        input.focus();
+        input.blur();
+      }
+      if (validationErrors[field]) isValid = false;
+      if (!body[field]) isValid = false;
+    });
+    if (!isValid) {
+      return;
+    }
     try {
       const data: WithMessage = await request('/profile/change', 'POST', body);
       const userData: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
@@ -62,6 +73,20 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
       clearValue();
     } catch (err) {
       setAppAlert(err.message, statuses.ERROR);
+    }
+  };
+
+  const handleConfirmation = (name: string) => {
+    if (validationErrors[name]) {
+      setConfirmed({
+        ...confirmed,
+        [name]: false
+      });
+    } else {
+      setConfirmed({
+        ...confirmed,
+        [name]: true
+      });
     }
   };
 
@@ -107,12 +132,26 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
                     data.inputs.map((props, i) => <Input
                       key={i}
                       {...props}
-                      onChange={onChange}
+                      {...bindEvents}
+                      error={validationErrors[props.name]?.message}
                       autoComplete="off"
                       value={getValue(props.name)}
                     />)
                   }
                   <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
+                  {/* {
+                    confirmed[name] && <>
+                      <Input
+                        key="1232132313213"
+                        name="oldPassword"
+                        {...bindEvents}
+                        error={validationErrors['oldPassword']?.message}
+                        autoComplete="off"
+                        value={getValue('oldPassword')}
+                      />
+                      <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
+                    </>
+                  } */}
                 </div>
               </form>
             );

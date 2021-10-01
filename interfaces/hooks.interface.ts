@@ -8,6 +8,12 @@ export interface IUseInput {
   getValue: (name?: string) => any;
   clearValue: (name?: string) => void;
   onChange: (event: any) => void;
+  onBlur: (event: any) => void;
+  validationErrors: Record<string, { message: string }>;
+  bindEvents: {
+    onBlur: (event: any) => void;
+    onChange: (event: any) => void;
+  }
 }
 
 export interface IUseAuth {

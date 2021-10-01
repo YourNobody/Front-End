@@ -26,6 +26,7 @@ const Login: FC<AuthorizationProps> = () => {
   const history = useHistory();
 
   const onSubmit = async (formData) => {
+    if (Object.keys(errors).length) return;
     try {
       const data = await request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', formData);
       setAppAlert(data.message, statuses.SUCCESS);
@@ -86,18 +87,11 @@ const Register: FC<AuthorizationProps> = () => {
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
   
-  const onSubmit = async (formData) => {
-    console.log('here');
-    
-    if (Object.keys(errors).length) {
-      console.log('regected');
-      return;
-    }
+  const onSubmit = async (formData) => {    
+    if (Object.keys(errors).length) return;
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
     try {
-      const data: WithMessage = await request('/auth/register', 'POST', formData);
-      console.log('data: ', data);
-      
+      const data: WithMessage = await request('/auth/register', 'POST', formData);      
       history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
     } catch (err) {
