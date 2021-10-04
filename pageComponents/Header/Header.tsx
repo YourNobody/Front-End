@@ -9,7 +9,6 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export const Header: FC<HeaderProps> = ({ className, ...props }) => {
   const {user, isAuthenticated} = useTypedSelector(state => state.user);
-  console.log( useTypedSelector(state => state));
   
   return (
     <header className={cn(styles.header, className)} {...props}>

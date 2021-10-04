@@ -7,18 +7,14 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
   const { validators } = useResolver();
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
-  console.log('validationErrors: ', validationErrors);
-  
-  const onBlur = useCallback((event: any) => {
+  const onBlur = useCallback((event: any): void => {
     validators.forEach(async (validator) => {
       let v = new validator();
       const fieldsOfValidator = v.getValidatorFields();
       v = Object.assign(v, {
         [event.target.name]: event.target.value
       });
-      
       const errors: ValidationError[] = await validate(v);
-      
       const errorOfThisItem = errors.find((error) => error.property === event.target.name && error.value !== undefined);
       if (errorOfThisItem && fieldsOfValidator.includes(event.target.name)) {
         setValidationErrors({
@@ -27,16 +23,16 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
             message: Object.values(errorOfThisItem.constraints)[0]
           }
         });
-      } else if (fieldsOfValidator.includes(event.target.name)) {
+      } else if (fieldsOfValidator.includes(event.target.name)) {    
         const copy = JSON.parse(JSON.stringify(validationErrors));
         copy[event.target.name] && delete copy[event.target.name];
         setValidationErrors(copy);
       }
     });
     
-  }, []);
+  }, [setValidationErrors, validators, validationErrors]);
 
-  const onChange = useCallback((event: any) => {
+  const onChange = useCallback((event: any): void => {
     validators.forEach(async (validator) => {
       let v = new validator();
       const fieldsOfValidator = v.getValidatorFields();
@@ -47,7 +43,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       const errors: ValidationError[] = await validate(v);
       
       const errorOfThisItem = errors.find((error) => error.property === event.target.name && error.value);
-      if (!errorOfThisItem && fieldsOfValidator.includes(event.target.name)) {
+      if (!errorOfThisItem && fieldsOfValidator.includes(event.target.name)) {        
         const copy = JSON.parse(JSON.stringify(validationErrors));
         copy[event.target.name] && delete copy[event.target.name];
         setValidationErrors(copy);
@@ -57,9 +53,9 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       ...inputsState,
       [event.target.name]: event.target.value
     });
-  }, [inputsState]);
+  }, [inputsState, setValidationErrors, validators, validationErrors]);
 
-  const clearValue = useCallback((name?: string) => {
+  const clearValue = useCallback((name?: string): void => {
     if (!name) setInputsState(initialState);
     if (inputsState[name]) {
       setInputsState({
@@ -67,9 +63,9 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
         [name]: ''
       });
     }
-  }, [inputsState]);
+  }, [inputsState, setInputsState, initialState]);
 
-  const getValue = useCallback((name?: string): any => {
+  const getValue = useCallback((name?: string): string | typeof initialState => {
     if (!name) return inputsState;
     if (inputsState[name]) return inputsState[name];
     return '';

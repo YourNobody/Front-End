@@ -60,10 +60,6 @@ export const Routes: FC<any> = () => {
   const { request, loading, error, clearError } = useRequest();
   const history = useHistory();
 
-    history.listen((location, action) => {
-      console.log(JSON.stringify(location, null, 2) + ' | ' + action);
-    });
-
   const checkForAuthed = async (): Promise<void> => {
     try {
       if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
