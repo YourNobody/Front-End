@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, c
         id={inputId}
       />
       {
-        error && <ErrorMessage>{error}</ErrorMessage>
+        error && <ErrorMessage className={styles.error}>{error}</ErrorMessage>
       }
     </div>
   );

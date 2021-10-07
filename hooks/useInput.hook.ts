@@ -7,71 +7,112 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
   const { validators } = useResolver();
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
+  const getValidationErrorMessage = useCallback((name: string): string | null => {
+    const lowerName = name.toLowerCase();
+    if (validationErrors[lowerName] && validationErrors[lowerName].message) {
+      return validationErrors[lowerName].message;
+    }
+    return null;
+  }, [validationErrors]);
+  
   const onBlur = useCallback((event: any): void => {
+    const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
       let v = new validator();
       const fieldsOfValidator = v.getValidatorFields();
       v = Object.assign(v, {
-        [event.target.name]: event.target.value
+        [lowerName]: event.target.value
       });
       const errors: ValidationError[] = await validate(v);
-      const errorOfThisItem = errors.find((error) => error.property === event.target.name && error.value !== undefined);
-      if (errorOfThisItem && fieldsOfValidator.includes(event.target.name)) {
+      const errorOfThisItem = errors.find((error) => error.property.toLowerCase() === lowerName && error.value !== undefined);
+      if (errorOfThisItem && fieldsOfValidator.includes(lowerName)) {
         setValidationErrors({
           ...validationErrors,
           [errorOfThisItem.property]: {
             message: Object.values(errorOfThisItem.constraints)[0]
           }
         });
-      } else if (fieldsOfValidator.includes(event.target.name)) {    
+      } else if (fieldsOfValidator.includes(lowerName)) {    
         const copy = JSON.parse(JSON.stringify(validationErrors));
-        copy[event.target.name] && delete copy[event.target.name];
+        copy[lowerName] && delete copy[lowerName];
         setValidationErrors(copy);
+      } else if (!fieldsOfValidator.includes(lowerName)) {
+        const splitted = lowerName.split('_');
+        if (splitted.length === 2) {
+          const message = v.validateCustomProperty(splitted[1], event.target.value);
+          if (message) {
+            setValidationErrors({
+              ...validationErrors,
+              [lowerName]: { message }
+            });
+          } else {
+            const copy = JSON.parse(JSON.stringify(validationErrors));
+            copy[lowerName] && delete copy[lowerName];
+            setValidationErrors(copy);
+          }
+        }
       }
     });
-    
   }, [setValidationErrors, validators, validationErrors]);
 
   const onChange = useCallback((event: any): void => {
+    const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
       let v = new validator();
       const fieldsOfValidator = v.getValidatorFields();
       v = Object.assign(v, {
-        [event.target.name]: event.target.value
+        [lowerName]: event.target.value
       });
       
       const errors: ValidationError[] = await validate(v);
       
-      const errorOfThisItem = errors.find((error) => error.property === event.target.name && error.value);
-      if (!errorOfThisItem && fieldsOfValidator.includes(event.target.name)) {        
+      const errorOfThisItem = errors.find((error) => error.property.toLowerCase() === lowerName && error.value);
+      if (!errorOfThisItem && fieldsOfValidator.includes(lowerName)) {        
         const copy = JSON.parse(JSON.stringify(validationErrors));
-        copy[event.target.name] && delete copy[event.target.name];
+        copy[lowerName] && delete copy[lowerName];
         setValidationErrors(copy);
+      } else if (!fieldsOfValidator.includes(lowerName)) {
+        const splitted = lowerName.split('_');
+        if (splitted.length === 2) {
+          const message = v.validateCustomProperty(splitted[1], event.target.value);          
+          if (!message && message !== false) {
+            const copy = JSON.parse(JSON.stringify(validationErrors));
+            copy[lowerName] && delete copy[lowerName];
+            setValidationErrors(copy);
+          }
+        }
       }
     });
     setInputsState({
       ...inputsState,
-      [event.target.name]: event.target.value
+      [lowerName]: event.target.value
     });
   }, [inputsState, setValidationErrors, validators, validationErrors]);
 
   const clearValue = useCallback((name?: string): void => {
-    if (!name) setInputsState(initialState);
-    if (inputsState[name]) {
+    const lowerName = name.toLowerCase();
+    if (!lowerName) setInputsState(initialState);
+    if (inputsState[lowerName]) {
       setInputsState({
         ...inputsState,
-        [name]: ''
+        [lowerName]: ''
       });
     }
   }, [inputsState, setInputsState, initialState]);
 
   const getValue = useCallback((name?: string): string | typeof initialState => {
-    if (!name) return inputsState;
-    if (inputsState[name]) return inputsState[name];
+    const lowerName = name.toLowerCase();
+    if (!lowerName) return inputsState;
+    if (inputsState[lowerName]) return inputsState[lowerName];
     return '';
   }, [inputsState]);
 
   return {
-    getValue, clearValue, onChange, validationErrors, onBlur, bindEvents: { onChange, onBlur }
+    getValue,
+    clearValue,
+    onChange,
+    onBlur,
+    getValidationErrorMessage,
+    bindEvents: { onChange, onBlur }
   };
 };

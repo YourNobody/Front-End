@@ -38,3 +38,19 @@ export const MyIsAlphanumeric = (locale?: string): PropertyDecorator => IsAlphan
 export const MyNotContains = (seed?: string): PropertyDecorator => NotContains(seed, {
   message: M.NotContains(seed)
 });
+
+export const CustomValidateTitle = (title: string): string | null => {
+  if (!title) return M.IsNotEmpty;
+  if (typeof title !== 'string') return M.isString;
+  if (title.length < 10) return M.MinLength(10);
+  if (title.length > 40) return M.MaxLength(40);
+  return null;
+};
+
+export const CustomValidateSuggestedAnswers = (answer: string): string | null => {
+  if (!answer) return M.IsNotEmpty;
+  if (typeof answer !== 'string') return M.isString;
+  if (answer.length < 10) return M.MinLength(5);
+  if (answer.length > 40) return M.MaxLength(25);
+  return null;
+};

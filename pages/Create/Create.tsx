@@ -28,7 +28,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const { error, clearError, request, loading} = useRequest();
   const { setAppAlert } = useActions();
   const { control, handleSubmit, setValue } = useForm();
-  const { getValue, clearValue, onChange } = useInput();
+  const { getValue, clearValue, onChange, bindEvents, getValidationErrorMessage } = useInput();
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
   const [questionAnswers, setQuestionAnswers] = useState<Record<QuestionTypes, string[]>>({} as Record<QuestionTypes, string[]>);
   const formRef = useRef<HTMLFormElement>(null);
@@ -127,12 +127,13 @@ const Create: FC<CreateProps> = (): JSX.Element => {
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input
+                  {...bindEvents}
                   label="Write an answer to your question:"
-                  name={selectedType}
+                  name={selectedType + "_answer"}
                   type="text"
                   placeholder="Write an answer variant to your question"
-                  value={getValue(selectedType)}
-                  onChange={onChange}
+                  value={getValue(selectedType + '_answer')}
+                  error={getValidationErrorMessage(selectedType + "_answer")}
                 />
                 <Button
                   onClick={handleAnswerAdd}
@@ -169,12 +170,13 @@ const Create: FC<CreateProps> = (): JSX.Element => {
             />
             <div className={styles.addAnswer}>
               <Input
+                {...bindEvents}
                 label="Or just paste the image URL that you want to be estimated:"
-                name={selectedType}
+                name={selectedType + '_answer'}
                 type="text"
                 placeholder="Paste an URL of an image..."
-                value={getValue(selectedType)}
-                onChange={onChange}
+                value={getValue(selectedType + '_answer')}
+                error={getValidationErrorMessage(selectedType + "_answer")}
                 onKeyDown={() => console.log('key down')}
               />
               <Button
@@ -199,12 +201,13 @@ const Create: FC<CreateProps> = (): JSX.Element => {
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input
+                  {...bindEvents}
                   label="Write 2 answers for your question or paste 2 URLs to the images that you want to compare"
-                  name={selectedType}
+                  name={selectedType + '_answer'}
+                  error={getValidationErrorMessage(selectedType + "_answer")}
                   type="text"
                   placeholder="Write an answer variant to your question"
-                  value={getValue(selectedType)}
-                  onChange={onChange}
+                  value={getValue(selectedType + '_answer')}
                 />
                 <Button
                   disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 2}
@@ -246,12 +249,13 @@ const Create: FC<CreateProps> = (): JSX.Element => {
           </div>
           {selectedType ? <>
               <Input
+                {...bindEvents}
                 label="Quiz Title:"
                 className={styles.inputTitle}
                 type="text"
+                error={getValidationErrorMessage(selectedType + '_title')}
                 name={selectedType + '_title'}
                 value={getValue(selectedType + '_title')}
-                onChange={onChange}
                 placeholder="Write title of your question..."
               />
             </> : <></>

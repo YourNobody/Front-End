@@ -19,7 +19,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
   const { setAppAlert, fetchUserSuccess } = useActions();
   const { request, loading } = useRequest();
-  const { getValue, onChange, clearValue, validationErrors, bindEvents } = useInput();
+  const { getValue, onChange, clearValue, getValidationErrorMessage, bindEvents } = useInput();
   const [ confirmed, setConfirmed ] = useState<Record<string, boolean>>({});
 
   const handleBlockToggling = (key: profileChangeKeys): void => {
@@ -52,7 +52,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
         input.focus();
         input.blur();
       }
-      if (validationErrors[field]) isValid = false;
+      if (getValidationErrorMessage(field)) isValid = false;
       if (!body[field]) isValid = false;
     });
     if (!isValid) {
@@ -77,7 +77,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
   };
 
   const handleConfirmation = (name: string) => {
-    if (validationErrors[name]) {
+    if (getValidationErrorMessage(name)) {
       setConfirmed({
         ...confirmed,
         [name]: false
@@ -133,7 +133,7 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
                       key={i}
                       {...props}
                       {...bindEvents}
-                      error={validationErrors[props.name]?.message}
+                      error={getValidationErrorMessage(props.name)}
                       autoComplete="off"
                       value={getValue(props.name)}
                     />)

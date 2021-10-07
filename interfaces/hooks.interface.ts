@@ -9,11 +9,11 @@ export interface IUseInput {
   clearValue: (name?: string) => void;
   onChange: (event: any) => void;
   onBlur: (event: any) => void;
-  validationErrors: Record<string, { message: string }>;
   bindEvents: {
     onBlur: (event: any) => void;
     onChange: (event: any) => void;
-  }
+  },
+  getValidationErrorMessage: (name: string) => string | null;
 }
 
 export interface IUseAuth {

@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { LOCALSTORAGE_USER_DATA_NAME } from "../constants/app";
 import { IUserReducer, IUserState } from "./interfaces-reducers/userReducer.interface";
 import { getEmptyObject } from "../helpers/custom.helper";
+import createSagaMiddleware from "@redux-saga/core";
 
 const preloadState = () => {  
     const userData: { user: IUserReducer, token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
@@ -30,6 +31,8 @@ const preloadState = () => {
     return userInitial;
 };
 
+const sagaMiddleware = createSagaMiddleware();
+
 export const store = createStore(rootReducer, {
   user: preloadState()
-}, composeWithDevTools(applyMiddleware(thunk))); 
+}, composeWithDevTools(applyMiddleware(thunk, sagaMiddleware))); 

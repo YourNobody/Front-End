@@ -1,5 +1,14 @@
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import { MyIsAlphanumeric, MyIsEmail, MyIsNotEmpty, MyIsString, MyMaxLength, MyMinLength } from '../constants/myValidator';
+import {
+  CustomValidateSuggestedAnswers,
+  CustomValidateTitle,
+  MyIsAlphanumeric,
+  MyIsEmail,
+  MyIsNotEmpty,
+  MyIsString,
+  MyMaxLength,
+  MyMinLength
+} from '../constants/myValidator';
 
 class User {
   @MyMaxLength(24)
@@ -36,6 +45,12 @@ class User {
   getValidatorFields = (): string[] => {
     return ['confirm', 'password', 'oldPassword', 'nickname', 'email'];
   };
+
+  validateCustomProperty = (type: 'title' | 'editor' | 'answer', text: string): string | boolean => {
+    switch (type) {
+      default: return false;
+    }
+  };
 }
 
 class Quiz {
@@ -60,6 +75,18 @@ class Quiz {
 
   getValidatorFields = (): string[] => {
     return ['title', 'question', 'answer'];
+  };
+
+  validateCustomProperty = (type: 'title' | 'editor' | 'answer', text: string): string | boolean => {
+    switch (type) {
+      case 'title':
+        return CustomValidateTitle(text);
+      case 'editor':
+        return;
+      case 'answer':
+        return CustomValidateSuggestedAnswers(text);
+      default: return false;
+    }
   };
 }
 

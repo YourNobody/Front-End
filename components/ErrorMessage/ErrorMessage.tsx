@@ -5,8 +5,8 @@ import cn from 'classnames';
 
 export const ErrorMessage: FC<ErrorMessageProps> = ({ children, className, ...props }) => {
   if (!children) return <></>;
-  return <span
+  return <p
     {...props}
     className={cn(styles.error, className)}
-  >{children}</span>;
+  >{children}</p>;
 };
