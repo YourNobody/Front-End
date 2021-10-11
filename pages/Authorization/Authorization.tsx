@@ -1,31 +1,31 @@
 import { FC, useEffect, useState } from 'react';
-import { Controller, Resolver, useForm } from 'react-hook-form';
+import { Controller, Resolver, useForm, UseFormHandleSubmit } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
 import styles from './Authorization.module.css';
-import { HTag, Input, Button } from '../../components';
-import { routes } from '../../constants/routes';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { HTag, Input, Button, Card, HR } from '../../components';
+import { queryKeys, routes } from '../../constants/routes';
+import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
-import { getEmptyObject, getObjectWithDefinedKeys } from '../../helpers/custom.helper';
+import { getEmptyObject } from '../../helpers/custom.helper';
 import { useResolver } from '../../hooks/useResolver.hook';
 import { WithMessage } from '../../interfaces/quizes.interface';
-import { IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
+import { IUserResetPassword, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
 
 const Login: FC<AuthorizationProps> = () => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const { initial, resolver } = useResolver().User;
-  const { register, getValues, handleSubmit, reset, formState: { errors } } = useForm({ 
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<typeof initial>({
     resolver,
-    context: { isValid }
+    context: { isValid: isValid }
   });
   const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: UseFormHandleSubmit<any>) => {
     if (Object.keys(errors).length) return;
     try {
       const data = await request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', formData);
@@ -39,7 +39,7 @@ const Login: FC<AuthorizationProps> = () => {
     }
     reset(getEmptyObject(formData));
   };
-  
+
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
@@ -48,7 +48,6 @@ const Login: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="text"
             label="Email"
-            name="email"
             error={errors['email']?.message}
             {...register('email', {
               disabled: loading
@@ -58,7 +57,6 @@ const Login: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input
             type="password"
-            name="password"
             label="Password"
             error={errors['password']?.message}
             {...register('password', {
@@ -69,7 +67,7 @@ const Login: FC<AuthorizationProps> = () => {
         <Button className={styles.button} type="submit">Log In</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.REGISTER}>No account?</Link>
-          <Link to={routes.AUTH.REGISTER}>Forgot password?</Link>
+          <Link to={routes.AUTH.RESET}>Forgot password?</Link>
         </div>
       </form>
     </div>
@@ -83,15 +81,15 @@ const Register: FC<AuthorizationProps> = () => {
     resolver,
     context: { isValid }
   });
-  const { setAppAlert } = useActions(); 
+  const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
-  
-  const onSubmit = async (formData) => {    
+
+  const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
     try {
-      const data: WithMessage = await request('/auth/register', 'POST', formData);      
+      const data: WithMessage = await request('/auth/register', 'POST', formData);
       history.push(routes.AUTH.LOGIN);
       setAppAlert(data.message, statuses.SUCCESS);
     } catch (err) {
@@ -109,7 +107,6 @@ const Register: FC<AuthorizationProps> = () => {
         <div className={styles.inputBlock}>
           <Input type="text"
             label="Nickname"
-            name="nickname"
             error={errors['nickname']?.message}
             {...register('nickname', {
               disabled: loading,
@@ -120,7 +117,6 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type="text"
             label="Email"
-            name="email"
             error={errors['email']?.message}
             {...register('email', {
               disabled: loading
@@ -155,6 +151,123 @@ const Register: FC<AuthorizationProps> = () => {
   );
 };
 
+const Reset: FC<AuthorizationProps> = () => {
+  const history = useHistory();
+  const { pathname, search } = useLocation();
+  const { resolver, initial } = useResolver().User;
+  const [isValid, setIsValid] = useState<boolean>(true);
+  const { setAppAlert } = useActions();
+  const {handleSubmit, register, formState: { errors }} = useForm<typeof initial>({
+    resolver, 
+    context: { isValid }
+  });
+  const { loading, request } = useRequest();
+  const [isSent, setIsSent] = useState<boolean>(false);
+  const [isResetting, setIsResetting] = useState<boolean>(false);
+  console.log('isResetting: ', isResetting);
+  useEffect(() => {
+    const query = new URLSearchParams(search);
+    if (query.get(queryKeys.RESET_TOKEN)) {
+      const getAccess = async () => {
+        try {
+          const data = await request<IUserResetPassword>(pathname + search, 'GET');
+          setIsResetting(data.isAccessed);
+        } catch (err: any) {
+          setIsResetting(false);
+          setAppAlert(err.message, statuses.ERROR)
+        }
+      }
+      getAccess();
+    }
+  }, []);
+
+  const handleEmailSending = async (formData) => {
+    try {
+      const data = await request<WithMessage>('/auth/reset', 'POST', formData);
+      setAppAlert(data.message, statuses.SUCCESS);
+      setIsSent(true);
+    } catch (err) {
+      setAppAlert(err.message, statuses.ERROR);
+    }
+  };
+
+  const handleReset = async (formData) => {
+    try {
+      const data = await request<WithMessage>('/auth/reset', 'POST', formData);
+      setAppAlert(data.message, statuses.SUCCESS);
+      history.push(routes.AUTH.LOGIN);
+    } catch (err) {
+      setAppAlert(err.message, statuses.ERROR);
+    }
+  };
+
+  return (
+    <div className={styles.authorization}>
+      <HTag size="large" className={styles.naming}>Quiz App</HTag>
+      {
+        !isResetting ?
+          isSent
+            ? <Card className={styles.text}>
+                <HTag size="m">
+                  We have sent you the email with a link for password reset
+                  <br />
+                  Please, follow the link, if you get the message
+                  <br />
+                  (If you don't see our email, check the spam please)
+                </HTag>
+                <HR />
+                <div className={styles.info}>
+                  <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+                </div>
+            </Card>
+            : <form className={styles.form} onSubmit={handleSubmit(handleEmailSending)}>
+              <HTag size="large" className={styles.title}>Access Recovery</HTag>
+              <div className={styles.inputBlock}>
+                <Input type="text"
+                       label="Email for recovery proccess"
+                       error={errors['email']?.message}
+                       {...register('email', {
+                         disabled: loading,
+                       })}
+                />
+              </div>
+              <Button className={styles.button} type="submit">Send email message</Button>
+              <div className={styles.info}>
+                <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+              </div>
+            </form>
+          : <>
+            <form className={styles.form} onSubmit={handleSubmit(handleReset)}>
+              <HTag size="large" className={styles.title}>Access Recovery</HTag>
+              <div className={styles.inputBlock}>
+                <Input type="text"
+                       label="Enter new password"
+                       error={errors['newPassword']?.message}
+                       {...register('newPassword', {
+                         disabled: loading,
+                       })}
+                />
+              </div>
+              <div className={styles.inputBlock}>
+                <Input type="text"
+                       label="Confirm new password"
+                       error={errors['password']?.message}
+                       {...register('password', {
+                         disabled: loading,
+                       })}
+                />
+              </div>
+              <Button className={styles.button} type="submit">Reset</Button>
+              <div className={styles.info}>
+                <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+              </div>
+            </form>
+          </>
+      }
+    </div>
+  );
+};
+
 export const Authorization: FC<AuthorizationProps> = (props): JSX.Element => {
   return (
     <Switch>
@@ -166,6 +279,9 @@ export const Authorization: FC<AuthorizationProps> = (props): JSX.Element => {
       </Route>
       <Route path={routes.AUTH.REGISTER} exact>
         <Register {...props}/>
+      </Route>
+      <Route path={routes.AUTH.RESET} exact>
+        <Reset {...props}/>
       </Route>
     </Switch>
   );

@@ -41,9 +41,15 @@ class User {
   @MyIsString()
   @MyIsNotEmpty()
   oldPassword: string;
+
+  @MyMaxLength(20)
+  @MyMinLength(4)
+  @MyIsString()
+  @MyIsNotEmpty()
+  newPassword: string;
   
   getValidatorFields = (): string[] => {
-    return ['confirm', 'password', 'oldPassword', 'nickname', 'email'];
+    return ['confirm', 'password', 'oldPassword', 'nickname', 'email', 'newPassword'];
   };
 
   validateCustomProperty = (type: 'title' | 'editor' | 'answer', text: string): string | boolean => {
@@ -92,7 +98,10 @@ class Quiz {
 
 const validators = {
   User: {
-    resolver: classValidatorResolver(User, { skipMissingProperties: true, skipUndefinedProperties: true }, {
+    resolver: classValidatorResolver(User, {
+      skipMissingProperties: true,
+      skipUndefinedProperties: true
+    }, {
       mode: 'sync'
     }),
     initial: User

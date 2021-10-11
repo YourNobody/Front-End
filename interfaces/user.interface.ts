@@ -1,3 +1,5 @@
+import { WithMessage } from './quizes.interface';
+
 export interface IUser {
   nickname: string;
   email: string;
@@ -22,4 +24,8 @@ export interface WithQuizes {
   user: {
     quizes: any[];
   }
+}
+
+export interface IUserResetPassword extends WithMessage {
+  isAccessed: boolean;
 }

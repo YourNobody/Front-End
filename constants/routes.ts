@@ -19,5 +19,10 @@ export const routes = {
     ROOT: '/auth',
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
+    RESET: '/auth/reset',
   },
+};
+
+export const queryKeys = {
+  RESET_TOKEN: 'reset_token'
 };
