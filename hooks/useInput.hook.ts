@@ -1,9 +1,10 @@
 import { validate, ValidationError } from "class-validator";
-import { useCallback, useEffect, useState } from "react";
-import { IUseInput } from "../interfaces/hooks.interface";
+import { FormEvent, useCallback, useEffect, useState } from 'react'
+import { IUseInput, IUseInputOptions, IUseInputOptionsAdditional } from '../interfaces/hooks.interface'
 import { useResolver } from "./useResolver.hook";
+import { getObjectWithDefinedKeys } from '../helpers/custom.helper'
 
-export const useInput = (initialState: Record<string, string> = {}): IUseInput => {
+export const useInput = (initialState: Record<string, string> = {}): { clearValues: (name?: string) => void; handleSubmit: (cb?: (formData: Record<string, unknown>) => void) => any; getValues: (name?: string) => (string | Record<string, string>); formState: { state: Record<string, string>; errors: Record<string, { message: string }> }; register: (name: string, options?: (IUseInputOptions & IUseInputOptionsAdditional)) => IUseInputOptions } => {
   const { validators } = useResolver();
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
@@ -14,7 +15,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     }
     return null;
   }, [validationErrors]);
-  
+
   const onBlur = useCallback((event: any): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
@@ -54,7 +55,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       }
     });
   }, [setValidationErrors, validators, validationErrors]);
-
+``//todo: In this function I need to find where the value disappears
   const onChange = useCallback((event: any): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
@@ -89,30 +90,78 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     });
   }, [inputsState, setValidationErrors, validators, validationErrors]);
 
-  const clearValue = useCallback((name?: string): void => {
-    const lowerName = name.toLowerCase();
-    if (!lowerName) setInputsState(initialState);
-    if (inputsState[lowerName]) {
-      setInputsState({
-        ...inputsState,
-        [lowerName]: ''
-      });
-    }
+  const clearValues = useCallback((name?: string | Record<string, unknown>): void => {
+    // if (!name) return;
+    // if (typeof name === 'string') {
+    //   const lowerName = name.toLowerCase();
+    //   if (!lowerName) setInputsState(initialState);
+    //   if (inputsState[lowerName]) {
+    //     setInputsState({
+    //       ...inputsState,
+    //       [lowerName]: ''
+    //     });
+    //   }
+    // } else {
+    //   Object.keys(name).forEach(key => {
+    //     if (inputsState[key]) inputsState[key] = '';
+    //   })
+    // }
   }, [inputsState, setInputsState, initialState]);
 
-  const getValue = useCallback((name?: string): string | typeof initialState => {
-    const lowerName = name.toLowerCase();
-    if (!lowerName) return inputsState;
-    if (inputsState[lowerName]) return inputsState[lowerName];
+  const getValues = useCallback((name?: string): string | typeof initialState => {
+    // if (!name) return '';
+    // const lowerName = name.toLowerCase();
+    // if (!lowerName) return inputsState;
+    // if (inputsState[lowerName]) return inputsState[lowerName];
     return '';
   }, [inputsState]);
 
+  const register = useCallback((name: string, options: IUseInputOptions & IUseInputOptionsAdditional = {
+    disableValidation: false,
+    exclude: false
+  }): IUseInputOptions => {
+    if (!name) throw new Error('Name isn\'t provided');
+    console.log(name, inputsState, inputsState[name])
+    const props = {
+      onChange, onBlur, name,
+      value: inputsState[name]
+    } as IUseInputOptions & IUseInputOptionsAdditional;
+    if (!options) return props;
+    if (options.disableValidation) {
+      props.error = getValidationErrorMessage(name);
+    }
+    if (options.exclude) {
+      props['data-exclude'] = 1;
+    }
+    delete options.disableValidation;
+    delete options.exclude;
+    return { ...props, ...options };
+  }, []);
+
+  const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => void): any => {
+    return (event: FormEvent) => {
+      event.preventDefault();
+      const form = event.target as Element;
+      const formData = Array.from(form.querySelectorAll('input')).reduce((data, input) => {
+        if (input.dataset.exclude) return data;
+        input.focus();
+        input.blur();
+        data[input.name] = inputsState[input.name];
+        return data;
+      }, {});
+      if (!cb || Object.keys(getObjectWithDefinedKeys(validationErrors, formData)).length) return;
+      return cb(formData);
+    };
+  }, []);
+
   return {
-    getValue,
-    clearValue,
-    onChange,
-    onBlur,
-    getValidationErrorMessage,
-    bindEvents: { onChange, onBlur }
+    getValues,
+    clearValues,
+    register,
+    handleSubmit,
+    formState: {
+      errors: validationErrors,
+      state: inputsState
+    }
   };
 };

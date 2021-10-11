@@ -3,9 +3,10 @@
 	font-weight: 300;
 	position: relative;
 	color: var(--red-bright);
+	margin-top: 8px;
 }
 
 .error::before {
 	display: inline;
-  content: "⚠ ";
+	content: "⚠ ";
 }

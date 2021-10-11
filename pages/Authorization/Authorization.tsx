@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react'
 import { Controller, Resolver, useForm, UseFormHandleSubmit } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
@@ -13,6 +13,7 @@ import { getEmptyObject } from '../../helpers/custom.helper';
 import { useResolver } from '../../hooks/useResolver.hook';
 import { WithMessage } from '../../interfaces/quizes.interface';
 import { IUserResetPassword, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
+import { useInput } from '../../hooks/useInput.hook'
 
 const Login: FC<AuthorizationProps> = () => {
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -154,17 +155,13 @@ const Register: FC<AuthorizationProps> = () => {
 const Reset: FC<AuthorizationProps> = () => {
   const history = useHistory();
   const { pathname, search } = useLocation();
-  const { resolver, initial } = useResolver().User;
+  const { register, clearValues, handleSubmit } = useInput();
   const [isValid, setIsValid] = useState<boolean>(true);
   const { setAppAlert } = useActions();
-  const {handleSubmit, register, formState: { errors }} = useForm<typeof initial>({
-    resolver, 
-    context: { isValid }
-  });
   const { loading, request } = useRequest();
   const [isSent, setIsSent] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
-  console.log('isResetting: ', isResetting);
+
   useEffect(() => {
     const query = new URLSearchParams(search);
     if (query.get(queryKeys.RESET_TOKEN)) {
@@ -186,16 +183,24 @@ const Reset: FC<AuthorizationProps> = () => {
       const data = await request<WithMessage>('/auth/reset', 'POST', formData);
       setAppAlert(data.message, statuses.SUCCESS);
       setIsSent(true);
+      clearValues(formData);
     } catch (err) {
       setAppAlert(err.message, statuses.ERROR);
     }
   };
 
-  const handleReset = async (formData) => {
+  const handleReset = async (e: FormEvent) => {
+    e.preventDefault();
     try {
-      const data = await request<WithMessage>('/auth/reset', 'POST', formData);
-      setAppAlert(data.message, statuses.SUCCESS);
-      history.push(routes.AUTH.LOGIN);
+      // const password = getValue('password');
+      // const confirm = getValue('confirm');
+      // if (password !== confirm) throw new Error('Password wasn\'t confirmed');
+      // const body = { password, confirm };
+      // const query = new URLSearchParams(search);
+      // const data = await request<WithMessage>(pathname + search, 'POST', body);
+      // setAppAlert(data.message, statuses.SUCCESS);
+      // history.push(routes.AUTH.LOGIN);
+      // clearValue();
     } catch (err) {
       setAppAlert(err.message, statuses.ERROR);
     }
@@ -223,12 +228,10 @@ const Reset: FC<AuthorizationProps> = () => {
             : <form className={styles.form} onSubmit={handleSubmit(handleEmailSending)}>
               <HTag size="large" className={styles.title}>Access Recovery</HTag>
               <div className={styles.inputBlock}>
-                <Input type="text"
-                       label="Email for recovery proccess"
-                       error={errors['email']?.message}
-                       {...register('email', {
-                         disabled: loading,
-                       })}
+                <Input
+                   type="text"
+                   label="Email for recovery process"
+                  {...register('email')}
                 />
               </div>
               <Button className={styles.button} type="submit">Send email message</Button>
@@ -237,24 +240,22 @@ const Reset: FC<AuthorizationProps> = () => {
               </div>
             </form>
           : <>
-            <form className={styles.form} onSubmit={handleSubmit(handleReset)}>
+            <form className={styles.form} onSubmit={handleReset}>
               <HTag size="large" className={styles.title}>Access Recovery</HTag>
               <div className={styles.inputBlock}>
-                <Input type="text"
+                <Input type="password"
                        label="Enter new password"
-                       error={errors['newPassword']?.message}
-                       {...register('newPassword', {
-                         disabled: loading,
-                       })}
+
+                       name="password"
+
                 />
               </div>
               <div className={styles.inputBlock}>
-                <Input type="text"
+                <Input type="password"
                        label="Confirm new password"
-                       error={errors['password']?.message}
-                       {...register('password', {
-                         disabled: loading,
-                       })}
+
+                       name="confirm"
+
                 />
               </div>
               <Button className={styles.button} type="submit">Reset</Button>

@@ -30,7 +30,7 @@ export const getEmptyObject = <T>(data: T): T => {
   }, {}) as T || {} as T;
 };
 
-export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string | Record<string, unknown>): any => {  
+export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string | Record<string, unknown | string>): any => {
   if (!initial || !Object.keys(initial).length) return {};
   if (!keys) return initial;
   if (typeof keys === 'string') {
