@@ -155,8 +155,7 @@ const Register: FC<AuthorizationProps> = () => {
 const Reset: FC<AuthorizationProps> = () => {
   const history = useHistory();
   const { pathname, search } = useLocation();
-  const { register, clearValues, handleSubmit } = useInput();
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const { register, clearValues, handleSubmit, formState: { errors } } = useInput();
   const { setAppAlert } = useActions();
   const { loading, request } = useRequest();
   const [isSent, setIsSent] = useState<boolean>(false);

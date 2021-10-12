@@ -4,7 +4,7 @@ import { IUseInput, IUseInputOptions, IUseInputOptionsAdditional } from '../inte
 import { useResolver } from "./useResolver.hook";
 import { getObjectWithDefinedKeys } from '../helpers/custom.helper'
 
-export const useInput = (initialState: Record<string, string> = {}): { clearValues: (name?: string) => void; handleSubmit: (cb?: (formData: Record<string, unknown>) => void) => any; getValues: (name?: string) => (string | Record<string, string>); formState: { state: Record<string, string>; errors: Record<string, { message: string }> }; register: (name: string, options?: (IUseInputOptions & IUseInputOptionsAdditional)) => IUseInputOptions } => {
+export const useInput = (initialState: Record<string, string> = {}): IUseInput => {
   const { validators } = useResolver();
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
@@ -55,7 +55,7 @@ export const useInput = (initialState: Record<string, string> = {}): { clearValu
       }
     });
   }, [setValidationErrors, validators, validationErrors]);
-``//todo: In this function I need to find where the value disappears
+
   const onChange = useCallback((event: any): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
@@ -91,28 +91,28 @@ export const useInput = (initialState: Record<string, string> = {}): { clearValu
   }, [inputsState, setValidationErrors, validators, validationErrors]);
 
   const clearValues = useCallback((name?: string | Record<string, unknown>): void => {
-    // if (!name) return;
-    // if (typeof name === 'string') {
-    //   const lowerName = name.toLowerCase();
-    //   if (!lowerName) setInputsState(initialState);
-    //   if (inputsState[lowerName]) {
-    //     setInputsState({
-    //       ...inputsState,
-    //       [lowerName]: ''
-    //     });
-    //   }
-    // } else {
-    //   Object.keys(name).forEach(key => {
-    //     if (inputsState[key]) inputsState[key] = '';
-    //   })
-    // }
+    if (!name) return;
+    if (typeof name === 'string') {
+      const lowerName = name.toLowerCase();
+      if (!lowerName) setInputsState(initialState);
+      if (inputsState[lowerName]) {
+        setInputsState({
+          ...inputsState,
+          [lowerName]: ''
+        });
+      }
+    } else {
+      Object.keys(name).forEach(key => {
+        if (inputsState[key]) inputsState[key] = '';
+      })
+    }
   }, [inputsState, setInputsState, initialState]);
 
-  const getValues = useCallback((name?: string): string | typeof initialState => {
-    // if (!name) return '';
-    // const lowerName = name.toLowerCase();
-    // if (!lowerName) return inputsState;
-    // if (inputsState[lowerName]) return inputsState[lowerName];
+  const getValues = useCallback((name?: string): string | Record<string, unknown> => {
+    if (!name) return '';
+    const lowerName = name.toLowerCase();
+    if (!lowerName) return inputsState;
+    if (inputsState[lowerName]) return inputsState[lowerName];
     return '';
   }, [inputsState]);
 
@@ -121,7 +121,6 @@ export const useInput = (initialState: Record<string, string> = {}): { clearValu
     exclude: false
   }): IUseInputOptions => {
     if (!name) throw new Error('Name isn\'t provided');
-    console.log(name, inputsState, inputsState[name])
     const props = {
       onChange, onBlur, name,
       value: inputsState[name]
@@ -136,11 +135,12 @@ export const useInput = (initialState: Record<string, string> = {}): { clearValu
     delete options.disableValidation;
     delete options.exclude;
     return { ...props, ...options };
-  }, []);
+  }, [inputsState]);
 
   const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => void): any => {
     return (event: FormEvent) => {
       event.preventDefault();
+      console.log('inp: ', inputsState);
       const form = event.target as Element;
       const formData = Array.from(form.querySelectorAll('input')).reduce((data, input) => {
         if (input.dataset.exclude) return data;
@@ -152,7 +152,7 @@ export const useInput = (initialState: Record<string, string> = {}): { clearValu
       if (!cb || Object.keys(getObjectWithDefinedKeys(validationErrors, formData)).length) return;
       return cb(formData);
     };
-  }, []);
+  }, [inputsState]);
 
   return {
     getValues,

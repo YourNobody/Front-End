@@ -7,7 +7,7 @@ export interface IUseRequest {
 }
 
 export interface IUseInput {
-  getValues?: (name?: string) => string | Record<string, string>;
+  getValues?: (name?: string) => string | Record<string, unknown>;
   clearValues?: (name?: string) => void;
   register?: (name: string, options: IUseInputOptions) => IUseInputOptions;
   handleSubmit?: (cb?: (formData: Record<string, unknown>) => void) => any;
