@@ -16,7 +16,6 @@ import { WithMessage } from '../../interfaces/quizes.interface';
 export const Profile: FC<ProfileProps> = (props) => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
-  const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
   const { userLogOut, setAppAlert, openModal, closeModal } = useActions();
   const { error, clearError, request, loading } = useRequest();
 

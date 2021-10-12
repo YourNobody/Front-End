@@ -11,58 +11,44 @@ import { useActions } from '../../../hooks/useActions.hook';
 import { LOCALSTORAGE_USER_DATA_NAME, statuses } from '../../../constants/app';
 import { IUserWithToken } from '../../../interfaces/user.interface';
 import { useResolver } from '../../../hooks/useResolver.hook';
-import { useForm } from 'react-hook-form';
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
   const Resolver = useResolver();
-  const { register, reset, formState: { errors } } = useForm({});
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
   const { setAppAlert, fetchUserSuccess } = useActions();
   const { request, loading } = useRequest();
-  const { getValue, onChange, clearValue, getValidationErrorMessage, bindEvents } = useInput();
-  const [ confirmed, setConfirmed ] = useState<Record<string, boolean>>({});
+  const { register, handleSubmit, clearValues, getValues } = useInput();
+  const [ selectedChangeKey, setSelectedChangeKey ] = useState<profileChangeKeys>(null);
 
   const handleBlockToggling = (key: profileChangeKeys): void => {
     if (openBlocks.includes(key)) return setOpenBlocks(openBlocks.filter(k => k !== key));
     return setOpenBlocks([...openBlocks, key]);
   };
 
-  const handleChange = async (key: profileChangeKeys) => {
-    const body: any = { key };
-    switch(key) {
+  const handleChange = async (formData: any) => {
+    const body: any = { key: selectedChangeKey };
+    switch (selectedChangeKey) {
       case 'nickname': {
-        body.nickname = getValue(key);
+        body.nickname = formData[selectedChangeKey];
         break;
       }
       case 'email': {
-        body.email = getValue(key);
+        body.email = formData[selectedChangeKey];
         break;
       }
       case 'password': {
-        body.oldPassword = getValue('oldPassword');
-        body.password = getValue(key);
-        body.confirm = getValue('confirm');
+        body.oldPassword = formData['old_password'];
+        body.password = formData[selectedChangeKey];
+        body.confirm = formData['confirm'];
         break;
       }
-    }
-    let isValid = true;
-    Object.keys(body).forEach(field => {
-      const input: HTMLInputElement = document.querySelector(`[name=${field}]`);
-      if (input) {
-        input.focus();
-        input.blur();
-      }
-      if (getValidationErrorMessage(field)) isValid = false;
-      if (!body[field]) isValid = false;
-    });
-    if (!isValid) {
-      return;
+      default: return;
     }
     try {
       const data: WithMessage = await request('/profile/change', 'POST', body);
       const userData: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
       delete body.key;
-      (key === 'email' || key === 'nickname') && fetchUserSuccess({
+      (selectedChangeKey === 'email' || selectedChangeKey === 'nickname') && fetchUserSuccess({
         user: {
           ...userData.user,
           ...body
@@ -70,23 +56,9 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
         token: userData.token,
       });
       setAppAlert(data.message, statuses.SUCCESS);
-      clearValue();
+      clearValues(body);
     } catch (err) {
       setAppAlert(err.message, statuses.ERROR);
-    }
-  };
-
-  const handleConfirmation = (name: string) => {
-    if (getValidationErrorMessage(name)) {
-      setConfirmed({
-        ...confirmed,
-        [name]: false
-      });
-    } else {
-      setConfirmed({
-        ...confirmed,
-        [name]: true
-      });
     }
   };
 
@@ -119,9 +91,8 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
           Object.entries(profileChangeOptions).map(opt => {
             const name = opt[0] as profileChangeKeys;
             const data = opt[1];
-
             return (
-              <form data-change="nickname" key={name}>
+              <form key={name} onSubmit={handleSubmit(handleChange)}>
                 <div className={cn(styles.change, { [styles.changeOpened]: openBlocks.includes(name) })} data-change={name} onClick={() => handleBlockToggling(name)}>
                   Change {name[0].toUpperCase() + name.slice(1)}
                 </div>
@@ -132,26 +103,16 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
                     data.inputs.map((props, i) => <Input
                       key={i}
                       {...props}
-                      {...bindEvents}
-                      error={getValidationErrorMessage(props.name)}
+                      {...register(props.name)}
                       autoComplete="off"
-                      value={getValue(props.name)}
                     />)
                   }
-                  <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
-                  {/* {
-                    confirmed[name] && <>
-                      <Input
-                        key="1232132313213"
-                        name="oldPassword"
-                        {...bindEvents}
-                        error={validationErrors['oldPassword']?.message}
-                        autoComplete="off"
-                        value={getValue('oldPassword')}
-                      />
-                      <Button color="ghost" onClick={() => handleChange(name)}>Change {name[0].toUpperCase() + name.slice(1)}</Button>
-                    </>
-                  } */}
+                  <Button
+                    color='ghost' type='submit'
+                    onClick={() => setSelectedChangeKey(name)}
+                  >
+                    Change {name[0].toUpperCase() + name.slice(1)}
+                  </Button>
                 </div>
               </form>
             );

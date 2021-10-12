@@ -4,9 +4,8 @@ import styles from './Input.module.css';
 import cn from 'classnames';
 import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, className, type, name, ...props}, ref): JSX.Element => {
+export const Input: FC<InputProps> = ({ value = '', label, error, className, type, name, ...props }) => {
   const inputId: string = label ? createId(label) : null;
-
   return (
     <div className={styles.wrapper}>
       {label && <label
@@ -17,7 +16,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, c
       >{label}</label>}
       <input
         {...props}
-        ref={ref}
+        value={value}
         className={cn(styles.input, className, {
           [styles.errorInput]: error
         })}
@@ -30,7 +29,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, c
       }
     </div>
   );
-});
+};
 
 function createId(str: string): string {
   if (!str) return '';

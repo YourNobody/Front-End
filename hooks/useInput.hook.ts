@@ -8,12 +8,13 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
   const { validators } = useResolver();
   const [inputsState, setInputsState] = useState<Record<string, string>>(initialState);
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
-  const getValidationErrorMessage = useCallback((name: string): string | null => {
+
+  const getValidationErrorMessage = useCallback((name: string): string => {
     const lowerName = name.toLowerCase();
     if (validationErrors[lowerName] && validationErrors[lowerName].message) {
       return validationErrors[lowerName].message;
     }
-    return null;
+    return '';
   }, [validationErrors]);
 
   const onBlur = useCallback((event: any): void => {
@@ -116,17 +117,25 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     return '';
   }, [inputsState]);
 
-  const register = useCallback((name: string, options: IUseInputOptions & IUseInputOptionsAdditional = {
-    disableValidation: false,
-    exclude: false
-  }): IUseInputOptions => {
+  const register = useCallback((name: string, options?: IUseInputOptions & IUseInputOptionsAdditional): IUseInputOptions => {
+    if (!options) {
+      options = {
+        disableValidation: false,
+        exclude: false
+      };
+    } else {
+      options = {
+        ...options,
+        disableValidation: false,
+        exclude: false
+      };
+    }
     if (!name) throw new Error('Name isn\'t provided');
     const props = {
       onChange, onBlur, name,
       value: inputsState[name]
     } as IUseInputOptions & IUseInputOptionsAdditional;
-    if (!options) return props;
-    if (options.disableValidation) {
+    if (!options.disableValidation) {
       props.error = getValidationErrorMessage(name);
     }
     if (options.exclude) {
@@ -135,12 +144,11 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     delete options.disableValidation;
     delete options.exclude;
     return { ...props, ...options };
-  }, [inputsState]);
+  }, [inputsState, validationErrors]);
 
-  const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => void): any => {
+  const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => Promise<any> | any): any => {
     return (event: FormEvent) => {
       event.preventDefault();
-      console.log('inp: ', inputsState);
       const form = event.target as Element;
       const formData = Array.from(form.querySelectorAll('input')).reduce((data, input) => {
         if (input.dataset.exclude) return data;

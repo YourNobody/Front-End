@@ -9,15 +9,15 @@ export interface IUseRequest {
 export interface IUseInput {
   getValues?: (name?: string) => string | Record<string, unknown>;
   clearValues?: (name?: string) => void;
-  register?: (name: string, options: IUseInputOptions) => IUseInputOptions;
-  handleSubmit?: (cb?: (formData: Record<string, unknown>) => void) => any;
+  register?: (name: string, options?: IUseInputOptions & IUseInputOptionsAdditional) => IUseInputOptions;
+  handleSubmit?: (cb?: (formData: Record<string, unknown>) => Promise<any> | any) => any;
   formState?: {
     errors?: Record<string, { message: string }>;
     state?: Record<string, string>;
   }
 }
 
-export interface IUseInputOptions extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'ref'> {
+export interface IUseInputOptions extends DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   'data-exclude'?: 1 | 0 | '1' | '0';
   error?: string | null;
 }

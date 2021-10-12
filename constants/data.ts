@@ -39,7 +39,7 @@ export const profileChangeOptions = {
   password: {
     inputs: [
       {
-        name: 'oldPassword',
+        name: 'old_password',
         type: 'password',
         label: 'Old password',
         placeholder: 'Enter your old password'

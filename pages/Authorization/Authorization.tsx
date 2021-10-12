@@ -18,15 +18,12 @@ import { useInput } from '../../hooks/useInput.hook'
 const Login: FC<AuthorizationProps> = () => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const { initial, resolver } = useResolver().User;
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<typeof initial>({
-    resolver,
-    context: { isValid: isValid }
-  });
+  const { register, handleSubmit, clearValues, formState: { errors } } = useInput();
   const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
-  const onSubmit = async (formData: UseFormHandleSubmit<any>) => {
+  const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
     try {
       const data = await request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', formData);
@@ -38,31 +35,26 @@ const Login: FC<AuthorizationProps> = () => {
       fetchUserError();
       clearError();
     }
-    reset(getEmptyObject(formData));
+    clearValues(formData);
   };
-
+  
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
       <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
-          <Input type="text"
-            label="Email"
-            error={errors['email']?.message}
-            {...register('email', {
-              disabled: loading
-            })}
+          <Input
+            type='text'
+            label='Email'
+            {...register('email')}
           />
         </div>
         <div className={styles.inputBlock}>
           <Input
             type="password"
             label="Password"
-            error={errors['password']?.message}
-            {...register('password', {
-              disabled: loading
-            })}
+            {...register('password')}
           />
         </div>
         <Button className={styles.button} type="submit">Log In</Button>
@@ -106,42 +98,32 @@ const Register: FC<AuthorizationProps> = () => {
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Sign Up</HTag>
         <div className={styles.inputBlock}>
-          <Input type="text"
-            label="Nickname"
-            error={errors['nickname']?.message}
-            {...register('nickname', {
-              disabled: loading,
-            })}
+          <Input
+            type="text"
+            label='Nickname'
+            {...register('nickname')}
           />
         </div>
         <div className={styles.inputBlock}>
           <Input
             type="text"
             label="Email"
-            error={errors['email']?.message}
-            {...register('email', {
-              disabled: loading
-            })}
+            {...register('email')}
           />
         </div>
         <div className={styles.inputBlock}>
           <Input
             type="password"
             label="Password"
-            error={errors['password']?.message}
-            {...register('password', {
-              disabled: loading
-            })}
+            {...register('password')}
           />
         </div>
         <div className={styles.inputBlock}>
           <Input
             type="password"
             label="Confirm Password"
-            error={errors['confirm']?.message}
-            {...register('confirm', {
-            disabled: loading
-          })}/>
+            {...register('confirm')}
+          />
         </div>
         <Button className={styles.button} type="submit">Sign Up</Button>
         <div className={styles.info}>
@@ -228,8 +210,8 @@ const Reset: FC<AuthorizationProps> = () => {
               <HTag size="large" className={styles.title}>Access Recovery</HTag>
               <div className={styles.inputBlock}>
                 <Input
-                   type="text"
-                   label="Email for recovery process"
+                  type="text"
+                  label="Email for recovery process"
                   {...register('email')}
                 />
               </div>
@@ -242,19 +224,17 @@ const Reset: FC<AuthorizationProps> = () => {
             <form className={styles.form} onSubmit={handleReset}>
               <HTag size="large" className={styles.title}>Access Recovery</HTag>
               <div className={styles.inputBlock}>
-                <Input type="password"
-                       label="Enter new password"
-
-                       name="password"
-
+                <Input
+                  type='password'
+                  label='Enter new password'
+                  {...register('password')}
                 />
               </div>
               <div className={styles.inputBlock}>
-                <Input type="password"
-                       label="Confirm new password"
-
-                       name="confirm"
-
+                <Input
+                  type='password'
+                  label='Confirm new password'
+                  {...register('confirm')}
                 />
               </div>
               <Button className={styles.button} type="submit">Reset</Button>
