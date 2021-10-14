@@ -1,51 +1,58 @@
 .profile {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 20px;
-  height: 100%;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 20px;
+
+	height: 100%;
 }
 
 .navList {
-  min-width: 150px;
-  font-size: 16px;
-  background-color: var(--black-light);
+	min-width: 150px;
+
+	background-color: var(--black-light);
+
+	font-size: 16px;
 }
 
 .navList a {
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
+	display: flex;
+	align-items: flex-end;
+
+	width: 100%;
 }
 
 .navList li {
-  width: 100%;
-  color: var(--white);
-  padding: 20px 15px;
-  transition: all 0.2s;
-  cursor: pointer;
+	width: 100%;
+	padding: 20px 15px;
+
+	cursor: pointer;
+	transition: all 0.2s;
+
+	color: var(--white);
 }
 
 .navList a:nth-of-type(3) li {
-  color: var(--red);
+	color: var(--red);
 }
 
 .navList a:nth-of-type(3) li:hover {
-  background-color: var(--red-transparent);
+	background-color: var(--red-transparent);
 }
 
 .navList li:hover {
-  color: var(--blue);
-  background-color: var(--white-transparent);
+	color: var(--blue);
+	background-color: var(--white-transparent);
 }
 
 .modalTitle {
-  text-align: center;
+	text-align: center;
 }
 
 .modalActions {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  margin: 25px 0 0 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+
+	margin: 25px 0 0 0;
 }

@@ -26,11 +26,13 @@
 
 html {
 	overflow-x: hidden;
+
 	margin-right: calc(-1 * (100vw - 100%));
 }
 
 body {
 	color: var(--white);
 	background-color: var(--black);
+
 	font-family: 'Roboto', sans-serif;
 }

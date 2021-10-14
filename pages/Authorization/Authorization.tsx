@@ -17,24 +17,15 @@ import { useInput } from '../../hooks/useInput.hook'
 
 const Login: FC<AuthorizationProps> = () => {
   const [isValid, setIsValid] = useState<boolean>(true);
-  const { initial, resolver } = useResolver().User;
   const { register, handleSubmit, clearValues, formState: { errors } } = useInput();
-  const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
+  const { userLogin, fetchUserError, fetchUserSuccess } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
 
   const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
-    try {
-      const data = await request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', formData);
-      setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess({ user: data.user, token: data.token });
-      history.push(routes.HOME);
-    } catch (err: any) {
-      setAppAlert(err.message, statuses.ERROR);
-      fetchUserError();
-      clearError();
-    }
+    userLogin(formData);
+    history.push(routes.HOME);
     clearValues(formData);
   };
   
@@ -70,10 +61,8 @@ const Login: FC<AuthorizationProps> = () => {
 const Register: FC<AuthorizationProps> = () => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const { initial, resolver } = useResolver().User;
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<typeof initial>({
-    resolver,
-    context: { isValid }
-  });
+  const { userRegister } = useActions();
+  const { register, handleSubmit, clearValues, formState: { errors } } = useInput();
   const { setAppAlert } = useActions();
   const { error, clearError, request, loading } = useRequest();
   const history = useHistory();
@@ -81,15 +70,9 @@ const Register: FC<AuthorizationProps> = () => {
   const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
-    try {
-      const data: WithMessage = await request('/auth/register', 'POST', formData);
-      history.push(routes.AUTH.LOGIN);
-      setAppAlert(data.message, statuses.SUCCESS);
-    } catch (err) {
-      setAppAlert(err, statuses.ERROR);
-      clearError();
-    }
-    reset(getEmptyObject(formData));
+    userRegister(formData);
+    history.push(routes.AUTH.LOGIN);
+    clearValues(getEmptyObject(formData));
   };
 
   return (
@@ -138,7 +121,7 @@ const Reset: FC<AuthorizationProps> = () => {
   const history = useHistory();
   const { pathname, search } = useLocation();
   const { register, clearValues, handleSubmit, formState: { errors } } = useInput();
-  const { setAppAlert } = useActions();
+  const { setAppAlert, userReset } = useActions();
   const { loading, request } = useRequest();
   const [isSent, setIsSent] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
@@ -160,14 +143,9 @@ const Reset: FC<AuthorizationProps> = () => {
   }, []);
 
   const handleEmailSending = async (formData) => {
-    try {
-      const data = await request<WithMessage>('/auth/reset', 'POST', formData);
-      setAppAlert(data.message, statuses.SUCCESS);
-      setIsSent(true);
-      clearValues(formData);
-    } catch (err) {
-      setAppAlert(err.message, statuses.ERROR);
-    }
+    userReset(formData);
+    setIsSent(true);
+    clearValues(formData);
   };
 
   const handleReset = async (e: FormEvent) => {

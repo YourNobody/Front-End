@@ -1,27 +1,28 @@
 .recharts-tooltip-wrapper {
-  background-color: var(--black-light) !important;
-  color: var(--white) !important;
+	color: var(--white) !important;
+	background-color: var(--black-light) !important;
 }
 
 .recharts-default-tooltip {
-  background-color: var(--black) !important;
+	background-color: var(--black) !important;
 }
 
 .recharts-text tspan {
-  fill: var(--white) !important;
+	fill: var(--white) !important;
 }
 
 .recharts-cartesian-grid line {
-  stroke: var(--mega-white-transparent);
+	stroke: var(--mega-white-transparent);
 }
 
 .recharts-legend-item {
-  position: relative;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
+	position: relative;
+
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
 }
 
 .recharts-layer line {
-  stroke: transparent;
+	stroke: transparent;
 }

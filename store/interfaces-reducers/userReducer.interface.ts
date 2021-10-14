@@ -12,32 +12,50 @@ export interface IUserState {
 }
 
 export interface IUserActionDefault {
-  type: userTypes.DEFAULT,
+  type: userTypes.DEFAULT;
 }
 
 export interface IUserActionFetchUserBegining {
-  type: userTypes.FETCH_USER_BEGINING,
+  type: userTypes.FETCH_USER_BEGINING;
 }
 
 export interface IUserActionFetchUserSuccess {
-  type: userTypes.FETCH_USER_SUCCESS,
+  type: userTypes.FETCH_USER_SUCCESS;
   payload: IUserReducer;
 }
 
 export interface IUserActionFetchUserError {
-  type: userTypes.FETCH_USER_ERROR,
+  type: userTypes.FETCH_USER_ERROR;
 }
 
 export interface IUserActionClearError {
-  type: userTypes.CLEAR_ERROR,
+  type: userTypes.CLEAR_ERROR;
 }
 
 export interface IUserActionLogOut {
-  type: userTypes.USER_LOGOUT,
+  type: userTypes.USER_LOGOUT;
+}
+
+export interface IUserRegister {
+  type: userTypes.REGISTER_USER;
+  payload: any;
+}
+
+export interface IUserLogin {
+  type: userTypes.LOGIN_USER;
+  payload: any;
+}
+
+export interface IUserReset {
+  type: userTypes.RESET_USER;
+  payload: any;
 }
 
 export enum userTypes {
   DEFAULT = 'DEFAULT',
+  REGISTER_USER='REGISTER_USER',
+  LOGIN_USER='LOGIN_USER',
+  RESET_USER='RESET_USER',
   FETCH_USER_BEGINING = 'FETCH_USER_BEGINING',
   FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
   FETCH_USER_ERROR = 'FETCH_USER_ERROR',

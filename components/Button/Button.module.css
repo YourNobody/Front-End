@@ -32,12 +32,12 @@
 }
 
 .danger {
-	background-color: var(--red-transparent);
 	color: var(--white);
-  box-shadow: 0 0 0 1px var(--red);
+	background-color: var(--red-transparent);
+	box-shadow: 0 0 0 1px var(--red);
 }
 
 .danger:hover {
-  background-color: var(--red);
-  color: var(--black);
+	color: var(--black);
+	background-color: var(--red);
 }

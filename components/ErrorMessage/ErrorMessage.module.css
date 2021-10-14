@@ -1,12 +1,16 @@
 .error {
+	position: relative;
+
+	margin-top: 8px;
+
+	color: var(--red-bright);
+
 	font-size: 15px;
 	font-weight: 300;
-	position: relative;
-	color: var(--red-bright);
-	margin-top: 8px;
 }
 
 .error::before {
 	display: inline;
+
 	content: "⚠ ";
 }

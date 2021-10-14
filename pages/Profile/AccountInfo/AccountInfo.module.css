@@ -1,101 +1,109 @@
 .info {
-  display: grid;
-  grid-template-areas:
-    'info image'
-    'change change'
-  ;
-  gap: 30px;
-  grid-template-columns: 1fr 150px;
+	display: grid;
+	grid-template-areas:
+		'info image'
+		'change change';
+	gap: 30px;
+	grid-template-columns: 1fr 150px;
 }
 
 .content {
-  grid-area: info;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr;
+	grid-area: info;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto auto 1fr;
 }
 
 .content > div {
-  margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 .infoLine {
-  display: grid;
-  grid-template-columns: minmax(120px, 200px) auto;
+	display: grid;
+	grid-template-columns: minmax(120px, 200px) auto;
 }
 
 .image {
-  grid-area: image;
-  width: 150px;
-  height: 150px;
+	grid-area: image;
+
+	width: 150px;
+	height: 150px;
 }
 
 .imageWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
-
 .imageWrapper button {
-  background-color: var(--red);
+	background-color: var(--red);
 }
 
 .changeInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  grid-area: change;
-  overflow: hidden;
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+	justify-content: flex-end;
+	grid-area: change;
 }
 
 .changeInfo > form:not(:last-of-type) {
-  margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 .change {
-  padding: 20px 10px;
-  background-color: var(--mega-white-transparent);
-  cursor: pointer;
-  transition: all 0.2s;
-  overflow: hidden;
+	overflow: hidden;
+
+	padding: 20px 10px;
+
+	cursor: pointer;
+	transition: all 0.2s;
+
+	background-color: var(--mega-white-transparent);
 }
 
 .change:hover {
-  color: var(--blue);
-  background-color: var(--white-transparent);
+	color: var(--blue);
+	background-color: var(--white-transparent);
 }
 
 .change:last-of-type {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .changeOpened {
-  color: var(--blue);
+	color: var(--blue);
 }
 
 .changeOpened:hover {
-  background-color: var(--black);
+	background-color: var(--black);
 }
 
 .unfilled {
-  color: var(--red);
-  cursor: pointer;
+	cursor: pointer;
+
+	color: var(--red);
 }
 
 .changeBlock {
-  background-color: var(--white-transparent);
-  padding-left: 20px;
-  padding-right: 20px;
-  display: none;
-  transition: all 0.2s;
+	display: none;
+
+	padding-right: 20px;
+	padding-left: 20px;
+
+	transition: all 0.2s;
+
+	background-color: var(--white-transparent);
 }
 
 .changeBlockOpened {
-  display: block;
-  padding: 20px;
+	display: block;
+
+	padding: 20px;
 }
 
 .changeBlock input {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }

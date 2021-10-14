@@ -1,4 +1,4 @@
 .editor {
-  background-color: var(--mega-white);
-  color: var(--black) !important;
+	color: var(--black) !important;
+	background-color: var(--mega-white);
 }

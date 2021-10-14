@@ -1,24 +1,25 @@
 .layout {
-  display: grid;
-  min-height: 100vh;
-  grid-template-areas: 
-    'header header header'
-    '. body .'
-    'footer footer footer'
-  ;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: auto 1fr auto;
+	display: grid;
+
+	min-height: 100vh;
+	grid-template-areas:
+		'header header header'
+		'. body .'
+		'footer footer footer';
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: auto 1fr auto;
 }
 
 .header {
-  grid-area: header;
+	grid-area: header;
 }
 
 .body {
-  grid-area: body;
-  padding: 20px 40px;
+	grid-area: body;
+
+	padding: 20px 40px;
 }
 
 .footer {
-  grid-area: footer;
+	grid-area: footer;
 }
