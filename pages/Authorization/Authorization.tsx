@@ -119,7 +119,7 @@ const Register: FC<AuthorizationProps> = () => {
 
 const Reset: FC<AuthorizationProps> = () => {
   const history = useHistory();
-  const { pathname, search } = useLocation();
+  const { pathname } = useLocation();
   const { register, clearValues, handleSubmit, formState: { errors } } = useInput();
   const { setAppAlert, userReset } = useActions();
   const { loading, request } = useRequest();
@@ -127,11 +127,11 @@ const Reset: FC<AuthorizationProps> = () => {
   const [isResetting, setIsResetting] = useState<boolean>(false);
 
   useEffect(() => {
-    const query = new URLSearchParams(search);
-    if (query.get(queryKeys.RESET_TOKEN)) {
+    const resetToken = pathname.split('/')[pathname.split('/').length - 1]
+    if (resetToken && resetToken !== 'reset') {
       const getAccess = async () => {
         try {
-          const data = await request<IUserResetPassword>(pathname + search, 'GET');
+          const data = await request<IUserResetPassword>(pathname + '/' + resetToken, 'GET');
           setIsResetting(data.isAccessed);
         } catch (err: any) {
           setIsResetting(false);
@@ -148,21 +148,10 @@ const Reset: FC<AuthorizationProps> = () => {
     clearValues(formData);
   };
 
-  const handleReset = async (e: FormEvent) => {
-    e.preventDefault();
-    try {
-      // const password = getValue('password');
-      // const confirm = getValue('confirm');
-      // if (password !== confirm) throw new Error('Password wasn\'t confirmed');
-      // const body = { password, confirm };
-      // const query = new URLSearchParams(search);
-      // const data = await request<WithMessage>(pathname + search, 'POST', body);
-      // setAppAlert(data.message, statuses.SUCCESS);
-      // history.push(routes.AUTH.LOGIN);
-      // clearValue();
-    } catch (err) {
-      setAppAlert(err.message, statuses.ERROR);
-    }
+  const handleReset = async (formData) => {
+    if (formData.password !== formData.confirm) throw new Error('Password wasn\'t confirmed');
+    userReset(formData);
+    history.push(routes.AUTH.LOGIN);
   };
 
   return (

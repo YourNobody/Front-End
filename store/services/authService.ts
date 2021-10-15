@@ -4,8 +4,9 @@ import { call, put } from '@redux-saga/core/effects'
 import { appActionTypes } from '../interfaces-reducers/appReducer.interface'
 import { setAppAlert } from '../action-creators/appActions'
 import { statuses } from '../../constants/app'
-import { IUserWithToken, WithQuizes } from '../../interfaces/user.interface'
-import { fetchUserBegining, fetchUserError, fetchUserSuccess } from '../action-creators/userActions'
+import { IUserResetToken, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
+import { fetchUserBegining, fetchUserError, fetchUserSuccess, userSetResetToken } from '../action-creators/userActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export function* loginSaga({ payload }) {
     console.log('fefefeffe')
@@ -31,9 +32,16 @@ export function* registerSaga({ payload }) {
 
 export function* resetSaga({ payload }) {
   try {
-    const data: WithMessage = yield call(() => request<WithMessage>('/auth/reset', 'POST', payload));
-    yield put(setAppAlert(data.message, statuses.SUCCESS));
+    if (payload.email) {
+      const data: IUserResetToken = yield call(() => request<IUserResetToken>('/auth/reset', 'POST', payload));
+      yield put(userSetResetToken(data.resetToken, data.resetTokenExp));
+      yield put(setAppAlert(data.message, statuses.SUCCESS));
+    } else {
+      const resetToken = useTypedSelector(state => state.user.resetToken) || '';
+      const data: WithMessage = yield call(() => request<WithMessage>('/auth/reset/' + resetToken, 'POST', payload));
+      yield put(setAppAlert(data.message, statuses.SUCCESS));
+    }
   } catch (e: any) {
-    yield put(setAppAlert(e.message, statuses.ERROR));
+    throw yield put(setAppAlert(e.message, statuses.ERROR));
   }
 }

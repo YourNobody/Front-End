@@ -9,7 +9,8 @@ const initialState: IUserState = {
     quizes: []
   },
   isAuthenticated: false,
-  loading: false
+  loading: false,
+  resetToken: null,
 };
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {
@@ -22,6 +23,10 @@ export const userReducer = (state = initialState, action: IUserActions): IUserSt
       return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false, loading: false};
     case userTypes.FETCH_USER_ERROR:
       return {...state, loading: false};
+    case userTypes.SET_RESET_TOKEN:
+      return {...state, resetToken: action.payload};
+    case userTypes.DELETE_RESET_TOKEN:
+      return {...state, resetToken: null};
     default: return state;
   }
 };

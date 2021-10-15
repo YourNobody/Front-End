@@ -29,3 +29,8 @@ export interface WithQuizes {
 export interface IUserResetPassword extends WithMessage {
   isAccessed: boolean;
 }
+
+export interface IUserResetToken extends WithMessage {
+  resetToken: string;
+  resetTokenExp: Date;
+}

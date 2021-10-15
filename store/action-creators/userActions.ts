@@ -1,18 +1,18 @@
 import { LOCALSTORAGE_USER_DATA_NAME } from "../../constants/app";
-import { 
-  IUserReducer, 
-  IUserActionDefault, 
+import {
+  IUserReducer,
+  IUserActionDefault,
   IUserActionFetchUserBegining,
-  IUserActionFetchUserError, 
-  IUserActionFetchUserSuccess, 
-  userTypes, 
-  IUserActionClearError, 
+  IUserActionFetchUserError,
+  IUserActionFetchUserSuccess,
+  userTypes,
+  IUserActionClearError,
   IUserActionLogOut,
   IUserState,
   IUserRegister,
   IUserLogin,
-  IUserReset
-} from "../interfaces-reducers/userReducer.interface";
+  IUserReset, IUserSetResetToken, IUserDeleteResetToken,
+} from '../interfaces-reducers/userReducer.interface';
 
 export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
 
@@ -48,4 +48,16 @@ export const userLogin = (payload): IUserLogin => {
 
 export const userReset = (payload): IUserReset => {
   return { type: userTypes.RESET_USER, payload };
+};
+
+export const userDeleteResetToken = (): IUserDeleteResetToken => {
+  return { type: userTypes.DELETE_RESET_TOKEN };
+};
+
+export const userSetResetToken = (payload, expTime): IUserSetResetToken => {
+  expTime && (Date.now() - new Date(expTime).getTime()) > 0 && setTimeout(() => {
+    userDeleteResetToken();
+  }, Date.now() - new Date(expTime).getTime());
+
+  return { type: userTypes.SET_RESET_TOKEN, payload };
 };

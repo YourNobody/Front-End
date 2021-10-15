@@ -9,6 +9,7 @@ export interface IUserState {
   user: IUserReducer;
   loading: boolean;
   isAuthenticated: boolean;
+  resetToken?: string;
 }
 
 export interface IUserActionDefault {
@@ -51,6 +52,15 @@ export interface IUserReset {
   payload: any;
 }
 
+export interface IUserSetResetToken {
+  type: userTypes.SET_RESET_TOKEN;
+  payload: string;
+}
+
+export interface IUserDeleteResetToken {
+  type: userTypes.DELETE_RESET_TOKEN;
+}
+
 export enum userTypes {
   DEFAULT = 'DEFAULT',
   REGISTER_USER='REGISTER_USER',
@@ -60,7 +70,16 @@ export enum userTypes {
   FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
   FETCH_USER_ERROR = 'FETCH_USER_ERROR',
   CLEAR_ERROR = 'CLEAR_ERROR',
-  USER_LOGOUT = 'USER_LOGOUT'
+  USER_LOGOUT = 'USER_LOGOUT',
+  SET_RESET_TOKEN='SET_RESET_TOKEN',
+  DELETE_RESET_TOKEN='DELETE_RESET_TOKEN'
 }
 
-export type IUserActions = IUserActionFetchUserBegining | IUserActionFetchUserSuccess | IUserActionFetchUserError | IUserActionDefault | IUserActionClearError | IUserActionLogOut;
+export type IUserActions = IUserActionFetchUserBegining |
+  IUserActionFetchUserSuccess |
+  IUserActionFetchUserError |
+  IUserActionDefault |
+  IUserActionClearError |
+  IUserActionLogOut |
+  IUserSetResetToken |
+  IUserDeleteResetToken
