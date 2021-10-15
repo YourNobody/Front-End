@@ -12,6 +12,7 @@ import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
 import { useActions } from './../../hooks/useActions.hook';
 import { quizesNames } from '../../../Back-End/src/constants/app';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
 
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { setQuizSelected } = useActions();
@@ -31,25 +32,13 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   };
 
   const history = useHistory();
-  const { setAppAlert } = useActions();
-  const { error, clearError, request, loading } = useRequest();
-  const [quizes, setQuizes] = useState<IQuizWithQuizCreator[]>([]);
+  const { fetchSelectedQuizzes } = useActions();
+  const { allSelectedQuizzes: quizzes, loading } = useTypedSelector(state => state.quiz);
   const [selectedType, setSelectedType] = useState<QuestionTypes>(alreadySelected);
   const [wrapped, setWrapped] = useState<boolean>(!!selectedType);
 
   useEffect(() => {
-    const realizingFetch = async () => {
-      try {
-        const data = await request<IQuizResponse>(routes.QUIZES.ROOT, 'POST', { type: selectedType });
-        setAppAlert(data.message, statuses.SUCCESS);
-        setQuizes(data.quizes);
-      } catch (err) {
-        setAppAlert(error, statuses.ERROR);
-        clearError();
-      }
-    };
-
-    selectedType && realizingFetch();
+    selectedType && fetchSelectedQuizzes(selectedType);
   }, [selectedType]);
 
   const handleCardClick = async (type: QuestionTypes) => {
@@ -88,9 +77,9 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   };
 
   const buildQuestionsLinks = (): JSX.Element | JSX.Element[] => {
-    if (!quizes) return <></>;
-    if (quizes.length) {
-      return quizes.filter(q => !!q.title).map(q => {
+    if (!quizzes) return <></>;
+    if (quizzes.length) {
+      return quizzes.filter(q => !!q.title).map(q => {
 
         return (
           <Card key={Math.random()} className={styles.quizLinkWrapper}>

@@ -110,22 +110,11 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 
 export const QuizStats: FC<any> = () => {
   const { error, loading, request, clearError } = useRequest();
-  const { setAppAlert } = useActions();
+  const { fetchSelfQuizzes } = useActions();
   const [quizes, setQuizes] = useState<IQuiz[]>([]);
-  console.log('quizes: ', quizes);
   
   useEffect(() => {
-    const getSelfQuizes = async () => {
-      try {
-        const data = await request<IResponseQuiz>('/quizes', 'GET');
-        data.message && setAppAlert(data.message, statuses.SUCCESS);
-        setQuizes(data.quizes || []);
-      } catch (err) {
-        setAppAlert(err.message, statuses.ERROR);
-      }
-    };
-
-    getSelfQuizes();
+    fetchSelfQuizzes();
   }, []);
 
   const handleRemoveQuizFromTheList = (id: string) => {

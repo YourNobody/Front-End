@@ -14,12 +14,12 @@ import { useResolver } from '../../hooks/useResolver.hook';
 import { WithMessage } from '../../interfaces/quizes.interface';
 import { IUserResetPassword, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
 import { useInput } from '../../hooks/useInput.hook'
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
 
 const Login: FC<AuthorizationProps> = () => {
-  const [isValid, setIsValid] = useState<boolean>(true);
   const { register, handleSubmit, clearValues, formState: { errors } } = useInput();
-  const { userLogin, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request, loading } = useRequest();
+  const { loading } = useTypedSelector(state => state.user);
+  const { userLogin } = useActions();
   const history = useHistory();
 
   const onSubmit = async (formData) => {
@@ -39,6 +39,7 @@ const Login: FC<AuthorizationProps> = () => {
             type='text'
             label='Email'
             {...register('email')}
+            disabled={loading}
           />
         </div>
         <div className={styles.inputBlock}>
@@ -46,9 +47,10 @@ const Login: FC<AuthorizationProps> = () => {
             type="password"
             label="Password"
             {...register('password')}
+            disabled={loading}
           />
         </div>
-        <Button className={styles.button} type="submit">Log In</Button>
+        <Button className={styles.button} type="submit" disabled={loading}>Log In</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.REGISTER}>No account?</Link>
           <Link to={routes.AUTH.RESET}>Forgot password?</Link>
@@ -59,12 +61,9 @@ const Login: FC<AuthorizationProps> = () => {
 };
 
 const Register: FC<AuthorizationProps> = () => {
-  const [isValid, setIsValid] = useState<boolean>(true);
-  const { initial, resolver } = useResolver().User;
-  const { userRegister } = useActions();
   const { register, handleSubmit, clearValues, formState: { errors } } = useInput();
-  const { setAppAlert } = useActions();
-  const { error, clearError, request, loading } = useRequest();
+  const { userRegister, setAppAlert } = useActions();
+  const { loading } = useTypedSelector(state => state.user);
   const history = useHistory();
 
   const onSubmit = async (formData) => {
@@ -85,6 +84,7 @@ const Register: FC<AuthorizationProps> = () => {
             type="text"
             label='Nickname'
             {...register('nickname')}
+            disabled={loading}
           />
         </div>
         <div className={styles.inputBlock}>
@@ -92,6 +92,7 @@ const Register: FC<AuthorizationProps> = () => {
             type="text"
             label="Email"
             {...register('email')}
+            disabled={loading}
           />
         </div>
         <div className={styles.inputBlock}>
@@ -99,16 +100,18 @@ const Register: FC<AuthorizationProps> = () => {
             type="password"
             label="Password"
             {...register('password')}
+            disabled={loading}
           />
         </div>
         <div className={styles.inputBlock}>
           <Input
-            type="password"
-            label="Confirm Password"
+            type='password'
+            label='Confirm Password'
             {...register('confirm')}
+            disabled={loading}
           />
         </div>
-        <Button className={styles.button} type="submit">Sign Up</Button>
+        <Button className={styles.button} type="submit" disabled={loading}>Sign Up</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.LOGIN}>Back to login</Link>
         </div>
@@ -122,8 +125,9 @@ const Reset: FC<AuthorizationProps> = () => {
   const { pathname } = useLocation();
   const { register, clearValues, handleSubmit, formState: { errors } } = useInput();
   const { setAppAlert, userReset } = useActions();
-  const { loading, request } = useRequest();
-  const [isSent, setIsSent] = useState<boolean>(false);
+  const { loading } = useTypedSelector(state => state.user);
+  const { request } = useRequest();
+  const [isSent, setIsSent] = useState<boolean>(loading);
   const [isResetting, setIsResetting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -144,7 +148,7 @@ const Reset: FC<AuthorizationProps> = () => {
 
   const handleEmailSending = async (formData) => {
     userReset(formData);
-    setIsSent(true);
+    !loading && setIsSent(true);
     clearValues(formData);
   };
 
@@ -180,9 +184,10 @@ const Reset: FC<AuthorizationProps> = () => {
                   type="text"
                   label="Email for recovery process"
                   {...register('email')}
+                  disabled={loading}
                 />
               </div>
-              <Button className={styles.button} type="submit">Send email message</Button>
+              <Button className={styles.button} type="submit" disabled={loading}>Send email message</Button>
               <div className={styles.info}>
                 <Link to={routes.AUTH.LOGIN}>Back to login</Link>
               </div>
@@ -195,6 +200,7 @@ const Reset: FC<AuthorizationProps> = () => {
                   type='password'
                   label='Enter new password'
                   {...register('password')}
+                  disabled={loading}
                 />
               </div>
               <div className={styles.inputBlock}>
@@ -202,9 +208,10 @@ const Reset: FC<AuthorizationProps> = () => {
                   type='password'
                   label='Confirm new password'
                   {...register('confirm')}
+                  disabled={loading}
                 />
               </div>
-              <Button className={styles.button} type="submit">Reset</Button>
+              <Button className={styles.button} type="submit" disabled={loading}>Reset</Button>
               <div className={styles.info}>
                 <Link to={routes.AUTH.LOGIN}>Back to login</Link>
               </div>

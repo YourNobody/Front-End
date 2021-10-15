@@ -24,9 +24,9 @@ export const userReducer = (state = initialState, action: IUserActions): IUserSt
     case userTypes.FETCH_USER_ERROR:
       return {...state, loading: false};
     case userTypes.SET_RESET_TOKEN:
-      return {...state, resetToken: action.payload};
+      return {...state, resetToken: action.payload, loading: false};
     case userTypes.DELETE_RESET_TOKEN:
-      return {...state, resetToken: null};
+      return {...state, resetToken: null, loading: false};
     default: return state;
   }
 };

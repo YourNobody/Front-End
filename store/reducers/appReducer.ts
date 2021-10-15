@@ -16,7 +16,9 @@ export const appReducer = (state: IAppState = initialAppState, action: IAppActio
       if (!action.payload) return state;
       return {
         ...state,
-        alerts: [...state.alerts, { message: action.payload.message, status: action.payload.status, id: action.payload.id}],
+        alerts: state.alerts.length >= 5
+          ? [...state.alerts.slice(1), { message: action.payload.message, status: action.payload.status, id: action.payload.id }]
+          : [...state.alerts, { message: action.payload.message, status: action.payload.status, id: action.payload.id }],
         newAlert: { ...state.newAlert, id: action.payload.id, isAutoDeleted: action.payload.isAutoDeleted }
       };
     case appActionTypes.CLEAR_ALERT:

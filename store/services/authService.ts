@@ -9,7 +9,6 @@ import { fetchUserBegining, fetchUserError, fetchUserSuccess, userSetResetToken 
 import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export function* loginSaga({ payload }) {
-    console.log('fefefeffe')
   try {
     yield put(fetchUserBegining());
     const data: IUserWithToken & WithMessage & WithQuizes = yield call(() => request<IUserWithToken & WithMessage & WithQuizes>('/auth/login', 'POST', payload));
@@ -23,6 +22,7 @@ export function* loginSaga({ payload }) {
 
 export function* registerSaga({ payload }) {
   try {
+    yield put(fetchUserBegining());
     const data: WithMessage = yield call(() => request<WithMessage>('/auth/register', 'POST', payload));
     yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e: any) {
@@ -32,6 +32,7 @@ export function* registerSaga({ payload }) {
 
 export function* resetSaga({ payload }) {
   try {
+    yield put(fetchUserBegining());
     if (payload.email) {
       const data: IUserResetToken = yield call(() => request<IUserResetToken>('/auth/reset', 'POST', payload));
       yield put(userSetResetToken(data.resetToken, data.resetTokenExp));

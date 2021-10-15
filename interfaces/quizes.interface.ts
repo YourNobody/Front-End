@@ -53,7 +53,7 @@ export interface IQuiz {
 }
 
 export interface IResponseQuiz extends WithMessage {
-  quizes: IQuiz[];
+  quizzes: IQuiz[];
 }
 
 export interface IQuizStatistic {
@@ -62,7 +62,7 @@ export interface IQuizStatistic {
   users: Array<{
     nickname: string | null;
     email: string | null;
-    isAnonimous: boolean;
+    isAnonymous: boolean;
   }>  
 }
 
