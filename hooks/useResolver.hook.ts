@@ -1,5 +1,6 @@
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import {
+  CustomValidatePassword,
   CustomValidateSuggestedAnswers,
   CustomValidateTitle,
   MyIsAlphanumeric,
@@ -7,8 +8,8 @@ import {
   MyIsNotEmpty,
   MyIsString,
   MyMaxLength,
-  MyMinLength
-} from '../constants/myValidator';
+  MyMinLength,
+} from '../constants/myValidator'
 
 class User {
   @MyMaxLength(24)
@@ -40,21 +41,25 @@ class User {
   @MyMinLength(4)
   @MyIsString()
   @MyIsNotEmpty()
-  oldPassword: string;
+  old_password: string;
 
   @MyMaxLength(20)
   @MyMinLength(4)
   @MyIsString()
   @MyIsNotEmpty()
-  newPassword: string;
+  new_password: string;
   
   getValidatorFields = (): string[] => {
-    return ['confirm', 'password', 'oldPassword', 'nickname', 'email', 'newPassword'];
+    return ['confirm', 'password', 'old_password', 'nickname', 'email', 'new_password'];
   };
 
-  validateCustomProperty = (type: 'title' | 'editor' | 'answer', text: string): string | boolean => {
+  validateCustomProperty = (type: 'password' | 'email' | 'nickname', text: string): string | boolean => {
+    console.log('here hrer')
     switch (type) {
-      default: return false;
+      case 'password':
+        console.log('here')
+        return CustomValidatePassword(text);
+      default: return null;
     }
   };
 }
@@ -91,7 +96,7 @@ class Quiz {
         return;
       case 'answer':
         return CustomValidateSuggestedAnswers(text);
-      default: return false;
+      default: return null;
     }
   };
 }

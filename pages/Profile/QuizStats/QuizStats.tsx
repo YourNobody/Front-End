@@ -25,7 +25,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   const [hidden, setHidden] = useState<boolean>(true);
   const [usersAnswersStats, setUsersAnswersStats] = useState<IQuizStatistic[]>([]);
   const { request, error, clearError, loading } = useRequest();
-  const { openModal, closeModal, setAppAlert } = useActions();
+  const { openModal, closeModal, setAppAlert, deleteQuiz } = useActions();
     
   const handleShowStats = async (id: string | number) => {
     setHidden(false);
@@ -39,21 +39,13 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     }
   };
 
-  const deleteQuiz = async () => {
-    try {
-      const body = {} as { quizId: string; };
-      body.quizId = quizData.id;
-      const data: WithMessage = await request('/quizes/remove', 'POST', body, {});
-      setAppAlert(data.message, statuses.SUCCESS);
-      onRemove();
+  const handleDeleteQuiz = async () => {
+      deleteQuiz(quizData.id)
       closeModal();
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   const handleRemoveQuiz = () => {
-    openModal(getModalBoilerplate(`Do you want to delete this quiz?\nTitle: ${quizData.title} and type: ${quizData.type}`, deleteQuiz, 'Delete', closeModal));
+    openModal(getModalBoilerplate(`Do you want to delete this quiz?\nTitle: ${quizData.title} and type: ${quizData.type}`, handleDeleteQuiz, 'Delete', closeModal));
   };
 
   if (!quizData) return <></>;

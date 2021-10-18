@@ -51,6 +51,14 @@ export const CustomValidateSuggestedAnswers = (answer: string): string | null =>
   if (!answer) return M.IsNotEmpty;
   if (typeof answer !== 'string') return M.isString;
   if (answer.length < 10) return M.MinLength(5);
-  if (answer.length > 40) return M.MaxLength(25);
+  if (answer.length > 40) return M.MaxLength(40);
   return null;
 };
+export const CustomValidatePassword = (answer: string): string | null => {
+  if (!answer) return M.IsNotEmpty;
+  if (typeof answer !== 'string') return M.isString;
+  if (answer.length < 4) return M.MinLength(4);
+  if (answer.length > 20) return M.MaxLength(20);
+  return null;
+};
+

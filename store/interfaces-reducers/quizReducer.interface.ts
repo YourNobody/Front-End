@@ -23,7 +23,9 @@ export enum quizActionTypes {
   FETCH_SELECTED_QUIZZES = 'FETCH_SELECTED_QUIZZES',
   FETCH_SELF_QUIZZES_SUCCESS = 'FETCH_SELF_QUIZZES_SUCCESS',
   FETCH_SELECTED_QUIZZES_SUCCESS = 'FETCH_SELECTED_QUIZZES_SUCCESS',
-  FETCH_QUIZZES_START = 'FETCH_QUIZZES_START'
+  FETCH_QUIZZES_START = 'FETCH_QUIZZES_START',
+  DELETE_QUIZ = 'DELETE_QUIZ',
+  DELETE_QUIZ_SUCCESS = 'DELETE_QUIZ_SUCCESS',
 }
 
 export interface IQuizSetSelected {
@@ -54,5 +56,15 @@ export interface IQuizFetchQuizzesStart {
   type: quizActionTypes.FETCH_QUIZZES_START;
 }
 
+export interface IQuizDeleteQuiz {
+  type: quizActionTypes.DELETE_QUIZ;
+  payload: string;
+}
+
+export interface IQuizDeleteQuizSuccess {
+  type: quizActionTypes.DELETE_QUIZ_SUCCESS;
+  payload: string;
+}
+
 export type IQuizActions = IQuizSetSelected | IQuizFetchSelfQuizzesSuccess | IQuizFetchSelectedQuizzesSuccess | IQuizFetchQuizzesStart
-  | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes;
+  | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes | IQuizDeleteQuiz | IQuizDeleteQuizSuccess;

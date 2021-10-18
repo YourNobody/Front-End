@@ -3,6 +3,7 @@ import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { IUseInput, IUseInputOptions, IUseInputOptionsAdditional } from '../interfaces/hooks.interface'
 import { useResolver } from "./useResolver.hook";
 import { getObjectWithDefinedKeys } from '../helpers/custom.helper'
+import { log } from 'util'
 
 export const useInput = (initialState: Record<string, string> = {}): IUseInput => {
   const { validators } = useResolver();
@@ -16,7 +17,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     }
     return '';
   }, [validationErrors]);
-
+  // console.log(validationErrors)
   const onBlur = useCallback((event: any): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
@@ -28,20 +29,24 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       const errors: ValidationError[] = await validate(v);
       const errorOfThisItem = errors.find((error) => error.property.toLowerCase() === lowerName && error.value !== undefined);
       if (errorOfThisItem && fieldsOfValidator.includes(lowerName)) {
+        console.log('0')
         setValidationErrors({
           ...validationErrors,
           [errorOfThisItem.property]: {
             message: Object.values(errorOfThisItem.constraints)[0]
           }
         });
-      } else if (fieldsOfValidator.includes(lowerName)) {    
+      } else if (fieldsOfValidator.includes(lowerName)) {
+        console.log('1')
         const copy = JSON.parse(JSON.stringify(validationErrors));
         copy[lowerName] && delete copy[lowerName];
         setValidationErrors(copy);
       } else if (!fieldsOfValidator.includes(lowerName)) {
+        console.log('2')
         const splitted = lowerName.split('_');
         if (splitted.length === 2) {
-          const message = v.validateCustomProperty(splitted[1], event.target.value);
+          let message = v.validateCustomProperty(splitted[1], event.target.value);
+          if (message) message = v.validateCustomProperty(splitted[2], event.target.value);
           if (message) {
             setValidationErrors({
               ...validationErrors,
@@ -151,17 +156,43 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     return (event: FormEvent) => {
       event.preventDefault();
       const form = event.target as Element;
-      const formData = Array.from(form.querySelectorAll('input')).reduce((data, input) => {
+      const allErrors = [];
+      const formInputs = Array.from(form.querySelectorAll('input'));
+      const formInputsData = formInputs.reduce((data, input, index, array) => {
         if (input.dataset.exclude) return data;
+        const lowerName = input.name.toLowerCase();
         input.focus();
         input.blur();
-        data[input.name] = inputsState[input.name];
+        data[lowerName] = inputsState[lowerName];
+        void async function() {
+          const promise = Promise.resolve();
+          const promises = [];
+
+          validators.forEach(validator => {
+            promises.push(promise.then(async () => {
+              let v = new validator();
+              v = Object.assign(v, {
+                [lowerName]: input.value
+              });
+              const errors: ValidationError[] = await validate(v);
+              const errorOfThisItem = errors.find((error) => error.value !== undefined && error.property.toLowerCase() === lowerName);
+              if (errorOfThisItem) allErrors.push(errorOfThisItem);
+            }))
+          });
+          await Promise.all(promises).then(() => {
+            if (index === array.length - 1) {
+              if (!cb || allErrors.length) return;
+              return cb(formInputsData);
+            }
+          });
+        }()
         return data;
       }, {});
-      if (!cb || Object.keys(getObjectWithDefinedKeys(validationErrors, formData)).length) return;
-      return cb(formData);
+      // return console.log(validationErrors);
+      // if (!cb || Object.keys(getObjectWithDefinedKeys(validationErrors, formInputsData)).length) return;
+      // return cb(formInputsData);
     };
-  }, [inputsState]);
+  }, [inputsState, validationErrors]);
 
   return {
     getValues,

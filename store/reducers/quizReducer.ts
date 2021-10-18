@@ -17,6 +17,11 @@ export const quizReducer = (state = initialAppState, action : IQuizActions): IQu
       return {...state, loading: false, allSelectedQuizzes: action.payload};
     case quizActionTypes.FETCH_QUIZZES_START:
       return {...state, loading: true};
+    case quizActionTypes.DELETE_QUIZ:
+      return {...state, loading: false,
+        selfQuizzes: state.selfQuizzes.filter(quiz => quiz.id !== action.payload),
+        allSelectedQuizzes: state.allSelectedQuizzes.filter(quiz => quiz.id !== action.payload)
+      };
     default: return state;
   }
 };

@@ -7,6 +7,7 @@ import { getFirstLetters } from '../../helpers/custom.helper';
 
 export const Image = ({ fully = false, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
   const formatText = (textToFormat: string) => {
+    if (!textToFormat) return 'YOU';
     const splitted = textToFormat.split(/\s/g);
     
     if (splitted.length >= 2) {

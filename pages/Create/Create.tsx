@@ -29,6 +29,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const { setAppAlert } = useActions();
   const { control, setValue } = useForm();
   const { register, clearValues, handleSubmit, getValues } = useInput();
+  const [allEditorState, setAllEditorState] = useState({});
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
   const [questionAnswers, setQuestionAnswers] = useState<Record<QuestionTypes, string[]>>({} as Record<QuestionTypes, string[]>);
   const formRef = useRef<HTMLFormElement>(null);
@@ -117,6 +118,16 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       : <></>;
   };
 
+  const editorWithState = (name) => {
+    // const [state, setState] = useState(EditorState.createEmpty());
+    // setAllEditorState({
+    //   ...allEditorState,
+    //   [name]: EditorState.createEmpty();
+    // })
+
+    return <Editor placeholder="Type a question you want to ask..." editorState={EditorState.createEmpty()} onEditorStateChange={(a) => console.log(a)}/>;
+  };
+
   const buildQuesionCreatorAccordingToType = (): JSX.Element => {
     if (!selectedType) return <></>;
     switch (selectedType) {
@@ -124,13 +135,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
+            {editorWithState(selectedType + '_editor')}
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input
@@ -152,26 +157,14 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
+            {editorWithState(selectedType + '_editor')}
           </>
         );
       case QuestionTypes.RA:
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
+            {editorWithState(selectedType + '_editor')}
             <div className={styles.addAnswer}>
               <Input
                 label="Or just paste the image URL that you want to be estimated:"
@@ -191,13 +184,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
+            {editorWithState(selectedType + '_editor')}
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input

@@ -4,6 +4,7 @@ import { loginSaga, registerSaga, resetSaga } from './services/authService'
 import * as Eff from 'redux-saga/effects'
 import { quizActionTypes } from './interfaces-reducers/quizReducer.interface'
 import { getSelectedQuizzesSaga, getSelfQuizzesSaga } from './services/quizService'
+import { deleteQuiz } from './action-creators/quizActions'
 
 const takeEvery: any = Eff.takeEvery;
 
@@ -22,7 +23,8 @@ function* authWatcher() {
 }
 
 function* quizzesWatcher() {
-  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES } = quizActionTypes;
+  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ } = quizActionTypes;
   yield takeEvery(FETCH_SELF_QUIZZES, getSelfQuizzesSaga);
   yield takeEvery(FETCH_SELECTED_QUIZZES, getSelectedQuizzesSaga);
+  yield takeEvery(DELETE_QUIZ, deleteQuiz);
 }
