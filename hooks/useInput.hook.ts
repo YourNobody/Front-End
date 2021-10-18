@@ -10,9 +10,9 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
   const [validationErrors, setValidationErrors] = useState<Record<string, { message: string }>>({});
 
   const getValidationErrorMessage = useCallback((name: string): string => {
-    const lowerName = name.toLowerCase();
-    if (validationErrors[lowerName] && validationErrors[lowerName].message) {
-      return validationErrors[lowerName].message;
+    name = name.toLowerCase();
+    if (validationErrors[name] && validationErrors[name].message) {
+      return validationErrors[name].message;
     }
     return '';
   }, [validationErrors]);
@@ -94,12 +94,12 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
   const clearValues = useCallback((name?: string | Record<string, unknown>): void => {
     if (!name) return;
     if (typeof name === 'string') {
-      const lowerName = name.toLowerCase();
-      if (!lowerName) setInputsState(initialState);
-      if (inputsState[lowerName]) {
+      name = name.toLowerCase();
+      if (!name) setInputsState(initialState);
+      if (inputsState[name]) {
         setInputsState({
           ...inputsState,
-          [lowerName]: ''
+          [name]: ''
         });
       }
     } else {
@@ -111,9 +111,9 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
 
   const getValues = useCallback((name?: string): string | Record<string, unknown> => {
     if (!name) return '';
-    const lowerName = name.toLowerCase();
-    if (!lowerName) return inputsState;
-    if (inputsState[lowerName]) return inputsState[lowerName];
+    name = name.toLowerCase();
+    if (!name) return inputsState;
+    if (inputsState[name]) return inputsState[name];
     return '';
   }, [inputsState]);
 
@@ -131,6 +131,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       };
     }
     if (!name) throw new Error('Name isn\'t provided');
+    name = name.toLowerCase();
     const props = {
       onChange, onBlur, name,
       value: inputsState[name]

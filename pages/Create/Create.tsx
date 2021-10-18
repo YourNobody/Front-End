@@ -35,45 +35,49 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const history = useHistory();
 
   const handleAnswerAdd = (): void => {
-    let value = getValues(selectedType) as string;
+    const type = selectedType.toLowerCase();
+    let value = getValues(type + '_answer') as string;
+
     value = value.trim();
-    if (value && questionAnswers[selectedType] && questionAnswers[selectedType].find(a => a === value)) {
-      clearValues(selectedType);
+    if (value && questionAnswers[type] && questionAnswers[type].find(a => a === value)) {
+      clearValues(type + '_answer');
       return;
     }
-    if (value && selectedType) {
-      if (!questionAnswers[selectedType]) {
+    if (value && type) {
+      if (!questionAnswers[type]) {
         setQuestionAnswers({
           ...questionAnswers,
-          [selectedType]: [value]
+          [type]: [value]
         });  
       } else {
         setQuestionAnswers({
           ...questionAnswers,
-          [selectedType]: [value, ...questionAnswers[selectedType]]
+          [type]: [value, ...questionAnswers[type]]
         });
       }
-      clearValues(selectedType);
+      clearValues(type + '_answer');
     }
   };
 
   const handleAnswerDelete = (index: number) => {
+    const type = selectedType.toLowerCase();
     setQuestionAnswers({
       ...questionAnswers,
-      [selectedType]: questionAnswers[selectedType].filter((item, i) => i !== index)
+      [type]: questionAnswers[type].filter((item, i) => i !== index)
     });
   };
 
   const handleQuestionCreation = async (formData) => {
     const body: any = {};
+    const type = selectedType.toLowerCase();
     Object.keys(QuestionTypes).forEach(key => {
       if (formData[key + '_editor']) {
         body.question = stateToHTML(formData[key + '_editor'].getCurrentContent());
       }
     });
-    body.type = selectedType;
-    body.title = getValues(selectedType + '_title');
-    body.quizAnswers = questionAnswers[selectedType];
+    body.type = type;
+    body.title = getValues(type + '_title');
+    body.quizAnswers = questionAnswers[type];
 
     const headers: Record<string, string> = {};
     if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
@@ -84,7 +88,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       const data: any = await request(routes.QUIZES.CREATE, 'POST', body, headers);
       setAppAlert(data.message, statuses.SUCCESS);
       handleResetForm();
-      history.push(routes.QUIZES.TYPES[selectedType]);
+      history.push(routes.QUIZES.TYPES[type]);
     } catch (err) {
       setAppAlert(err.message, statuses.ERROR);
       clearError();
@@ -93,20 +97,22 @@ const Create: FC<CreateProps> = (): JSX.Element => {
 
   const handleResetForm = () => {
     if (!selectedType) return;
+    const type = selectedType.toLowerCase();
     setQuestionAnswers({
       ...questionAnswers,
-      [selectedType]: []
+      [type]: []
     });
     clearValues(selectedType);
-    setValue(selectedType + '_editor', EditorState.createEmpty());
+    setValue(type + '_editor', EditorState.createEmpty());
     setSelectedType(null);
   };
 
   const addSuggestedAnswers = (): JSX.Element => {
-    return selectedType && questionAnswers[selectedType] && questionAnswers[selectedType].length
+    const type = selectedType ? selectedType.toLowerCase() : selectedType;
+    return type && questionAnswers[type] && questionAnswers[type].length
       ? <>
         <HTag size="m" className={styles.suggested}>Suggested answers:</HTag>
-        <List list={questionAnswers[selectedType]} className={styles.list} onClose={handleAnswerDelete}/> 
+        <List list={questionAnswers[type]} className={styles.list} onClose={handleAnswerDelete}/>
       </>
       : <></>;
   };
