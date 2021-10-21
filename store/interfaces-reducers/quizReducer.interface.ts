@@ -1,4 +1,10 @@
-import { IQuiz, IQuizResponse, IQuizWithQuizCreator, IResponseQuiz } from '../../interfaces/quizes.interface';
+import {
+  IQuiz,
+  IQuizResponse,
+  IQuizWithQuizCreator,
+  IResponseQuiz,
+  QuestionTypes,
+} from '../../interfaces/quizes.interface'
 
 export interface IQuizReducer {
   loading?: boolean;
@@ -32,6 +38,8 @@ export enum quizActionTypes {
   DELETE_QUIZ_SUCCESS = 'DELETE_QUIZ_SUCCESS',
   GET_QUIZ_STATS = 'GET_QUIZ_STATS',
   GET_QUIZ_STATS_SUCCESS = 'GET_QUIZ_STATS_SUCCESS',
+  SAVA_QUIZ_ANSWER = 'SAVA_QUIZ_ANSWER',
+  SAVA_QUIZ_ANSWER_SUCCESS = 'SAVA_QUIZ_ANSWER_SUCCESS',
 }
 
 export interface IQuizSetSelected {
@@ -82,6 +90,16 @@ export interface IQuizGetQuizStatsSuccess {
   payload: Omit<IQuizResponse, 'quizes'> & { id: string };
 }
 
+export interface IQuizSaveAnswer {
+  type: quizActionTypes.SAVA_QUIZ_ANSWER;
+  payload: string;
+  quizType: QuestionTypes;
+}
+
+export interface IQuizSaveAnswerSuccess {
+  type: quizActionTypes.SAVA_QUIZ_ANSWER_SUCCESS;
+}
+
 export type IQuizActions = IQuizSetSelected | IQuizFetchSelfQuizzesSuccess | IQuizFetchSelectedQuizzesSuccess | IQuizFetchQuizzesStart
   | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes | IQuizDeleteQuiz | IQuizDeleteQuizSuccess |
-  IQuizGetQuizStats | IQuizGetQuizStatsSuccess;
+  IQuizGetQuizStats | IQuizGetQuizStatsSuccess | IQuizSaveAnswer | IQuizSaveAnswerSuccess;

@@ -9,7 +9,7 @@ import { routes } from './../../constants/routes';
 import { QuestionTypes, IQuizResponse, IQuizWithQuizCreator } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
 import { useRequest } from '../../hooks/useRequest';
-import { statuses } from '../../constants/app';
+import { LOCALSTORAGE_QUIZ_DATA_NAME, statuses } from '../../constants/app'
 import { useActions } from './../../hooks/useActions.hook';
 import { quizesNames } from '../../../Back-End/src/constants/app';
 import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
@@ -28,6 +28,7 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const generateRouteAndRedirect = (quiz: any) => {
     const titled = quiz.title.toLowerCase().replace(/\s/ig, '-');
     setQuizSelected(quiz);
+    localStorage.setItem(LOCALSTORAGE_QUIZ_DATA_NAME, JSON.stringify(quiz));
     history.push(routes.QUIZES.ROOT + `/${quiz.type.toLowerCase()}/${titled}`);
   };
 

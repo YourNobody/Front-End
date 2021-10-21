@@ -7,8 +7,8 @@ import {
   deleteQuizSaga,
   getSelectedQuizzesSaga,
   getSelfQuizzesSaga,
-  getSelfQuizzesWithStatsSaga,
-} from './services/quizService';
+  getSelfQuizzesWithStatsSaga, saveQuizAnswerSaga,
+} from './services/quizService'
 import { deleteQuiz } from './action-creators/quizActions'
 
 const takeEvery: any = Eff.takeEvery;
@@ -28,9 +28,10 @@ function* authWatcher() {
 }
 
 function* quizzesWatcher() {
-  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS } = quizActionTypes;
+  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS, SAVA_QUIZ_ANSWER } = quizActionTypes;
   yield takeEvery(FETCH_SELF_QUIZZES, getSelfQuizzesSaga);
   yield takeEvery(FETCH_SELECTED_QUIZZES, getSelectedQuizzesSaga);
   yield takeEvery(DELETE_QUIZ, deleteQuizSaga);
   yield takeEvery(GET_QUIZ_STATS, getSelfQuizzesWithStatsSaga);
+  yield takeEvery(SAVA_QUIZ_ANSWER, saveQuizAnswerSaga);
 }

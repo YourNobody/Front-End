@@ -8,7 +8,7 @@ import { useRequest } from './../../../hooks/useRequest';
 import { useTypedSelector } from './../../../hooks/useTypedSelector.hook';
 import { IUserAnswer } from './../../../interfaces/quizes.interface';
 
-export const SA_Question: FC<SA_QuestionProps> = ({ id, question, title, quizAnswers, usersAnswers, ...props }) => {
+export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title, quizAnswers, usersAnswers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const user = useTypedSelector(state => state.user.user)
   const { error, clearError, loading, request } = useRequest();
@@ -17,16 +17,11 @@ export const SA_Question: FC<SA_QuestionProps> = ({ id, question, title, quizAns
     setSelected(index);
   }, []);
 
-  const handleUserAnswerSave = async () => {
+  const handleUserAnswerSave = () => {
     const body = {} as IUserAnswer & { quizAnswerId?: string, quizId: string };
     body.quizId = id;
     body.quizAnswerId = quizAnswers.find((_, index) => selected === index)?._id;
-    try {
-      const data: any = await request('/quizes/save', 'POST', body, {});
-      console.log(data.message);
-    } catch (err) {
-      console.error(err);
-    }
+    onSave(body);
   };
 
   if (!quizAnswers || !quizAnswers.length) return <></>;

@@ -1,6 +1,5 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react'
 import { QuizProps } from './Quiz.props';
-import styles from './Quiz.module.css';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import { useParams } from 'react-router-dom';
 import { QuestionParamsTypes, QuestionTypes } from '../../interfaces/quizes.interface';
@@ -12,24 +11,50 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export const Quiz: FC<any> = () => {
   const { selectedQuiz } = useTypedSelector(state => state.quiz);
+  const { setQuizSelected, saveQuizAnswer } = useActions();
+  if (!selectedQuiz) {
+    const quiz = JSON.parse(localStorage.getItem(LOCALSTORAGE_QUIZ_DATA_NAME));
+    setQuizSelected(quiz);
+  }
   const { qType, title } = useParams<QuestionParamsTypes>();
+
+  const handleSaveAnswerAccordingToType = useCallback((dataToSave) => {
+    switch (qType.toUpperCase()) {
+      case QuestionTypes.SA: {
+        const { quizId, quizAnswerId } = dataToSave;
+        return saveQuizAnswer(qType, { quizId, quizAnswerId });
+      }
+      case QuestionTypes.TA: {
+        const { quizId, answer } = dataToSave;
+        return saveQuizAnswer(qType, { quizId, answer });
+      }
+      case QuestionTypes.RA: {
+        const { quizId, answer } = dataToSave;
+        return saveQuizAnswer(qType, { quizId, answer });
+      }
+      case QuestionTypes.AB: {
+        const { quizId, quizAnswerId } = dataToSave;
+        return saveQuizAnswer(qType, { quizId, quizAnswerId });
+      }
+    }
+  }, [saveQuizAnswer, qType]);
 
   switch (qType.toUpperCase()) {
     case QuestionTypes.SA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
-      return <SA_Question {...payload} />;
+      return <SA_Question {...payload} onSave={handleSaveAnswerAccordingToType} />;
     }
     case QuestionTypes.TA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
-      return <TA_Question {...payload}/>;
+      return <TA_Question {...payload} onSave={handleSaveAnswerAccordingToType} />;
     }
     case QuestionTypes.RA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
-      return <RA_Question {...payload}/>;
+      return <RA_Question {...payload} onSave={handleSaveAnswerAccordingToType} />;
     }
     case QuestionTypes.AB: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
-      return <AB_Question {...payload}/>;
+      return <AB_Question {...payload} onSave={handleSaveAnswerAccordingToType} />;
     }
     default: return <></>;
   }

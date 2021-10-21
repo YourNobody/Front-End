@@ -5,9 +5,18 @@ import { HTag, Image, Card, Button, HR } from '../../../components/index';
 import { useState } from 'react';
 import { checkForValideImageLink } from '../../../helpers/custom.helper';
 import parse from 'html-react-parser';
+import { IUserAnswer } from '../../../interfaces/quizes.interface'
 
-export const RA_Question: FC<RA_QuestionProps> = ({ quizAnswers, usersAnswers, title, question, creator, ...props }) => {
+export const RA_Question: FC<RA_QuestionProps> = ({ onSave, id, quizAnswers, usersAnswers, title, question, creator, ...props }) => {
   const [sliderValue, setSliderValue] = useState<string | number>(0);
+  if (!quizAnswers) return <></>;
+
+  const handleUserAnswerSave = () => {
+    const body = {} as IUserAnswer & { quizId?: string, answer?: any };
+    body.quizId = id;
+    body.answer = {};
+    onSave(body);
+  };
 
   const handleSliderChange = (e) => {
     setSliderValue(e.target.value);
@@ -42,7 +51,7 @@ export const RA_Question: FC<RA_QuestionProps> = ({ quizAnswers, usersAnswers, t
           onChange={handleSliderChange}
         />
         <HTag size="s" className={styles.markWrapper}>You mark:&nbsp;<span className={styles.mark}>{sliderValue}</span></HTag>
-        <Button color='ghost'>Save mark</Button>
+        <Button color='ghost' onClick={handleUserAnswerSave}>Save mark</Button>
       </div>
     </Card>
   );

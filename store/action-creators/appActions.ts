@@ -17,3 +17,10 @@ export const openModal = (template: JSX.Element): IAppOpenModal => {
 export const closeModal = (): IAppCloseModal => {
   return { type: appActionTypes.CLOSE_MODAL };
 };
+
+export default {
+  setAppAlert,
+  clearAppAlert,
+  openModal,
+  closeModal
+}

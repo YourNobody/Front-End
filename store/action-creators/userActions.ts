@@ -61,3 +61,11 @@ export const userSetResetToken = (payload, expTime): IUserSetResetToken => {
 
   return { type: userTypes.SET_RESET_TOKEN, payload };
 };
+
+export default {
+  userLogOut,
+  userRegister,
+  userLogin,
+  userReset,
+  fetchUserSuccess
+};
