@@ -23,7 +23,7 @@ export interface MainQuestionsProps {
   question?: string;
   usersAnswers?: IUserAnswer[];
   creator?: string;
-  _id?: string; 
+  id?: string;
 }
 
 export interface IUserAnswer {

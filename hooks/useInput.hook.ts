@@ -17,7 +17,6 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     }
     return '';
   }, [validationErrors]);
-  // console.log(validationErrors)
   const onBlur = useCallback((event: any): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
@@ -29,7 +28,6 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
       const errors: ValidationError[] = await validate(v);
       const errorOfThisItem = errors.find((error) => error.property.toLowerCase() === lowerName && error.value !== undefined);
       if (errorOfThisItem && fieldsOfValidator.includes(lowerName)) {
-        console.log('0')
         setValidationErrors({
           ...validationErrors,
           [errorOfThisItem.property]: {
@@ -37,12 +35,10 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
           }
         });
       } else if (fieldsOfValidator.includes(lowerName)) {
-        console.log('1')
         const copy = JSON.parse(JSON.stringify(validationErrors));
         copy[lowerName] && delete copy[lowerName];
         setValidationErrors(copy);
       } else if (!fieldsOfValidator.includes(lowerName)) {
-        console.log('2')
         const splitted = lowerName.split('_');
         if (splitted.length === 2) {
           let message = v.validateCustomProperty(splitted[1], event.target.value);
@@ -188,9 +184,6 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
         }()
         return data;
       }, {});
-      // return console.log(validationErrors);
-      // if (!cb || Object.keys(getObjectWithDefinedKeys(validationErrors, formInputsData)).length) return;
-      // return cb(formInputsData);
     };
   }, [inputsState, validationErrors]);
 

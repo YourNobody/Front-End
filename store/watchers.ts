@@ -3,7 +3,12 @@ import { userTypes } from './interfaces-reducers/userReducer.interface'
 import { loginSaga, registerSaga, resetSaga } from './services/authService'
 import * as Eff from 'redux-saga/effects'
 import { quizActionTypes } from './interfaces-reducers/quizReducer.interface'
-import { getSelectedQuizzesSaga, getSelfQuizzesSaga } from './services/quizService'
+import {
+  deleteQuizSaga,
+  getSelectedQuizzesSaga,
+  getSelfQuizzesSaga,
+  getSelfQuizzesWithStatsSaga,
+} from './services/quizService';
 import { deleteQuiz } from './action-creators/quizActions'
 
 const takeEvery: any = Eff.takeEvery;
@@ -23,8 +28,9 @@ function* authWatcher() {
 }
 
 function* quizzesWatcher() {
-  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ } = quizActionTypes;
+  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS } = quizActionTypes;
   yield takeEvery(FETCH_SELF_QUIZZES, getSelfQuizzesSaga);
   yield takeEvery(FETCH_SELECTED_QUIZZES, getSelectedQuizzesSaga);
-  yield takeEvery(DELETE_QUIZ, deleteQuiz);
+  yield takeEvery(DELETE_QUIZ, deleteQuizSaga);
+  yield takeEvery(GET_QUIZ_STATS, getSelfQuizzesWithStatsSaga);
 }

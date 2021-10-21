@@ -54,10 +54,8 @@ class User {
   };
 
   validateCustomProperty = (type: 'password' | 'email' | 'nickname', text: string): string | boolean => {
-    console.log('here hrer')
     switch (type) {
       case 'password':
-        console.log('here')
         return CustomValidatePassword(text);
       default: return null;
     }

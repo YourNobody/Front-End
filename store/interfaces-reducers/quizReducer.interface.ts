@@ -1,9 +1,13 @@
-import { IQuiz, IQuizWithQuizCreator, IResponseQuiz } from '../../interfaces/quizes.interface'
+import { IQuiz, IQuizResponse, IQuizWithQuizCreator, IResponseQuiz } from '../../interfaces/quizes.interface';
 
 export interface IQuizReducer {
   loading?: boolean;
   selectedQuiz?: IQuizState;
   selfQuizzes?: IQuiz[];
+  selfQuizzesWithStats?: {
+    loading?: boolean,
+    quizzes?: Array<Omit<IQuizResponse, 'quizes'> & { id: string }>;
+  };
   allSelectedQuizzes?: IQuizWithQuizCreator[];
 }
 
@@ -26,6 +30,8 @@ export enum quizActionTypes {
   FETCH_QUIZZES_START = 'FETCH_QUIZZES_START',
   DELETE_QUIZ = 'DELETE_QUIZ',
   DELETE_QUIZ_SUCCESS = 'DELETE_QUIZ_SUCCESS',
+  GET_QUIZ_STATS = 'GET_QUIZ_STATS',
+  GET_QUIZ_STATS_SUCCESS = 'GET_QUIZ_STATS_SUCCESS',
 }
 
 export interface IQuizSetSelected {
@@ -66,5 +72,16 @@ export interface IQuizDeleteQuizSuccess {
   payload: string;
 }
 
+export interface IQuizGetQuizStats {
+  type: quizActionTypes.GET_QUIZ_STATS;
+  payload: string;
+}
+
+export interface IQuizGetQuizStatsSuccess {
+  type: quizActionTypes.GET_QUIZ_STATS_SUCCESS;
+  payload: Omit<IQuizResponse, 'quizes'> & { id: string };
+}
+
 export type IQuizActions = IQuizSetSelected | IQuizFetchSelfQuizzesSuccess | IQuizFetchSelectedQuizzesSuccess | IQuizFetchQuizzesStart
-  | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes | IQuizDeleteQuiz | IQuizDeleteQuizSuccess;
+  | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes | IQuizDeleteQuiz | IQuizDeleteQuizSuccess |
+  IQuizGetQuizStats | IQuizGetQuizStatsSuccess;

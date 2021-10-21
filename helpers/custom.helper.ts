@@ -63,9 +63,7 @@ export const formatDate = (date: number | Date): string => {
 };
 
 export const changeStatisticsTooltipLabel = (value: number | string, name: string, props: any) => {
-  
   return function (oldLabel: string, newLabel: string): void {
-    console.log(value, name, props);
     if (name && oldLabel) {
       props.name = newLabel + ': ' + value;
     }

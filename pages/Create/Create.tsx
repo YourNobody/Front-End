@@ -71,14 +71,10 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const handleQuestionCreation = async (formData) => {
     const body: any = {};
     const type = selectedType.toLowerCase();
-    Object.keys(QuestionTypes).forEach(key => {
-      if (formData[key + '_editor']) {
-        body.question = stateToHTML(formData[key + '_editor'].getCurrentContent());
-      }
-    });
     body.type = type;
+    body.question = allEditorState[type + '_editor'] ? stateToHTML(allEditorState[type + '_editor'].getCurrentContent()) : null;
     body.title = getValues(type + '_title');
-    body.quizAnswers = questionAnswers[type];
+    body.quizAnswers = questionAnswers[type] || null;
 
     const headers: Record<string, string> = {};
     if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
@@ -119,13 +115,20 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   };
 
   const editorWithState = (name) => {
-    // const [state, setState] = useState(EditorState.createEmpty());
-    // setAllEditorState({
-    //   ...allEditorState,
-    //   [name]: EditorState.createEmpty();
-    // })
-
-    return <Editor placeholder="Type a question you want to ask..." editorState={EditorState.createEmpty()} onEditorStateChange={(a) => console.log(a)}/>;
+    if (!name) throw new Error('Name wan\'t provided');
+    name = name.toLowerCase();
+    const handleEditorStateChange = (state) => {
+      if (!allEditorState[name]) {
+        return setAllEditorState({
+          ...allEditorState,
+          [name]: EditorState.createEmpty()
+        });
+      } else return setAllEditorState({
+        ...allEditorState,
+        [name]: state
+      });
+    };
+    return <Editor placeholder="Type a question you want to ask..." editorState={allEditorState[name]} onEditorStateChange={handleEditorStateChange}/>;
   };
 
   const buildQuesionCreatorAccordingToType = (): JSX.Element => {

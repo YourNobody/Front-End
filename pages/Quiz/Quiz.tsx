@@ -13,6 +13,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 export const Quiz: FC<any> = () => {
   const { selectedQuiz } = useTypedSelector(state => state.quiz);
   const { qType, title } = useParams<QuestionParamsTypes>();
+
   switch (qType.toUpperCase()) {
     case QuestionTypes.SA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
@@ -37,7 +38,7 @@ export const Quiz: FC<any> = () => {
 export default withMainLayout(Quiz);
 
 function returnAppropriatePayload(type: QuestionTypes, data: any) {
-  const mainPayload = ['question', 'usersAnswers', 'creator', 'title', '_id'];
+  const mainPayload = ['question', 'usersAnswers', 'creator', 'title', 'id'];
   let additionalKeys: string[] = [];
   if (!type) return {};
   switch (type.toUpperCase()) {

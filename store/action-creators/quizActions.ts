@@ -8,8 +8,8 @@ import {
   IQuizFetchSelfQuizzesSuccess,
   IQuizFetchSelectedQuizzesSuccess,
   IQuizDeleteQuiz,
-  IQuizDeleteQuizSuccess,
-} from '../interfaces-reducers/quizReducer.interface'
+  IQuizDeleteQuizSuccess, IQuizGetQuizStats, IQuizGetQuizStatsSuccess,
+} from '../interfaces-reducers/quizReducer.interface';
 
 export const setQuizSelected = (payload: IQuizState): IQuizSetSelected => {
   return {type: quizActionTypes.SET_SELECTED_QUIZ, payload};
@@ -41,4 +41,12 @@ export const deleteQuiz = (payload): IQuizDeleteQuiz => {
 
 export const deleteQuizSuccess = (payload): IQuizDeleteQuizSuccess => {
   return {type: quizActionTypes.DELETE_QUIZ_SUCCESS, payload};
+};
+
+export const getQuizStats = (payload): IQuizGetQuizStats => {
+  return {type: quizActionTypes.GET_QUIZ_STATS, payload};
+};
+
+export const getQuizStatsSuccess = (payload): IQuizGetQuizStatsSuccess => {
+  return {type: quizActionTypes.GET_QUIZ_STATS_SUCCESS, payload};
 };

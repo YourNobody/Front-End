@@ -20,23 +20,16 @@ import {
 import './rechart.css';
 import { getModalBoilerplate } from '../../../pageComponents';
 import { IQuiz, IQuizStatistic, IQuizResponse, IResponseQuiz, WithMessage } from '../../../interfaces/quizes.interface';
+import { useTypedSelector } from '../../../hooks/useTypedSelector.hook';
 
-const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData, onRemove, ...props }) => {
+const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData, ...props }) => {
   const [hidden, setHidden] = useState<boolean>(true);
-  const [usersAnswersStats, setUsersAnswersStats] = useState<IQuizStatistic[]>([]);
-  const { request, error, clearError, loading } = useRequest();
-  const { openModal, closeModal, setAppAlert, deleteQuiz } = useActions();
+  const { selfQuizzesWithStats, loading } = useTypedSelector(state => state.quiz);
+  const { openModal, closeModal, getQuizStats, deleteQuiz } = useActions();
     
   const handleShowStats = async (id: string | number) => {
     setHidden(false);
-    try {
-      const data = await request<IQuizResponse>('/quizes/statistics?quizId=' + (id || ''), 'GET');
-      setUsersAnswersStats(data.usersAnswers);
-    } catch (err) {
-      console.error(err);
-      setAppAlert(err.message, statuses.ERROR);
-      clearError();
-    }
+    getQuizStats(id);
   };
 
   const handleDeleteQuiz = async () => {
@@ -65,7 +58,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
       [styles.hidden]: hidden
     })}>
       {
-        loading ? <HTag size="m">Loading statistics...</HTag>
+        selfQuizzesWithStats.loading ? <HTag size="m">Loading statistics...</HTag>
         : 
         <>
           <HTag size="s">Answers: {quizData.usersAnswers.length}</HTag>
@@ -73,7 +66,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
             <ComposedChart
               layout="vertical"
               width={500}
-              data={usersAnswersStats}
+              data={selfQuizzesWithStats.quizzes.find(q => q.id === quizData.id)?.usersAnswers}
               margin={{
                 top: 20,
                 right: 20,
@@ -101,23 +94,19 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 };
 
 export const QuizStats: FC<any> = () => {
-  const { error, loading, request, clearError } = useRequest();
   const { fetchSelfQuizzes } = useActions();
-  const [quizes, setQuizes] = useState<IQuiz[]>([]);
+  const { selfQuizzes, loading } = useTypedSelector(state => state.quiz);
   
   useEffect(() => {
     fetchSelfQuizzes();
   }, []);
 
-  const handleRemoveQuizFromTheList = (id: string) => {
-    setQuizes(quizes.filter(q => q.id !== id));
-  };
       
   if (loading) return <HTag size="m">Your questions is loading...</HTag>;
-  if (!quizes.length && !loading) return <HTag size="m">You haven't created any quizzes</HTag>;
+  if (!selfQuizzes.length && !loading) return <HTag size="m">You haven't created any quizzes</HTag>;
   return <div>
     {
-      quizes.map(q => <QuizWithStatsBoilerplate key={q.id} quizData={q} onRemove={() => handleRemoveQuizFromTheList(q.id)}/>)
+      selfQuizzes.map(q => <QuizWithStatsBoilerplate key={q.id} quizData={q}/>)
     }
   </div>;
 };

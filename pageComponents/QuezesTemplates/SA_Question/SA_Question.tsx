@@ -8,7 +8,7 @@ import { useRequest } from './../../../hooks/useRequest';
 import { useTypedSelector } from './../../../hooks/useTypedSelector.hook';
 import { IUserAnswer } from './../../../interfaces/quizes.interface';
 
-export const SA_Question: FC<SA_QuestionProps> = ({ _id, question, title, quizAnswers, usersAnswers, ...props }) => {
+export const SA_Question: FC<SA_QuestionProps> = ({ id, question, title, quizAnswers, usersAnswers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const user = useTypedSelector(state => state.user.user)
   const { error, clearError, loading, request } = useRequest();
@@ -18,10 +18,9 @@ export const SA_Question: FC<SA_QuestionProps> = ({ _id, question, title, quizAn
   }, []);
 
   const handleUserAnswerSave = async () => {
-    const body = {} as IUserAnswer & { quizAnswerId?: string };
-    body.quizAnswerId = _id;
+    const body = {} as IUserAnswer & { quizAnswerId?: string, quizId: string };
+    body.quizId = id;
     body.quizAnswerId = quizAnswers.find((_, index) => selected === index)?._id;
-    body.answer = quizAnswers[selected];
     try {
       const data: any = await request('/quizes/save', 'POST', body, {});
       console.log(data.message);

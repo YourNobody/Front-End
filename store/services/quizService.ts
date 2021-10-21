@@ -1,15 +1,16 @@
-import { IQuizResponse, IResponseQuiz, WithMessage } from '../../interfaces/quizes.interface'
-import { call, put } from '@redux-saga/core/effects'
-import { request } from '../../helpers/request.helper'
+import { IQuizResponse, IResponseQuiz, WithMessage } from '../../interfaces/quizes.interface';
+import { call, put } from '@redux-saga/core/effects';
+import { request } from '../../helpers/request.helper';
 import {
   deleteQuizSuccess,
   fetchQuizStart,
   fetchSelectedQuizzesSuccess,
   fetchSelfQuizzesSuccess,
-} from '../action-creators/quizActions'
-import { routes } from '../../constants/routes'
-import { setAppAlert } from '../action-creators/appActions'
-import { statuses } from '../../constants/app'
+  getQuizStatsSuccess,
+} from '../action-creators/quizActions';
+import { routes } from '../../constants/routes';
+import { setAppAlert } from '../action-creators/appActions';
+import { statuses } from '../../constants/app';
 
 export function* getSelfQuizzesSaga() {
   try {
@@ -18,6 +19,15 @@ export function* getSelfQuizzesSaga() {
     yield put(fetchSelfQuizzesSuccess(data.quizzes));
   } catch (e) {
     yield put(fetchSelfQuizzesSuccess([]));
+  }
+}
+
+export function* getSelfQuizzesWithStatsSaga({ payload }) {
+  try {
+    const data: Omit<IQuizResponse, 'quizes'> = yield call(() => request('/quizes/statistics?quizId=' + (payload || ''), 'GET'));
+    yield put(getQuizStatsSuccess({ id: payload, usersAnswers: data.usersAnswers }));
+  } catch (e: any) {
+    yield put(setAppAlert(e.message, statuses.ERROR));
   }
 }
 
@@ -35,7 +45,7 @@ export function* getSelectedQuizzesSaga({ payload }) {
 export function* deleteQuizSaga({ payload }) {
   try {
     yield put(fetchQuizStart());
-    const data: WithMessage & { deletedQuizId: string } = yield call(() => request('/quizes/remove', 'POST', { quizId: payload }, {}));
+    const data: WithMessage & { deletedQuizId: string } = yield call(() => request('/quizes/remove', 'POST', { quizId: payload }));
     yield put(deleteQuizSuccess(data.deletedQuizId));
     yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e) {
