@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@svgr/webpack": "^5.5.0",
     "@types/draft-js": "^0.11.5",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/html-to-draftjs": "^1.4.0",

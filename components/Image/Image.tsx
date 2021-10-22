@@ -5,7 +5,7 @@ import cn from 'classnames';
 import { getRandomColor } from '../../helpers/css.helper';
 import { getFirstLetters } from '../../helpers/custom.helper';
 
-export const Image = ({ fully = false, text, src, alt, fit = 'contain', isCircled = false, className, ...props }: ImageProps): JSX.Element => {
+export const Image: FC<ImageProps> = ({ fully = false, text, src, alt, fit = 'contain', isCircled = false, className, ...props }) => {
   const formatText = (textToFormat: string) => {
     if (!textToFormat) return 'YOU';
     const splitted = textToFormat.split(/\s/g);

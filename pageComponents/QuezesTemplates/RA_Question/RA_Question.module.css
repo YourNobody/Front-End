@@ -74,14 +74,14 @@
 }
 
 .markWrapper {
-	margin-top: -3px;
-
-	line-height: 0;
+	position: relative;
+	left: 30px;
+	top: 0px;
 }
 
-.mark {
+.markWrapper span {
 	position: relative;
-	top: 3px;
+	top: 2px;
 	right: -5px;
 
 	display: inline-block;

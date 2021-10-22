@@ -35,7 +35,6 @@ export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title,
       <div className={styles.answers}>
         {
           quizAnswers.reduce((tags: JSX.Element[], answer: any, index) => {
-            console.log('a: ', answer);
             if (answer.answer && answer.answer.trim()) {
               tags.push(<Tagger
                 key={index}

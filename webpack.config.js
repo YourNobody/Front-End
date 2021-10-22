@@ -135,10 +135,14 @@ const config = {
         },
       },
       {
-        test: /\.(svg|png|gif|jpg|ico|jpeg|jfif)$/,
+        test: /\.(png|gif|jpg|ico|jpeg|jfif)$/,
         exclude: /node_modules/,
         use: ['file-loader'],
       },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      }
     ],
   },
 }

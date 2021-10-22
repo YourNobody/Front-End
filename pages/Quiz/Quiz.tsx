@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { QuizProps } from './Quiz.props';
 import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
 import { useParams } from 'react-router-dom';
@@ -8,15 +8,39 @@ import { getObjectWithDefinedKeys } from '../../helpers/custom.helper';
 import { LOCALSTORAGE_QUIZ_DATA_NAME } from '../../constants/app';
 import { useActions } from '../../hooks/useActions.hook';
 import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
+import { EditorState } from 'draft-js'
+import { Editor } from '../../components'
+
+const _EDITOR = '_editor';
 
 export const Quiz: FC<any> = () => {
   const { selectedQuiz } = useTypedSelector(state => state.quiz);
   const { setQuizSelected, saveQuizAnswer } = useActions();
+  const [allEditorState, setAllEditorState] = useState({});
   if (!selectedQuiz) {
     const quiz = JSON.parse(localStorage.getItem(LOCALSTORAGE_QUIZ_DATA_NAME));
     setQuizSelected(quiz);
   }
   const { qType, title } = useParams<QuestionParamsTypes>();
+
+  const getEditorWithState = useCallback((name: string) => {
+    return () => {
+      if (!name) throw new Error('Name wan\'t provided');
+      name = name.toLowerCase();
+      const handleEditorStateChange = (state) => {
+        if (!allEditorState[name]) {
+          return setAllEditorState({
+            ...allEditorState,
+            [name]: EditorState.createEmpty()
+          });
+        } else return setAllEditorState({
+          ...allEditorState,
+          [name]: state
+        });
+      };
+      return <Editor placeholder="Type your answer..." editorState={allEditorState[name]} onEditorStateChange={handleEditorStateChange}/>;
+    }
+  }, [allEditorState, setAllEditorState]);
 
   const handleSaveAnswerAccordingToType = useCallback((dataToSave) => {
     switch (qType.toUpperCase()) {
@@ -46,7 +70,7 @@ export const Quiz: FC<any> = () => {
     }
     case QuestionTypes.TA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);
-      return <TA_Question {...payload} onSave={handleSaveAnswerAccordingToType} />;
+      return <TA_Question {...payload} onSave={handleSaveAnswerAccordingToType} getEditorWithState={getEditorWithState(title)}/>;
     }
     case QuestionTypes.RA: {
       const payload = returnAppropriatePayload(qType, selectedQuiz);

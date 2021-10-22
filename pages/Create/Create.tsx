@@ -7,7 +7,7 @@ import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { useInput } from './../../hooks/useInput.hook';
 import cn from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
-import { EditorState } from 'draft-js';
+import { convertToRaw, EditorState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html';
 import { useRequest } from '../../hooks/useRequest';
 import { useActions } from '../../hooks/useActions.hook';
@@ -15,6 +15,7 @@ import { statuses } from '../../constants/app';
 import { useHistory } from 'react-router';
 import { routes } from '../../constants/routes';
 import { LOCALSTORAGE_USER_DATA_NAME } from './../../constants/app';
+import draftToHtml from 'draftjs-to-html'
 
 const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.SA, 'Select Question', 'User can choose one of the answers that you provide'], 
@@ -71,8 +72,9 @@ const Create: FC<CreateProps> = (): JSX.Element => {
   const handleQuestionCreation = async (formData) => {
     const body: any = {};
     const type = selectedType.toLowerCase();
+    const editorState = allEditorState[type + '_editor'].getCurrentContent();
     body.type = type;
-    body.question = allEditorState[type + '_editor'] ? stateToHTML(allEditorState[type + '_editor'].getCurrentContent()) : null;
+    body.question = editorState ? draftToHtml(convertToRaw(editorState)) : null;
     body.title = getValues(type + '_title');
     body.quizAnswers = questionAnswers[type] || null;
 
@@ -114,7 +116,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       : <></>;
   };
 
-  const editorWithState = (name) => {
+  const EditorWithState = (name) => {
     if (!name) throw new Error('Name wan\'t provided');
     name = name.toLowerCase();
     const handleEditorStateChange = (state) => {
@@ -138,7 +140,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            {editorWithState(selectedType + '_editor')}
+            {EditorWithState(selectedType + '_editor')}
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input
@@ -160,14 +162,14 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            {editorWithState(selectedType + '_editor')}
+            {EditorWithState(selectedType + '_editor')}
           </>
         );
       case QuestionTypes.RA:
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            {editorWithState(selectedType + '_editor')}
+            {EditorWithState(selectedType + '_editor')}
             <div className={styles.addAnswer}>
               <Input
                 label="Or just paste the image URL that you want to be estimated:"
@@ -187,7 +189,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
         return (
           <>
             <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            {editorWithState(selectedType + '_editor')}
+            {EditorWithState(selectedType + '_editor')}
             <div className={styles.saAnswers}>
               <div className={styles.addAnswer}>
                 <Input

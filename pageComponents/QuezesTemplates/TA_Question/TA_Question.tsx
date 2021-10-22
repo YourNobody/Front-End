@@ -6,7 +6,16 @@ import { useState } from 'react';
 import parse from 'html-react-parser';
 import { IUserAnswer } from '../../../interfaces/quizes.interface'
 
-export const TA_Question: FC<TA_QuestionProps> = ({ onSave, question, id, usersAnswers, creator, title, ...props}) => {
+export const TA_Question: FC<TA_QuestionProps> = ({
+  getEditorWithState,
+  onSave,
+  question,
+  id,
+  usersAnswers,
+  creator,
+  title,
+  ...props
+}) => {
   const [hidden, setHidden] = useState<boolean>(true);
   if (!question) return <></>;
 
@@ -25,7 +34,7 @@ export const TA_Question: FC<TA_QuestionProps> = ({ onSave, question, id, usersA
         hidden && <Button color="ghost" className={styles.toAnswer} onClick={() => setHidden(false)}>Click to leave your answer</Button>
       }
       {
-        !hidden && <Editor />
+        !hidden && getEditorWithState()
       }
       <HR color="gray" className={styles.hr}/>
       <div className={styles.info}>

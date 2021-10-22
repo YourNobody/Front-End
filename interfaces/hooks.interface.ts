@@ -33,3 +33,18 @@ export interface IUseAuth {
   userId: string;
   token: string;
 }
+
+export interface IUseEstimationReturn {
+  value: number,
+  getEstimationElement: (props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => JSX.Element;
+}
+
+export interface IUseEstimation {
+  range?: number | string;
+  onRatingClick?: (index?: number | string) => void;
+  onRatingHover?: (index?: number | string) => void;
+  onRatingOut: () => void;
+  ratingArray?: JSX.Element[];
+  rating?: number | string;
+  ratingHover?: number | string;
+}
