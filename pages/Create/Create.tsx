@@ -6,16 +6,13 @@ import { Card, Button, HTag, HR, Editor, Tagger, Input, List } from '../../compo
 import { QuestionTypes } from '../../interfaces/quizes.interface';
 import { useInput } from './../../hooks/useInput.hook';
 import cn from 'classnames';
-import { Controller, useForm } from 'react-hook-form';
 import { convertToRaw, EditorState } from 'draft-js'
-import { stateToHTML } from 'draft-js-export-html';
-import { useRequest } from '../../hooks/useRequest';
 import { useActions } from '../../hooks/useActions.hook';
-import { statuses } from '../../constants/app';
 import { useHistory } from 'react-router';
-import { routes } from '../../constants/routes';
-import { LOCALSTORAGE_USER_DATA_NAME } from './../../constants/app';
-import draftToHtml from 'draftjs-to-html'
+import draftToHtml from 'draftjs-to-html';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
+import { routes } from '../../constants/routes'
+
 
 const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
   [QuestionTypes.SA, 'Select Question', 'User can choose one of the answers that you provide'], 
@@ -26,9 +23,8 @@ const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
 
 //questionAnswers
 const Create: FC<CreateProps> = (): JSX.Element => {
-  const { error, clearError, request, loading} = useRequest();
-  const { setAppAlert } = useActions();
-  const { control, setValue } = useForm();
+  const { createQuiz } = useActions();
+  const { loading } = useTypedSelector(state => state.quiz);
   const { register, clearValues, handleSubmit, getValues } = useInput();
   const [allEditorState, setAllEditorState] = useState({});
   const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
@@ -75,23 +71,12 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     const editorState = allEditorState[type + '_editor'].getCurrentContent();
     body.type = type;
     body.question = editorState ? draftToHtml(convertToRaw(editorState)) : null;
-    body.title = getValues(type + '_title');
+    body.title = formData[type + '_title'];
     body.quizAnswers = questionAnswers[type] || null;
 
-    const headers: Record<string, string> = {};
-    if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-      const { token } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-      headers.authorization = token ? token : null;
-    }
-    try {
-      const data: any = await request(routes.QUIZES.CREATE, 'POST', body, headers);
-      setAppAlert(data.message, statuses.SUCCESS);
-      handleResetForm();
-      history.push(routes.QUIZES.TYPES[type]);
-    } catch (err) {
-      setAppAlert(err.message, statuses.ERROR);
-      clearError();
-    }
+    createQuiz(body);
+    handleResetForm();
+    history.push(routes.QUIZES.ROOT);
   };
 
   const handleResetForm = () => {
@@ -102,7 +87,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       [type]: []
     });
     clearValues(selectedType);
-    setValue(type + '_editor', EditorState.createEmpty());
+    allEditorState[type + '_editor'] = EditorState.createEmpty();
     setSelectedType(null);
   };
 
@@ -133,7 +118,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     return <Editor placeholder="Type a question you want to ask..." editorState={allEditorState[name]} onEditorStateChange={handleEditorStateChange}/>;
   };
 
-  const buildQuesionCreatorAccordingToType = (): JSX.Element => {
+  const buildQuizCreatorAccordingToType = (): JSX.Element => {
     if (!selectedType) return <></>;
     switch (selectedType) {
       case QuestionTypes.SA: {
@@ -210,6 +195,12 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       default: return <></>;
     }
   };
+
+  if (loading) {
+    return <>
+      <HTag size="m">Quiz is being created...</HTag>
+    </>;
+  }
   return (
     <div className={styles.createPage}>
       <HTag size="l" className={styles.createPageTitle}>Create Quiz!</HTag>
@@ -246,7 +237,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
               />
             </> : <></>
           }
-          {buildQuesionCreatorAccordingToType()}
+          {buildQuizCreatorAccordingToType()}
           <HR className={styles.mainHr}/>
           <div className={styles.actions}>
             <Button className={styles.reset} onClick={handleResetForm}>Reset</Button>

@@ -8,7 +8,12 @@ import {
   IQuizFetchSelfQuizzesSuccess,
   IQuizFetchSelectedQuizzesSuccess,
   IQuizDeleteQuiz,
-  IQuizDeleteQuizSuccess, IQuizGetQuizStats, IQuizGetQuizStatsSuccess, IQuizSaveAnswer, IQuizSaveAnswerSuccess,
+  IQuizDeleteQuizSuccess,
+  IQuizGetQuizStats,
+  IQuizGetQuizStatsSuccess,
+  IQuizSaveAnswer,
+  IQuizSaveAnswerSuccess,
+  IQuizCreate, IQuizCreateSuccess,
 } from '../interfaces-reducers/quizReducer.interface'
 
 export const setQuizSelected = (payload: IQuizState): IQuizSetSelected => {
@@ -59,6 +64,14 @@ export const saveQuizAnswerSucess = (payload): IQuizSaveAnswerSuccess => {
   return {type: quizActionTypes.SAVA_QUIZ_ANSWER_SUCCESS};
 };
 
+export const createQuiz = (payload): IQuizCreate => {
+  return {type: quizActionTypes.CREATE_QUIZ, payload};
+};
+
+export const createQuizSuccess = (): IQuizCreateSuccess => {
+  return {type: quizActionTypes.CREATE_QUIZ_SUCCESS};
+};
+
 export default {
   setQuizSelected,
   fetchQuizStart,
@@ -66,5 +79,6 @@ export default {
   fetchSelfQuizzes,
   deleteQuiz,
   getQuizStats,
-  saveQuizAnswer
+  saveQuizAnswer,
+  createQuiz
 };

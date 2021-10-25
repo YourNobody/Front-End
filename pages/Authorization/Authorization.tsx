@@ -4,14 +4,12 @@ import { AuthorizationProps } from './Authorization.props';
 import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
 import styles from './Authorization.module.css';
 import { HTag, Input, Button, Card, HR } from '../../components';
-import { queryKeys, routes } from '../../constants/routes';
+import { routes } from '../../constants/routes';
 import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../../hooks/useActions.hook';
 import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
 import { getEmptyObject } from '../../helpers/custom.helper';
-import { useResolver } from '../../hooks/useResolver.hook';
-import { WithMessage } from '../../interfaces/quizes.interface';
 import { IUserResetPassword, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
 import { useInput } from '../../hooks/useInput.hook'
 import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
@@ -125,7 +123,7 @@ const Reset: FC<AuthorizationProps> = () => {
   const { pathname } = useLocation();
   const { register, clearValues, handleSubmit, formState: { errors } } = useInput();
   const { setAppAlert, userReset } = useActions();
-  const { loading } = useTypedSelector(state => state.user);
+  const { loading, resetToken } = useTypedSelector(state => state.user);
   const { request } = useRequest();
   const [isSent, setIsSent] = useState<boolean>(loading);
   const [isResetting, setIsResetting] = useState<boolean>(false);
@@ -154,7 +152,7 @@ const Reset: FC<AuthorizationProps> = () => {
 
   const handleReset = async (formData) => {
     if (formData.password !== formData.confirm) throw new Error('Password wasn\'t confirmed');
-    userReset(formData);
+    userReset(formData, resetToken);
     history.push(routes.AUTH.LOGIN);
   };
 

@@ -43,7 +43,7 @@ export interface IUseEstimation {
   range?: number | string;
   onRatingClick?: (index?: number | string) => void;
   onRatingHover?: (index?: number | string) => void;
-  onRatingOut: () => void;
+  onRatingOut?: () => void;
   ratingArray?: JSX.Element[];
   rating?: number | string;
   ratingHover?: number | string;

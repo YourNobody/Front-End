@@ -2,7 +2,6 @@ export interface IUserReducer {
   nickname: string;
   email: string;
   id: string;
-  quizes: any[];
 }
 
 export interface IUserState {
@@ -61,6 +60,11 @@ export interface IUserDeleteResetToken {
   type: userTypes.DELETE_RESET_TOKEN;
 }
 
+export interface IUserChangeInfo {
+  type: userTypes.CHANGE_INFO;
+  payload: any;
+}
+
 export enum userTypes {
   DEFAULT = 'DEFAULT',
   REGISTER_USER='REGISTER_USER',
@@ -72,7 +76,8 @@ export enum userTypes {
   CLEAR_ERROR = 'CLEAR_ERROR',
   USER_LOGOUT = 'USER_LOGOUT',
   SET_RESET_TOKEN='SET_RESET_TOKEN',
-  DELETE_RESET_TOKEN='DELETE_RESET_TOKEN'
+  DELETE_RESET_TOKEN='DELETE_RESET_TOKEN',
+  CHANGE_INFO='CHANGE_INFO',
 }
 
 export type IUserActions = IUserActionFetchUserBegining |
@@ -82,4 +87,5 @@ export type IUserActions = IUserActionFetchUserBegining |
   IUserActionClearError |
   IUserActionLogOut |
   IUserSetResetToken |
-  IUserDeleteResetToken
+  IUserDeleteResetToken |
+  IUserChangeInfo;

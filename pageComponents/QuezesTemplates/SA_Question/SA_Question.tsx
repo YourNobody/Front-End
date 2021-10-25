@@ -4,14 +4,12 @@ import styles from './SA_Question.module.css';
 import { Card, HTag, Tagger, Button, HR } from '../../../components/index';
 import parse from 'html-react-parser';
 import cn from 'classnames';
-import { useRequest } from './../../../hooks/useRequest';
 import { useTypedSelector } from './../../../hooks/useTypedSelector.hook';
 import { IUserAnswer } from './../../../interfaces/quizes.interface';
 
 export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title, quizAnswers, usersAnswers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const user = useTypedSelector(state => state.user.user)
-  const { error, clearError, loading, request } = useRequest();
 
   const handleTaggerClick = useCallback((index: number) => {
     setSelected(index);

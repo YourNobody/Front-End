@@ -56,7 +56,17 @@ export function* deleteQuizSaga({ payload }) {
 export function* saveQuizAnswerSaga({ payload, quizType }) {
   try {
     yield put(fetchQuizStart());
-    const data: WithMessage = yield call(() =>  request('/quizes/save', 'POST', { ...payload, type: quizType }));
+    const data: WithMessage = yield call(() => request('/quizes/save', 'POST', { ...payload, type: quizType }));
+    yield put(setAppAlert(data.message, statuses.SUCCESS));
+  } catch (e) {
+    yield put(setAppAlert(e.message, statuses.SUCCESS));
+  }
+}
+
+export function* createQuizSaga({ payload }) {
+  try {
+    yield put(fetchQuizStart());
+    const data: WithMessage = yield call(() => request(routes.QUIZES.CREATE, 'POST', payload));
     yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e) {
     yield put(setAppAlert(e.message, statuses.SUCCESS));

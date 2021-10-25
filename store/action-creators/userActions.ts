@@ -11,8 +11,8 @@ import {
   IUserState,
   IUserRegister,
   IUserLogin,
-  IUserReset, IUserSetResetToken, IUserDeleteResetToken,
-} from '../interfaces-reducers/userReducer.interface';
+  IUserReset, IUserSetResetToken, IUserDeleteResetToken, IUserChangeInfo,
+} from '../interfaces-reducers/userReducer.interface'
 
 export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
 
@@ -46,7 +46,7 @@ export const userLogin = (payload): IUserLogin => {
   return { type: userTypes.LOGIN_USER, payload };
 };
 
-export const userReset = (payload): IUserReset => {
+export const userReset = (payload, resetToken?: string): IUserReset => {
   return { type: userTypes.RESET_USER, payload };
 };
 
@@ -62,10 +62,15 @@ export const userSetResetToken = (payload, expTime): IUserSetResetToken => {
   return { type: userTypes.SET_RESET_TOKEN, payload };
 };
 
+export const userChangeInfo = (payload): IUserChangeInfo => {
+  return { type: userTypes.CHANGE_INFO, payload };
+};
+
 export default {
   userLogOut,
   userRegister,
   userLogin,
   userReset,
-  fetchUserSuccess
+  fetchUserSuccess,
+  userChangeInfo
 };

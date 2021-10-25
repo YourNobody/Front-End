@@ -5,19 +5,13 @@ import { Image, HTag, Card, Button, Input } from '../../../components';
 import cn from 'classnames';
 import { profileChangeKeys, profileChangeOptions } from '../../../constants/data';
 import { useInput } from '../../../hooks/useInput.hook';
-import { WithMessage } from '../../../interfaces/quizes.interface';
 import { useRequest } from '../../../hooks/useRequest';
 import { useActions } from '../../../hooks/useActions.hook';
-import { LOCALSTORAGE_USER_DATA_NAME, statuses } from '../../../constants/app';
-import { IUserWithToken } from '../../../interfaces/user.interface';
-import { useResolver } from '../../../hooks/useResolver.hook';
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
-  const Resolver = useResolver();
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
-  const { setAppAlert, fetchUserSuccess } = useActions();
-  const { request, loading } = useRequest();
-  const { register, handleSubmit, clearValues, getValues } = useInput();
+  const { userChangeInfo } = useActions();
+  const { register, handleSubmit, clearValues } = useInput();
   const [ selectedChangeKey, setSelectedChangeKey ] = useState<profileChangeKeys>(null);
 
   const handleBlockToggling = (key: profileChangeKeys): void => {
@@ -44,22 +38,9 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
       }
       default: return;
     }
-    try {
-      const data: WithMessage = await request('/profile/change', 'POST', body);
-      const userData: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-      delete body.key;
-      (selectedChangeKey === 'email' || selectedChangeKey === 'nickname') && fetchUserSuccess({
-        user: {
-          ...userData.user,
-          ...body
-        },
-        token: userData.token,
-      });
-      setAppAlert(data.message, statuses.SUCCESS);
-      clearValues(body);
-    } catch (err) {
-      setAppAlert(err.message, statuses.ERROR);
-    }
+
+    userChangeInfo(body);
+    clearValues(body);
   };
 
   return (

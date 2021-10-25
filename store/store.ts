@@ -11,7 +11,7 @@ import { rootWatcher } from './watchers'
 const preloadState = () => {  
     const userData: { user: IUserReducer, token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
     const userInitial: IUserState = {
-      user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '', quizes: [] }),
+      user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '' }),
       isAuthenticated: false,
       loading: false
     };
@@ -23,7 +23,6 @@ const preloadState = () => {
           id: userData.user.id,
           nickname: userData.user.nickname,
           email: userData.user.email,
-          quizes: userData.user.quizes
         },
         isAuthenticated: !!userData.token,
       };

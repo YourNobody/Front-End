@@ -1,12 +1,10 @@
-import { WithMessage } from '../../interfaces/quizes.interface'
-import { request } from '../../helpers/request.helper'
-import { call, put } from '@redux-saga/core/effects'
-import { appActionTypes } from '../interfaces-reducers/appReducer.interface'
-import { setAppAlert } from '../action-creators/appActions'
-import { statuses } from '../../constants/app'
+import { WithMessage } from '../../interfaces/quizes.interface';
+import { request } from '../../helpers/request.helper';
+import { call, put } from '@redux-saga/core/effects';
+import { closeModal, setAppAlert } from '../action-creators/appActions';
+import { statuses } from '../../constants/app';
 import { IUserResetToken, IUserWithToken, WithQuizes } from '../../interfaces/user.interface';
 import { fetchUserBegining, fetchUserError, fetchUserSuccess, userSetResetToken } from '../action-creators/userActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 
 export function* loginSaga({ payload }) {
   try {
@@ -30,15 +28,24 @@ export function* registerSaga({ payload }) {
   }
 }
 
-export function* resetSaga({ payload }) {
+export function* logoutSaga({ payload }) {
+  try {
+    yield put(fetchUserBegining());
+    const data: WithMessage = yield call(() => request('/auth/logout', 'POST'));
+    yield put(setAppAlert(data.message, statuses.SUCCESS));
+  } catch (e: any) {
+    yield put(setAppAlert(e.message, statuses.ERROR));
+  }
+}
+
+export function* resetSaga({ payload, resetToken }) {
   try {
     yield put(fetchUserBegining());
     if (payload.email) {
       const data: IUserResetToken = yield call(() => request<IUserResetToken>('/auth/reset', 'POST', payload));
       yield put(userSetResetToken(data.resetToken, data.resetTokenExp));
       yield put(setAppAlert(data.message, statuses.SUCCESS));
-    } else {
-      const resetToken = useTypedSelector(state => state.user.resetToken) || '';
+    } else {;
       const data: WithMessage = yield call(() => request<WithMessage>('/auth/reset/' + resetToken, 'POST', payload));
       yield put(setAppAlert(data.message, statuses.SUCCESS));
     }

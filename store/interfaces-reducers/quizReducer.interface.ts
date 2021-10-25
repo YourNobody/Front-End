@@ -40,6 +40,8 @@ export enum quizActionTypes {
   GET_QUIZ_STATS_SUCCESS = 'GET_QUIZ_STATS_SUCCESS',
   SAVA_QUIZ_ANSWER = 'SAVA_QUIZ_ANSWER',
   SAVA_QUIZ_ANSWER_SUCCESS = 'SAVA_QUIZ_ANSWER_SUCCESS',
+  CREATE_QUIZ = 'CREATE_QUIZ',
+  CREATE_QUIZ_SUCCESS = 'CREATE_QUIZ_SUCCESS',
 }
 
 export interface IQuizSetSelected {
@@ -100,6 +102,21 @@ export interface IQuizSaveAnswerSuccess {
   type: quizActionTypes.SAVA_QUIZ_ANSWER_SUCCESS;
 }
 
+export interface IQuizCreate {
+  type: quizActionTypes.CREATE_QUIZ;
+  payload: {
+    title: string;
+    type: string;
+    question: string;
+    quizAnswers: string[] | null;
+  }
+}
+
+export interface IQuizCreateSuccess {
+  type: quizActionTypes.CREATE_QUIZ_SUCCESS;
+}
+
 export type IQuizActions = IQuizSetSelected | IQuizFetchSelfQuizzesSuccess | IQuizFetchSelectedQuizzesSuccess | IQuizFetchQuizzesStart
   | IQuizFetchSelfQuizzes | IQuizFetchSelectedQuizzes | IQuizDeleteQuiz | IQuizDeleteQuizSuccess |
-  IQuizGetQuizStats | IQuizGetQuizStatsSuccess | IQuizSaveAnswer | IQuizSaveAnswerSuccess;
+  IQuizGetQuizStats | IQuizGetQuizStatsSuccess | IQuizSaveAnswer | IQuizSaveAnswerSuccess |
+  IQuizCreate | IQuizCreateSuccess;
