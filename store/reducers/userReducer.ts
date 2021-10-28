@@ -10,6 +10,7 @@ const initialState: IUserState = {
   isAuthenticated: false,
   loading: false,
   resetToken: null,
+  hasSubscription: false
 };
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {

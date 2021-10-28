@@ -9,6 +9,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 import { useActions } from '../../hooks/useActions.hook';
 import { HTag, Button } from '../../components';
 import { QuizStats } from './QuizStats/QuizStats';
+import { Subscription } from './Subscription/Subscription'
 
 export const Profile: FC<ProfileProps> = (props) => {
   const history = useHistory();
@@ -40,7 +41,10 @@ export const Profile: FC<ProfileProps> = (props) => {
           <li>Account</li>
         </Link>
         <Link to={routes.PROFILE.QUESTIONS}>
-          <li>My Quizes</li>
+          <li>My Quizzes</li>
+        </Link>
+        <Link to={routes.PROFILE.SUBSCRIPTION}>
+          <li>Subscription</li>
         </Link>
         <a>
           <li onClick={handleOpenModal}>Log Out</li>
@@ -52,6 +56,9 @@ export const Profile: FC<ProfileProps> = (props) => {
         </Route>
         <Route path={routes.PROFILE.QUESTIONS} exact>
           <QuizStats/>
+        </Route>
+        <Route path={routes.PROFILE.SUBSCRIPTION} exact>
+          <Subscription/>
         </Route>
       </Switch>
     </div>

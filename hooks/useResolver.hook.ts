@@ -1,5 +1,6 @@
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import {
+  CardDateMaxLength, CardDateMinLength, CardNumberMaxLength, CardNumberMinLength,
   CustomValidatePassword,
   CustomValidateSuggestedAnswers,
   CustomValidateTitle,
@@ -62,6 +63,36 @@ class User {
   };
 }
 
+class Card {
+  @CardNumberMaxLength(19)
+  @CardNumberMinLength(19)
+  @MyIsString()
+  @MyIsNotEmpty()
+  card_number: string;
+
+  @CardDateMaxLength(5)
+  @CardDateMinLength(5)
+  @MyIsString()
+  @MyIsNotEmpty()
+  card_date: string;
+
+  @MyMaxLength(3)
+  @MyMinLength(3)
+  @MyIsString()
+  @MyIsNotEmpty()
+  card_csv: string;
+
+  getValidatorFields = (): string[] => {
+    return ['card_csv', 'card_date', 'card_number'];
+  };
+
+  validateCustomProperty = (type: 'card_csv' | 'card_date' | 'card_number', text: string): string | boolean => {
+    switch (type) {
+      default: return null;
+    }
+  };
+}
+
 class Quiz {
   @MyMaxLength(30)
   @MyMinLength(10)
@@ -118,7 +149,16 @@ const validators = {
     }),
     initial: Quiz
   },
-  validators: [User, Quiz]
+  Card: {
+    resolver: classValidatorResolver(Card, {
+      skipMissingProperties: true,
+      skipUndefinedProperties: true
+    }, {
+      mode: 'sync'
+    }),
+    initial: Card
+  },
+  validators: [User, Quiz, Card]
 };
 
 export const useResolver = (): any => {

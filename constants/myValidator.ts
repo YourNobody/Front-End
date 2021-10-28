@@ -31,6 +31,22 @@ export const MyMaxLength = (max: number): PropertyDecorator => MaxLength(max, {
   message: M.MaxLength(max)
 });
 
+export const CardDateMinLength = (min: number): PropertyDecorator => MinLength(min, {
+  message: M.MinLength(min - 1)
+});
+
+export const CardDateMaxLength = (max: number): PropertyDecorator => MaxLength(max, {
+  message: M.MaxLength(max - 1)
+});
+
+export const CardNumberMinLength = (min: number): PropertyDecorator => MinLength(min, {
+  message: M.MinLength(min - 3)
+});
+
+export const CardNumberMaxLength = (max: number): PropertyDecorator => MaxLength(max, {
+  message: M.MaxLength(max - 3)
+});
+
 export const MyIsAlphanumeric = (locale?: string): PropertyDecorator => IsAlphanumeric(locale, {
   message: M.IsAlphanumeric
 });

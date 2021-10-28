@@ -9,6 +9,7 @@ export interface IUserState {
   loading: boolean;
   isAuthenticated: boolean;
   resetToken?: string;
+  hasSubscription: boolean;
 }
 
 export interface IUserActionDefault {

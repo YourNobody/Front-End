@@ -17,6 +17,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { setQuizSelected } = useActions();
   const { pathname } = useLocation();
+  const { isVip } = useTypedSelector(state => state.user);
   let alreadySelected: any = null;
   if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
     const pathSplitted = pathname.split('/');
@@ -112,7 +113,13 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
       <Route path={routes.QUIZES.ROOT + '/:qType'}>
         <div className={styles.allWrapper}>
           {loading ? <HTag size="m">Loading...</HTag> : <></>}
-          {!loading ? buildQuestionsLinks() : <></>}
+          {
+            isVip
+              ? !loading ? buildQuestionsLinks() : <></>
+              : !loading ? <div>
+                <HTag size="m">This type of quizzes is available only if you have our <Link to={routes.PROFILE.SUBSCRIPTION}>subscription</Link></HTag>
+              </div> : <></>
+          }
         </div>
       </Route>
     </div>

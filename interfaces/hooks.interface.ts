@@ -9,7 +9,7 @@ export interface IUseRequest {
 export interface IUseInput {
   getValues?: (name?: string) => string | Record<string, unknown>;
   clearValues?: (name?: string) => void;
-  register?: (name: string, options?: IUseInputOptions & IUseInputOptionsAdditional) => IUseInputOptions;
+  register?: (name: string, options?: IUseInputOptions, additionalOptions?: IUseInputOptionsAdditional) => IUseInputOptions;
   handleSubmit?: (cb?: (formData: Record<string, unknown>) => Promise<any> | any) => any;
   formState?: {
     errors?: Record<string, { message: string }>;
@@ -25,6 +25,7 @@ export interface IUseInputOptions extends DetailedHTMLProps<HTMLAttributes<HTMLI
 export interface IUseInputOptionsAdditional {
   disableValidation?: boolean;
   exclude?: boolean;
+  onChangeCallback?: (value: string) => string;
 }
 
 export interface IUseAuth {

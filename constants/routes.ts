@@ -14,6 +14,7 @@ export const routes = {
     ROOT: '/profile',
     ACCOUNT: '/profile/account',
     QUESTIONS: '/profile/account/questions',
+    SUBSCRIPTION: '/profile/account/subscription',
   },
   AUTH: {
     ROOT: '/auth',

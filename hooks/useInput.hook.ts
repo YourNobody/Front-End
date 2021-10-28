@@ -2,8 +2,6 @@ import { validate, ValidationError } from "class-validator";
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { IUseInput, IUseInputOptions, IUseInputOptionsAdditional } from '../interfaces/hooks.interface'
 import { useResolver } from "./useResolver.hook";
-import { getObjectWithDefinedKeys } from '../helpers/custom.helper'
-import { log } from 'util'
 
 export const useInput = (initialState: Record<string, string> = {}): IUseInput => {
   const { validators } = useResolver();
@@ -58,7 +56,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     });
   }, [setValidationErrors, validators, validationErrors]);
 
-  const onChange = useCallback((event: any): void => {
+  const onChange = useCallback((event: any, callback?: (value: string) => string): void => {
     const lowerName = event.target.name.toLowerCase();
     validators.forEach(async (validator) => {
       let v = new validator();
@@ -86,10 +84,17 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
         }
       }
     });
-    setInputsState({
-      ...inputsState,
-      [lowerName]: event.target.value
-    });
+    if (callback) {
+      setInputsState({
+        ...inputsState,
+        [lowerName]: callback(event.target.value)
+      });
+    } else {
+      setInputsState({
+        ...inputsState,
+        [lowerName]: event.target.value
+      });
+    }
   }, [inputsState, setValidationErrors, validators, validationErrors]);
 
   const clearValues = useCallback((name?: string | Record<string, unknown>): void => {
@@ -106,7 +111,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     } else {
       Object.keys(name).forEach(key => {
         if (inputsState[key]) inputsState[key] = '';
-      })
+      });
     }
   }, [inputsState, setInputsState, initialState]);
 
@@ -118,35 +123,24 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     return '';
   }, [inputsState]);
 
-  const register = useCallback((name: string, options?: IUseInputOptions & IUseInputOptionsAdditional): IUseInputOptions => {
-    if (!options) {
-      options = {
-        disableValidation: false,
-        exclude: false
-      };
-    } else {
-      options = {
-        ...options,
-        disableValidation: false,
-        exclude: false
-      };
-    }
+  const register = useCallback((name: string, options?: IUseInputOptions, additionalOptions?: IUseInputOptionsAdditional): IUseInputOptions => {
     if (!name) throw new Error('Name isn\'t provided');
+    if (!additionalOptions) additionalOptions = {};
     name = name.toLowerCase();
     const props = {
-      onChange, onBlur, name,
+      onChange: additionalOptions.onChangeCallback ? (e) => onChange(e, additionalOptions.onChangeCallback) : onChange,
+      onBlur, name,
       value: inputsState[name]
     } as IUseInputOptions & IUseInputOptionsAdditional;
-    if (!options.disableValidation) {
+    if (!additionalOptions.disableValidation) {
       props.error = getValidationErrorMessage(name);
     }
-    if (options.exclude) {
+    if (additionalOptions.exclude) {
       props['data-exclude'] = 1;
     }
-    delete options.disableValidation;
-    delete options.exclude;
+    if (!options) options = {};
     return { ...props, ...options };
-  }, [inputsState, validationErrors]);
+  }, [getValidationErrorMessage, inputsState]);
 
   const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => Promise<any> | any): any => {
     return (event: FormEvent) => {
@@ -173,7 +167,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
               const errors: ValidationError[] = await validate(v);
               const errorOfThisItem = errors.find((error) => error.value !== undefined && error.property.toLowerCase() === lowerName);
               if (errorOfThisItem) allErrors.push(errorOfThisItem);
-            }))
+            }));
           });
           await Promise.all(promises).then(() => {
             if (index === array.length - 1) {
@@ -181,7 +175,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
               return cb(formInputsData);
             }
           });
-        }()
+        }();
         return data;
       }, {});
     };
