@@ -11,10 +11,10 @@ export const quizesNames = {
   AB: 'A/B Quizes'
 };
 export const quizesData: IQuizData[] = [
-  { title: quizesNames.SA, description: 'In this type of questions you can choose one or more answers', src: SA_Image, type: QuestionTypes.SA, isForVip: false },
-  { title: quizesNames.TA, description: 'Here you need to answer a question using text and your own thoughts', src: TA_Image, type: QuestionTypes.TA, isForVip: false },
-  { title: quizesNames.RA, description: 'You can set a "Rating" as an answe', src: RA_Image, type: QuestionTypes.RA, isForVip: false },
-  { title: quizesNames.AB, description: 'It\'s questions that provide you for only two answer', src: AB_Image, type: QuestionTypes.AB, isForVip: true }
+  { title: quizesNames.SA, description: 'In this type of questions you can choose one or more answers', src: SA_Image, type: QuestionTypes.SA, withSubscription: false },
+  { title: quizesNames.TA, description: 'Here you need to answer a question using text and your own thoughts', src: TA_Image, type: QuestionTypes.TA, withSubscription: false },
+  { title: quizesNames.RA, description: 'You can set a "Rating" as an answe', src: RA_Image, type: QuestionTypes.RA, withSubscription: false },
+  { title: quizesNames.AB, description: 'It\'s questions that provide you for only two answer', src: AB_Image, type: QuestionTypes.AB, withSubscription: true }
 ];
 
 export type profileChangeKeys = 'nickname' | 'email' | 'password';

@@ -1,6 +1,6 @@
 import { all } from '@redux-saga/core/effects';
 import { userTypes } from './interfaces-reducers/userReducer.interface';
-import { loginSaga, logoutSaga, registerSaga, resetSaga } from './services/authService'
+import { loginSaga, logoutSaga, registerSaga, resetSaga } from './services/authService';
 import * as Eff from 'redux-saga/effects'
 import { quizActionTypes } from './interfaces-reducers/quizReducer.interface';
 import {
@@ -10,7 +10,8 @@ import {
   getSelfQuizzesSaga,
   getSelfQuizzesWithStatsSaga, saveQuizAnswerSaga,
 } from './services/quizService';
-import { changeSaga } from './services/profileService'
+import { changeSaga, getClientSecretSaga, getStripeTokenSaga, payForSubscriptionSaga } from './services/profileService'
+import { appActionTypes } from './interfaces-reducers/appReducer.interface';
 
 const takeEvery: any = Eff.takeEvery;
 
@@ -23,8 +24,11 @@ export function* rootWatcher() {
 }
 
 function* profileWatcher() {
-  const { CHANGE_INFO } = userTypes;
+  const { CHANGE_INFO, GET_CLIENT_SECRET, PAY_FOR_SUBSCRIPTION } = userTypes;
+  const { GET_STRIPE_TOKEN } = appActionTypes;
   yield takeEvery(CHANGE_INFO, changeSaga);
+  yield takeEvery(GET_CLIENT_SECRET, getClientSecretSaga);
+  yield takeEvery(PAY_FOR_SUBSCRIPTION, payForSubscriptionSaga);
 }
 
 function* authWatcher() {

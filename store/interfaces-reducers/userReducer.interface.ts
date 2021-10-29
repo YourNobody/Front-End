@@ -9,7 +9,8 @@ export interface IUserState {
   loading: boolean;
   isAuthenticated: boolean;
   resetToken?: string;
-  hasSubscription: boolean;
+  hasSubscription?: boolean;
+  clientSecret?: string;
 }
 
 export interface IUserActionDefault {
@@ -66,6 +67,30 @@ export interface IUserChangeInfo {
   payload: any;
 }
 
+export interface IUserPayForSubscription {
+  type: userTypes.PAY_FOR_SUBSCRIPTION;
+  payload: {
+    stripe: any;
+    clientSecret: string;
+    method: any;
+  }
+}
+
+export interface IUserGetClientSecret {
+  type: userTypes.GET_CLIENT_SECRET;
+  payload: string; //email
+}
+
+export interface IUserSetClientSecret {
+  type: userTypes.SET_CLIENT_SECRET;
+  payload: string;
+}
+
+export interface IUserPayForSubscriptionSuccess {
+  type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS;
+  payload: boolean;
+}
+
 export enum userTypes {
   DEFAULT = 'DEFAULT',
   REGISTER_USER='REGISTER_USER',
@@ -79,6 +104,10 @@ export enum userTypes {
   SET_RESET_TOKEN='SET_RESET_TOKEN',
   DELETE_RESET_TOKEN='DELETE_RESET_TOKEN',
   CHANGE_INFO='CHANGE_INFO',
+  PAY_FOR_SUBSCRIPTION='PAY_FOR_SUBSCRIPTION',
+  PAY_FOR_SUBSCRIPTION_SUCCESS='PAY_FOR_SUBSCRIPTION_SUCCESS',
+  SET_CLIENT_SECRET='SET_CLIENT_SECRET',
+  GET_CLIENT_SECRET='GET_CLIENT_SECRET'
 }
 
 export type IUserActions = IUserActionFetchUserBegining |
@@ -89,4 +118,8 @@ export type IUserActions = IUserActionFetchUserBegining |
   IUserActionLogOut |
   IUserSetResetToken |
   IUserDeleteResetToken |
-  IUserChangeInfo;
+  IUserChangeInfo |
+  IUserSetClientSecret |
+  IUserGetClientSecret |
+  IUserPayForSubscription |
+  IUserPayForSubscriptionSuccess;

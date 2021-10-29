@@ -1,5 +1,12 @@
 import { statuses } from "../../constants/app";
-import { appActionTypes, IAppSetAlert, IAppClearAlert, IAppOpenModal, IAppCloseModal } from "../interfaces-reducers/appReducer.interface";
+import {
+  appActionTypes,
+  IAppSetAlert,
+  IAppClearAlert,
+  IAppOpenModal,
+  IAppCloseModal,
+  IAppSetStripeToken, IAppGetStripeToken,
+} from '../interfaces-reducers/appReducer.interface'
 
 export const setAppAlert = (message: string, status: statuses, isAutoDeleted = true): IAppSetAlert => {
   const id = String(Date.now() * Math.random());
@@ -18,9 +25,18 @@ export const closeModal = (): IAppCloseModal => {
   return { type: appActionTypes.CLOSE_MODAL };
 };
 
+export const getStripeToken = (): IAppGetStripeToken => {
+  return { type: appActionTypes.GET_STRIPE_TOKEN };
+};
+
+export const setStripeToken = (payload): IAppSetStripeToken => {
+  return { type: appActionTypes.SET_STRIPE_TOKEN, payload };
+};
+
 export default {
   setAppAlert,
   clearAppAlert,
   openModal,
-  closeModal
+  closeModal,
+  getStripeToken
 }

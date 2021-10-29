@@ -13,7 +13,8 @@ export interface IAppState {
     isAutoDeleted: boolean;
   };
   loading: boolean;
-  modalTemplate: JSX.Element
+  modalTemplate: JSX.Element,
+  stripeToken: string
 }
 
 export enum appActionTypes {
@@ -21,7 +22,9 @@ export enum appActionTypes {
   SET_ALERT = 'SET_ALERT',
   CLEAR_ALERT = 'CLEAR_ALERT',
   OPEN_MODAL = 'OPEN_MODAL',
-  CLOSE_MODAL = 'CLOSE_MODAL'
+  CLOSE_MODAL = 'CLOSE_MODAL',
+  SET_STRIPE_TOKEN = 'SET_STRIPE_TOKEN',
+  GET_STRIPE_TOKEN = 'GET_STRIPE_TOKEN'
 }
 
 export interface IAppDefault {
@@ -47,4 +50,13 @@ export interface IAppCloseModal {
   type: appActionTypes.CLOSE_MODAL;
 }
 
-export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal;
+export interface IAppSetStripeToken {
+  type: appActionTypes.SET_STRIPE_TOKEN;
+  payload: string;
+}
+
+export interface IAppGetStripeToken {
+  type: appActionTypes.GET_STRIPE_TOKEN;
+}
+
+export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal | IAppSetStripeToken | IAppGetStripeToken;

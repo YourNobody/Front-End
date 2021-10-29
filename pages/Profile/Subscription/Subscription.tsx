@@ -1,10 +1,35 @@
 import React, { FC } from 'react';
+import styles from './Subscription.module.css';
 import { Button, Card, HTag, Input } from '../../../components';
 import { useInput } from '../../../hooks/useInput.hook';
 import { SubscriptionProps } from './Subscription.props';
+import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
+import { useActions } from '../../../hooks/useActions.hook';
+import { useTypedSelector } from '../../../hooks/useTypedSelector.hook';
+import './Subscription.module.css';
+
+const CARD_ELEMENT_OPTIONS = {};
 
 export const Subscription: FC<SubscriptionProps> = () => {
   const { register } = useInput();
+  const { getClientSecret, payForSubscription } = useActions();
+  const { clientSecret } = useTypedSelector(state => state.user);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = (formData) => {
+    if (!stripe || !elements) return;
+    getClientSecret(formData.email);
+    payForSubscription(stripe, clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          email: formData.email,
+        },
+      },
+    });
+  };
 
   const handleCardNumberDisplaying = (value: string): string => {
     if (!value) return '';
@@ -47,34 +72,13 @@ export const Subscription: FC<SubscriptionProps> = () => {
       You will get new types of quizzes available for you, and you will have new creation quizzes
     </p>
     <Button color="ghost">Subscribe</Button>
-    <form>
+    <form onSubmit={handleSubmit}>
       <Input
-        id="number"
-        label="Card number:"
-        type="text"
-        placeholder="Write your card number"
-        {...register("card_number", {}, {
-          onChangeCallback: handleCardNumberDisplaying
-        })}
+        label="Email"
+        placeholder="Enter your email"
+        {...register('email')}
       />
-      <Input
-        id="date"
-        label="Expiration date:"
-        type="text"
-        placeholder="Write expiration date of your card"
-        {...register("card_date", {}, {
-          onChangeCallback: handleCardExpDateDisplaying
-        })}
-      />
-      <Input
-        id="csv"
-        label="CSV code:"
-        type="number"
-        placeholder="Write your csv code"
-        {...register("card_csv", {}, {
-          onChangeCallback: (value) => value.length >=3 ? value.substring(0, 3) : value
-        })}
-      />
+      <CardElement options={CARD_ELEMENT_OPTIONS} className={styles.cardElement}/>
       <Button color="primary">Pay</Button>
     </form>
   </Card>;

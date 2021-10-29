@@ -8,7 +8,6 @@ import { Link, Route, useHistory, useLocation } from 'react-router-dom';
 import { routes } from './../../constants/routes';
 import { QuestionTypes, IQuizResponse, IQuizWithQuizCreator } from '../../interfaces/quizes.interface';
 import { quizesData } from '../../constants/data';
-import { useRequest } from '../../hooks/useRequest';
 import { LOCALSTORAGE_QUIZ_DATA_NAME, statuses } from '../../constants/app'
 import { useActions } from './../../hooks/useActions.hook';
 import { quizesNames } from '../../../Back-End/src/constants/app';
@@ -17,7 +16,7 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { setQuizSelected } = useActions();
   const { pathname } = useLocation();
-  const { isVip } = useTypedSelector(state => state.user);
+  const { hasSubscription, isAuthenticated } = useTypedSelector(state => state.user);
   let alreadySelected: any = null;
   if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
     const pathSplitted = pathname.split('/');
@@ -114,11 +113,25 @@ export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
         <div className={styles.allWrapper}>
           {loading ? <HTag size="m">Loading...</HTag> : <></>}
           {
-            isVip
+            hasSubscription
               ? !loading ? buildQuestionsLinks() : <></>
-              : !loading ? <div>
-                <HTag size="m">This type of quizzes is available only if you have our <Link to={routes.PROFILE.SUBSCRIPTION}>subscription</Link></HTag>
-              </div> : <></>
+              : !loading
+                ? quizesData.find(q => q.type === selectedType && q.withSubscription)
+                  ?
+                    isAuthenticated
+                      ? <div>
+                          <HTag size="m">This type of quizzes is available only if you have our <Link to={routes.PROFILE.SUBSCRIPTION}>subscription</Link></HTag>
+                        </div>
+                      : <div>
+                          <HTag size="m">
+                            This type of quizzes is available only if you have our subscription
+                            <br/>
+                            <br/>
+                            But firstly you need t o <Link to={routes.AUTH.REGISTER}>register</Link> to our app
+                          </HTag>
+                        </div>
+                  : buildQuestionsLinks()
+                : <></>
           }
         </div>
       </Route>

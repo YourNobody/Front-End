@@ -11,7 +11,13 @@ import {
   IUserState,
   IUserRegister,
   IUserLogin,
-  IUserReset, IUserSetResetToken, IUserDeleteResetToken, IUserChangeInfo,
+  IUserReset,
+  IUserSetResetToken,
+  IUserDeleteResetToken,
+  IUserChangeInfo,
+  IUserGetClientSecret,
+  IUserSetClientSecret,
+  IUserPayForSubscription, IUserPayForSubscriptionSuccess,
 } from '../interfaces-reducers/userReducer.interface'
 
 export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
@@ -66,11 +72,29 @@ export const userChangeInfo = (payload): IUserChangeInfo => {
   return { type: userTypes.CHANGE_INFO, payload };
 };
 
+export const payForSubscription = (stripe: any, clientSecret: string, method: any): IUserPayForSubscription => {
+  return { type: userTypes.PAY_FOR_SUBSCRIPTION, payload: { stripe, clientSecret, method } };
+}
+
+export const payForSubscriptionSuccess = (payload): IUserPayForSubscriptionSuccess => {
+  return { type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS, payload };
+};
+
+export const getClientSecret = (payload): IUserGetClientSecret => {
+  return { type: userTypes.GET_CLIENT_SECRET, payload };
+};
+
+export const setClientSecret = (payload): IUserSetClientSecret => {
+  return { type: userTypes.SET_CLIENT_SECRET, payload };
+};
+
 export default {
   userLogOut,
   userRegister,
   userLogin,
   userReset,
   fetchUserSuccess,
-  userChangeInfo
+  userChangeInfo,
+  payForSubscription,
+  getClientSecret
 };

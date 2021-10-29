@@ -9,13 +9,19 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
 import { useActions } from '../../hooks/useActions.hook';
 import { HTag, Button } from '../../components';
 import { QuizStats } from './QuizStats/QuizStats';
-import { Subscription } from './Subscription/Subscription'
+import { Subscription } from './Subscription/Subscription';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js'
 
 export const Profile: FC<ProfileProps> = (props) => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
-  const { modalTemplate } = useTypedSelector(state => state.app);
-  const { userLogOut, openModal, closeModal } = useActions();
+  const { modalTemplate, stripeToken } = useTypedSelector(state => state.app);
+  const { userLogOut, openModal, closeModal, getStripeToken } = useActions();
+
+  useEffect(() => {
+    getStripeToken();
+  }, []);
 
   const handleLogOut = async (): Promise<void> => {
     userLogOut();
@@ -58,7 +64,9 @@ export const Profile: FC<ProfileProps> = (props) => {
           <QuizStats/>
         </Route>
         <Route path={routes.PROFILE.SUBSCRIPTION} exact>
-          <Subscription/>
+          <Elements stripe={loadStripe(stripeToken)}>
+            <Subscription/>
+          </Elements>
         </Route>
       </Switch>
     </div>

@@ -16,7 +16,7 @@ export interface IQuizData {
   src: string;
   description: string;
   type: QuestionTypes;
-  isForVip: boolean;
+  withSubscription: boolean;
 }
 
 export interface MainQuestionsProps {
