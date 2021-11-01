@@ -8,61 +8,27 @@ import { useActions } from '../../../hooks/useActions.hook';
 import { useTypedSelector } from '../../../hooks/useTypedSelector.hook';
 import './Subscription.module.css';
 
-const CARD_ELEMENT_OPTIONS = {};
+const CARD_ELEMENT_OPTIONS = {
+  hidePostalCode: true
+};
 
 export const Subscription: FC<SubscriptionProps> = () => {
-  const { register } = useInput();
-  const { getClientSecret, payForSubscription } = useActions();
-  const { clientSecret } = useTypedSelector(state => state.user);
+  const { register, handleSubmit } = useInput();
+  const { getClientSecretAndSubscribe, payForSubscription } = useActions();
+  const { clientSecret, user: { email } } = useTypedSelector(state => state.user);
 
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleSubmit = (formData) => {
+  const handleSubmitSubscription = async (formData) => {
     if (!stripe || !elements) return;
-    getClientSecret(formData.email);
-    payForSubscription(stripe, clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-        billing_details: {
-          email: formData.email,
-        },
+    getClientSecretAndSubscribe(stripe, formData.email || email ,{
+      type: 'card',
+      card: elements.getElement(CardElement),
+      billing_details: {
+        email: email
       },
     });
-  };
-
-  const handleCardNumberDisplaying = (value: string): string => {
-    if (!value) return '';
-    let unspacedValue = value.replace(/\s/g, '');
-    if (unspacedValue.length >= 16) return value.substring(0, 19);
-    if (unspacedValue.length) {
-      const groupsAmount = Math.floor(unspacedValue.length / 4);
-      if (groupsAmount) {
-        let val = '';
-        for (let i = 0; i < groupsAmount; i++) {
-          val += unspacedValue.substring(0, 0 * 3 + 4) + ' ';
-          unspacedValue = unspacedValue.substring(0 * 3 + 4);
-          if (i === groupsAmount - 1) {
-            val += unspacedValue;
-          }
-        }
-        return val.trim();
-      } else return value;
-    } else {
-      return value;
-    }
-  };
-
-  const handleCardExpDateDisplaying = (value: string): string => {
-    if (!value) return '';
-    const unlined = value.replace(/\//g, '');
-    const groupsAmount = 2;
-    if (unlined.length >= 4 && value.match(/\//)) return value.substring(0, 5);
-    if (unlined.length > groupsAmount) {
-      return unlined.substring(0, 2) + '/' + unlined.substring(2, unlined.length <= 4 ? unlined.length : 4);
-    } else {
-      return value;
-    }
   };
 
   return <Card>
@@ -72,14 +38,17 @@ export const Subscription: FC<SubscriptionProps> = () => {
       You will get new types of quizzes available for you, and you will have new creation quizzes
     </p>
     <Button color="ghost">Subscribe</Button>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(handleSubmitSubscription)}>
       <Input
         label="Email"
+        disabled={!!email}
         placeholder="Enter your email"
-        {...register('email')}
+        {...register('email', null, {
+          initialValue: email
+        })}
       />
       <CardElement options={CARD_ELEMENT_OPTIONS} className={styles.cardElement}/>
-      <Button color="primary">Pay</Button>
+      <Button color="primary" type="submit">Subscribe</Button>
     </form>
   </Card>;
 };

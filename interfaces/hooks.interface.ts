@@ -26,6 +26,7 @@ export interface IUseInputOptionsAdditional {
   disableValidation?: boolean;
   exclude?: boolean;
   onChangeCallback?: (value: string) => string;
+  initialValue?: string;
 }
 
 export interface IUseAuth {

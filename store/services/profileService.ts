@@ -10,6 +10,7 @@ import { setAppAlert, setStripeToken } from '../action-creators/appActions'
 import { statuses } from '../../constants/app'
 import { IUserWithToken } from '../../interfaces/user.interface'
 import { WithMessage } from '../../interfaces/quizes.interface'
+import { PaymentIntentResult, PaymentMethodResult } from '@stripe/stripe-js'
 
 export function* changeSaga({ payload }) {
   try {
@@ -31,20 +32,23 @@ export function* getStripeTokenSaga() {
   }
 }
 
-export function* getClientSecretSaga({ payload }) {
+export function* getClientSecretAndSubscribeSaga({ payload: { stripe, method, email } }) {
   try {
-    const data: { client_secret: string } & WithMessage = yield call(() => request('/profile/payment', 'POST', { email: payload }));
-    yield put(setClientSecret(data.client_secret));
-  } catch (e: any) {
-    yield put(setAppAlert(e.message, statuses.ERROR));
-  }
-}
-
-export function* payForSubscriptionSaga({ payload: { stripe, clientSecret, method } }) {
-  try {
-    const data: { isSucceed: string } & WithMessage = yield call(() => stripe.confirmCardPayment(clientSecret, method));
-    yield put(payForSubscriptionSuccess(data.isSucceed));
-    yield put(setAppAlert(data.message, statuses.SUCCESS));
+    const result: PaymentMethodResult = yield call(() => stripe.createPaymentMethod(method));
+    if (result.error && result.error.message) throw new Error(result.error.message);
+    else {
+      const res: {
+        client_secret: string;
+        status: string;
+      } = yield call(() => request('/profile/payment/sub', 'POST', { payment_method: result.paymentMethod.id, email }));
+      const {client_secret, status} = res;
+      if (status === 'requires_action') {
+        const payment = yield call(() => stripe.confirmCardPayment(client_secret));
+        if (payment.error) throw new Error('Subscription payment failed. Try later');
+        return setAppAlert('Subscription has been paid successfully', statuses.SUCCESS);
+      }
+      return setAppAlert('Subscription has been paid successfully', statuses.SUCCESS);
+    }
   } catch (e: any) {
     yield put(setAppAlert(e.message, statuses.ERROR));
   }

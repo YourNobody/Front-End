@@ -130,7 +130,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     const props = {
       onChange: additionalOptions.onChangeCallback ? (e) => onChange(e, additionalOptions.onChangeCallback) : onChange,
       onBlur, name,
-      value: inputsState[name]
+      value: additionalOptions.initialValue || inputsState[name]
     } as IUseInputOptions & IUseInputOptionsAdditional;
     if (!additionalOptions.disableValidation) {
       props.error = getValidationErrorMessage(name);
@@ -140,7 +140,7 @@ export const useInput = (initialState: Record<string, string> = {}): IUseInput =
     }
     if (!options) options = {};
     return { ...props, ...options };
-  }, [getValidationErrorMessage, inputsState]);
+  }, [getValidationErrorMessage, inputsState, setInputsState]);
 
   const handleSubmit = useCallback((cb?: (formData: Record<string, unknown>) => Promise<any> | any): any => {
     return (event: FormEvent) => {

@@ -80,8 +80,8 @@ export const payForSubscriptionSuccess = (payload): IUserPayForSubscriptionSucce
   return { type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS, payload };
 };
 
-export const getClientSecret = (payload): IUserGetClientSecret => {
-  return { type: userTypes.GET_CLIENT_SECRET, payload };
+export const getClientSecretAndSubscribe = (stripe, email, method): IUserGetClientSecret => {
+  return { type: userTypes.GET_CLIENT_SECRET, payload: { stripe, method, email } };
 };
 
 export const setClientSecret = (payload): IUserSetClientSecret => {
@@ -96,5 +96,5 @@ export default {
   fetchUserSuccess,
   userChangeInfo,
   payForSubscription,
-  getClientSecret
+  getClientSecretAndSubscribe
 };

@@ -78,7 +78,11 @@ export interface IUserPayForSubscription {
 
 export interface IUserGetClientSecret {
   type: userTypes.GET_CLIENT_SECRET;
-  payload: string; //email
+  payload: {
+    stripe: any;
+    method: any;
+    email: string;
+  };
 }
 
 export interface IUserSetClientSecret {
