@@ -1,16 +1,14 @@
-import { call, put } from '@redux-saga/core/effects'
+import { call, put } from '@redux-saga/core/effects';
 import {
   fetchUserBegining,
   fetchUserSuccess,
-  payForSubscriptionSuccess,
-  setClientSecret,
-} from '../action-creators/userActions'
-import { request } from '../../helpers/request.helper'
-import { setAppAlert, setStripeToken } from '../action-creators/appActions'
-import { statuses } from '../../constants/app'
-import { IUserWithToken } from '../../interfaces/user.interface'
-import { WithMessage } from '../../interfaces/quizes.interface'
-import { PaymentIntentResult, PaymentMethodResult } from '@stripe/stripe-js'
+} from '../action-creators/userActions';
+import { request } from '../../helpers/request.helper';
+import { setAppAlert, setStripeToken } from '../action-creators/appActions';
+import { statuses } from '../../constants/app';
+import { IUserWithToken } from '../../interfaces/user.interface';
+import { WithMessage } from '../../interfaces/quizes.interface';
+import { PaymentMethodResult } from '@stripe/stripe-js';
 
 export function* changeSaga({ payload }) {
   try {
@@ -45,9 +43,10 @@ export function* getClientSecretAndSubscribeSaga({ payload: { stripe, method, em
       if (status === 'requires_action') {
         const payment = yield call(() => stripe.confirmCardPayment(client_secret));
         if (payment.error) throw new Error('Subscription payment failed. Try later');
-        return setAppAlert('Subscription has been paid successfully', statuses.SUCCESS);
+        yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
+      } else if (status === 'succeeded') {
+        yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
       }
-      return setAppAlert('Subscription has been paid successfully', statuses.SUCCESS);
     }
   } catch (e: any) {
     yield put(setAppAlert(e.message, statuses.ERROR));

@@ -60,35 +60,35 @@ export const Routes: FC<any> = () => {
   const { request, loading, error, clearError } = useRequest();
   const history = useHistory();
 
-  const checkForAuthed = async (): Promise<void> => {
-    try {
-      if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-        const data: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-        const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
+  // const checkForAuthed = async (): Promise<void> => {
+  //   try {
+  //     if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
+  //       const data: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
+  //       const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
+  //
+  //       if (!isAuthed) {
+  //         userLogOut();
+  //       } else {
+  //         const expirationData = JSON.parse(atob(data.token.split('.')[1]));
+  //         const { expiresIn, expiresAt } = expirationData;
+  //         const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
+  //         const now = Date.now();
+  //         const diff = expiresAt - now;
+  //         if (diff < 0) {
+  //           setAppAlert('Your session has expired', statuses.WARNING, false);
+  //           userLogOut();
+  //         }
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     userLogOut();
+  //   }
+  // };
 
-        if (!isAuthed) {
-          userLogOut();
-        } else {
-          const expirationData = JSON.parse(atob(data.token.split('.')[1]));
-          const { expiresIn, expiresAt } = expirationData;
-          const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
-          const now = Date.now();
-          const diff = expiresAt - now;
-          if (diff < 0) {
-            setAppAlert('Your session has expired', statuses.WARNING, false);
-            userLogOut();
-          }
-        }
-      }
-    } catch (err) { 
-      console.log(err);
-      userLogOut();
-    }
-  };
-
-  useEffect(() => {
-    checkForAuthed();
-  }, []);
+  // useEffect(() => {
+  //   checkForAuthed();
+  // }, []);
 
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
   

@@ -15,7 +15,7 @@ const CARD_ELEMENT_OPTIONS = {
 export const Subscription: FC<SubscriptionProps> = () => {
   const { register, handleSubmit } = useInput();
   const { getClientSecretAndSubscribe, payForSubscription } = useActions();
-  const { clientSecret, user: { email } } = useTypedSelector(state => state.user);
+  const { hasSubscription, loading, user: { email } } = useTypedSelector(state => state.user);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -30,25 +30,30 @@ export const Subscription: FC<SubscriptionProps> = () => {
       },
     });
   };
-
-  return <Card>
-    <HTag size="l">Subscription to new opportunities</HTag>
-    <p>
+  if (loading) return <Card className={styles.loadingCard}>
+    <HTag size="m"  className={styles.loadingTitle}>Load subscriptions info...</HTag>
+  </Card>;
+  return <Card className={styles.subscription}>
+    <HTag size="l" className={styles.subTitle}>Subscription to new opportunities</HTag>
+    <p className={styles.description}>
       This subscription gives you more opportunities to common user.
       You will get new types of quizzes available for you, and you will have new creation quizzes
     </p>
-    <Button color="ghost">Subscribe</Button>
-    <form onSubmit={handleSubmit(handleSubmitSubscription)}>
-      <Input
-        label="Email"
-        disabled={!!email}
-        placeholder="Enter your email"
-        {...register('email', null, {
-          initialValue: email
-        })}
-      />
-      <CardElement options={CARD_ELEMENT_OPTIONS} className={styles.cardElement}/>
-      <Button color="primary" type="submit">Subscribe</Button>
-    </form>
+    {
+      hasSubscription
+        ? <HTag size="m" >Your subscription is active</HTag>
+        : <form onSubmit={handleSubmit(handleSubmitSubscription)}>
+          <Input
+            label="Email"
+            disabled={!!email}
+            placeholder="Enter your email"
+            {...register('email', null, {
+              initialValue: email
+            })}
+          />
+          <CardElement options={CARD_ELEMENT_OPTIONS} className={styles.cardElement}/>
+          <Button color="primary" type="submit">Subscribe</Button>
+        </form>
+    }
   </Card>;
 };
