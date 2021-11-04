@@ -16,12 +16,8 @@ import { loadStripe } from '@stripe/stripe-js'
 export const Profile: FC<ProfileProps> = (props) => {
   const history = useHistory();
   const { user } = useTypedSelector(state => state.user);
-  const { modalTemplate, stripeToken } = useTypedSelector(state => state.app);
-  const { userLogOut, openModal, closeModal, getStripeToken } = useActions();
-
-  useEffect(() => {
-    getStripeToken();
-  }, []);
+  const { stripeToken } = useTypedSelector(state => state.app);
+  const { userLogOut, openModal, closeModal } = useActions();
 
   const handleLogOut = async (): Promise<void> => {
     userLogOut();

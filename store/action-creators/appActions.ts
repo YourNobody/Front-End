@@ -5,7 +5,7 @@ import {
   IAppClearAlert,
   IAppOpenModal,
   IAppCloseModal,
-  IAppSetStripeToken, IAppGetStripeToken,
+  IAppSetStripeToken, IAppGetStripeToken, IAppLoadingStart,
 } from '../interfaces-reducers/appReducer.interface'
 
 export const setAppAlert = (message: string, status: statuses, isAutoDeleted = true): IAppSetAlert => {
@@ -25,18 +25,23 @@ export const closeModal = (): IAppCloseModal => {
   return { type: appActionTypes.CLOSE_MODAL };
 };
 
-export const getStripeToken = (): IAppGetStripeToken => {
-  return { type: appActionTypes.GET_STRIPE_TOKEN };
+export const getAllSubscriptionsProducts = (): IAppGetStripeToken => {
+  return { type: appActionTypes.GET_ALL_SUBSCRIPTIONS_PRODUCTS };
 };
 
-export const setStripeToken = (payload): IAppSetStripeToken => {
-  return { type: appActionTypes.SET_STRIPE_TOKEN, payload };
+export const setAllSubscriptionsProducts = (payload): IAppSetStripeToken => {
+  return { type: appActionTypes.SET_ALL_SUBSCRIPTIONS_PRODUCTS, payload };
 };
+
+export const loadingStart = (): IAppLoadingStart => {
+  return { type: appActionTypes.LOADING_START };
+};
+
 
 export default {
   setAppAlert,
   clearAppAlert,
   openModal,
   closeModal,
-  getStripeToken
+  getAllSubscriptionsProducts
 }

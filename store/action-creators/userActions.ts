@@ -84,10 +84,6 @@ export const getClientSecretAndSubscribe = (stripe, email, method): IUserGetClie
   return { type: userTypes.GET_CLIENT_SECRET, payload: { stripe, method, email } };
 };
 
-export const setClientSecret = (payload): IUserSetClientSecret => {
-  return { type: userTypes.SET_CLIENT_SECRET, payload };
-};
-
 export default {
   userLogOut,
   userRegister,

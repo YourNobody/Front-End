@@ -9,8 +9,8 @@ export interface IUserState {
   loading: boolean;
   isAuthenticated: boolean;
   resetToken?: string;
-  hasSubscription?: boolean;
   clientSecret?: string;
+  mySubscriptions?: any[];
 }
 
 export interface IUserActionDefault {
@@ -92,7 +92,7 @@ export interface IUserSetClientSecret {
 
 export interface IUserPayForSubscriptionSuccess {
   type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS;
-  payload: boolean;
+  payload: string[];
 }
 
 export enum userTypes {

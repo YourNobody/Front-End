@@ -8,6 +8,7 @@ const initialAppState: IAppState = {
   },
   loading: false,
   modalTemplate: null,
+  subscriptions: [],
   stripeToken: 'pk_test_51JpUsRHGtSgh6m0CCqMQpncG0FWtJrMw2t2L7RhH0TxmJmdp9JK1HyG1VyI3ONMDzlE0OlZVOwR7JD3ZQazKBuXJ00iREhwXp9'
 };
 
@@ -30,8 +31,10 @@ export const appReducer = (state: IAppState = initialAppState, action: IAppActio
       return {...state, modalTemplate: action.payload} ;
     case appActionTypes.CLOSE_MODAL:
       return {...state, modalTemplate: null };
-    case appActionTypes.SET_STRIPE_TOKEN:
-      return {...state, stripeToken: action.payload };
+    case appActionTypes.SET_ALL_SUBSCRIPTIONS_PRODUCTS:
+      return {...state, subscriptions: action.payload, loading: false };
+    case appActionTypes.LOADING_START:
+      return {...state, loading: true};
     default: return state;
   }
 };

@@ -13,8 +13,9 @@ export interface IAppState {
     isAutoDeleted: boolean;
   };
   loading: boolean;
-  modalTemplate: JSX.Element,
-  stripeToken: string
+  modalTemplate: JSX.Element;
+  subscriptions: any[];
+  stripeToken: string;
 }
 
 export enum appActionTypes {
@@ -23,8 +24,13 @@ export enum appActionTypes {
   CLEAR_ALERT = 'CLEAR_ALERT',
   OPEN_MODAL = 'OPEN_MODAL',
   CLOSE_MODAL = 'CLOSE_MODAL',
-  SET_STRIPE_TOKEN = 'SET_STRIPE_TOKEN',
-  GET_STRIPE_TOKEN = 'GET_STRIPE_TOKEN'
+  SET_ALL_SUBSCRIPTIONS_PRODUCTS = 'SET_ALL_SUBSCRIPTIONS_PRODUCTS',
+  GET_ALL_SUBSCRIPTIONS_PRODUCTS = 'GET_ALL_SUBSCRIPTIONS_PRODUCTS',
+  LOADING_START = 'LOADING_START'
+}
+
+export interface  IAppLoadingStart {
+  type: appActionTypes.LOADING_START;
 }
 
 export interface IAppDefault {
@@ -51,12 +57,12 @@ export interface IAppCloseModal {
 }
 
 export interface IAppSetStripeToken {
-  type: appActionTypes.SET_STRIPE_TOKEN;
-  payload: string;
+  type: appActionTypes.SET_ALL_SUBSCRIPTIONS_PRODUCTS;
+  payload: any[];
 }
 
 export interface IAppGetStripeToken {
-  type: appActionTypes.GET_STRIPE_TOKEN;
+  type: appActionTypes.GET_ALL_SUBSCRIPTIONS_PRODUCTS;
 }
 
-export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal | IAppSetStripeToken | IAppGetStripeToken;
+export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal | IAppSetStripeToken | IAppGetStripeToken | IAppLoadingStart;

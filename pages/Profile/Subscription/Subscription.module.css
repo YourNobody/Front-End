@@ -26,8 +26,42 @@
   font-size: 24px;
 }
 
-.subTitle {
+.allSubs {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 
+.sub {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 15px;
+  align-items: center;
+  background: var(--white-transparent);
+  width: 100%;
+  max-width: 300px;
+}
+
+.sub h2.gold {
+  color: var(--yellow);
+}
+
+.sub button {
+  margin: 0;
+}
+
+.sub button.gold {
+  background-color: var(--yellow);
+}
+
+.formTitle {
+  margin: 12px 0;
+}
+
+.subTitle {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .description {

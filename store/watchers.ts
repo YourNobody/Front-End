@@ -10,7 +10,11 @@ import {
   getSelfQuizzesSaga,
   getSelfQuizzesWithStatsSaga, saveQuizAnswerSaga,
 } from './services/quizService';
-import { changeSaga, getClientSecretAndSubscribeSaga, getStripeTokenSaga } from './services/profileService'
+import {
+  changeSaga,
+  getAvailableSubscriptionsSaga,
+  getClientSecretAndSubscribeSaga,
+} from './services/profileService'
 import { appActionTypes } from './interfaces-reducers/appReducer.interface';
 
 const takeEvery: any = Eff.takeEvery;
@@ -24,9 +28,11 @@ export function* rootWatcher() {
 }
 
 function* profileWatcher() {
-  const { CHANGE_INFO, GET_CLIENT_SECRET, PAY_FOR_SUBSCRIPTION } = userTypes;
+  const { CHANGE_INFO, GET_CLIENT_SECRET } = userTypes;
+  const { GET_ALL_SUBSCRIPTIONS_PRODUCTS } = appActionTypes;
   yield takeEvery(CHANGE_INFO, changeSaga);
   yield takeEvery(GET_CLIENT_SECRET, getClientSecretAndSubscribeSaga);
+  yield takeEvery(GET_ALL_SUBSCRIPTIONS_PRODUCTS, getAvailableSubscriptionsSaga);
 }
 
 function* authWatcher() {

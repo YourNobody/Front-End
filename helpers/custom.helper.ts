@@ -62,6 +62,14 @@ export const formatDate = (date: number | Date): string => {
   }).format(new Date(date));
 };
 
+export const formatPrice = (price: number, currency = 'USD', locale = 'en-US'): string => {
+  if (!price) return '';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(price);
+};
+
 export const changeStatisticsTooltipLabel = (value: number | string, name: string, props: any) => {
   return function (oldLabel: string, newLabel: string): void {
     if (name && oldLabel) {

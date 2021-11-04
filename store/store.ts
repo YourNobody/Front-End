@@ -14,7 +14,7 @@ const preloadState = () => {
       user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '' }),
       isAuthenticated: false,
       loading: false,
-      hasSubscription: false
+      mySubscriptions: []
     };
 
     if (userData && userData.token) {

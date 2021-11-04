@@ -1,14 +1,11 @@
-import { call, put } from '@redux-saga/core/effects';
-import {
-  fetchUserBegining,
-  fetchUserSuccess,
-} from '../action-creators/userActions';
-import { request } from '../../helpers/request.helper';
-import { setAppAlert, setStripeToken } from '../action-creators/appActions';
-import { statuses } from '../../constants/app';
-import { IUserWithToken } from '../../interfaces/user.interface';
-import { WithMessage } from '../../interfaces/quizes.interface';
-import { PaymentMethodResult } from '@stripe/stripe-js';
+import { call, put } from '@redux-saga/core/effects'
+import { fetchUserBegining, fetchUserSuccess, payForSubscriptionSuccess } from '../action-creators/userActions'
+import { request } from '../../helpers/request.helper'
+import { loadingStart, setAllSubscriptionsProducts, setAppAlert } from '../action-creators/appActions'
+import { statuses } from '../../constants/app'
+import { IUserWithToken } from '../../interfaces/user.interface'
+import { WithMessage } from '../../interfaces/quizes.interface'
+import { PaymentMethodResult } from '@stripe/stripe-js'
 
 export function* changeSaga({ payload }) {
   try {
@@ -21,10 +18,12 @@ export function* changeSaga({ payload }) {
   }
 }
 
-export function* getStripeTokenSaga() {
+export function* getAvailableSubscriptionsSaga() {
   try {
-    const data: { client_stripe_token: string } & WithMessage = yield call(() => request('/profile/stripe', 'GET'));
-    yield put(setStripeToken(data.client_stripe_token));
+    yield put(loadingStart());
+    const data: { subscriptions: any[] } & WithMessage = yield call(() => request('/profile/payment/sub', 'GET'));
+    yield put(setAllSubscriptionsProducts(data.subscriptions));
+    yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e: any) {
     yield put(setAppAlert(e.message, statuses.ERROR));
   }
@@ -38,14 +37,20 @@ export function* getClientSecretAndSubscribeSaga({ payload: { stripe, method, em
       const res: {
         client_secret: string;
         status: string;
+        id: string;
       } = yield call(() => request('/profile/payment/sub', 'POST', { payment_method: result.paymentMethod.id, email }));
-      const {client_secret, status} = res;
+      const {client_secret, status, id} = res;
+      let payment = null;
       if (status === 'requires_action') {
-        const payment = yield call(() => stripe.confirmCardPayment(client_secret));
+        payment = yield call(() => stripe.confirmCardPayment(client_secret));
         if (payment.error) throw new Error('Subscription payment failed. Try later');
-        yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
-      } else if (status === 'succeeded') {
-        yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
+      }
+      if (status === 'succeeded' || !payment.error) {
+        const data: { confirmed: string; subscriptions: string[] } & WithMessage =  yield call(() => request('/profile/payment/sub/confirm', 'POST', { id }));
+        if (data.confirmed) {
+          yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
+          yield put(payForSubscriptionSuccess(data.subscriptions));
+        } else yield put(setAppAlert(data.message, statuses.SUCCESS));
       }
     }
   } catch (e: any) {
