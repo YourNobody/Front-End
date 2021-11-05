@@ -10,7 +10,7 @@ export interface IUserState {
   isAuthenticated: boolean;
   resetToken?: string;
   clientSecret?: string;
-  mySubscriptions?: any[];
+  subscription?: any;
 }
 
 export interface IUserActionDefault {
@@ -82,6 +82,7 @@ export interface IUserGetClientSecret {
     stripe: any;
     method: any;
     email: string;
+    priceId: string;
   };
 }
 
@@ -92,7 +93,7 @@ export interface IUserSetClientSecret {
 
 export interface IUserPayForSubscriptionSuccess {
   type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS;
-  payload: string[];
+  payload: any;
 }
 
 export enum userTypes {

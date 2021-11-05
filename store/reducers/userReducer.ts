@@ -11,7 +11,7 @@ const initialState: IUserState = {
   loading: false,
   resetToken: null,
   clientSecret: null,
-  mySubscriptions: []
+  subscription: null
 };
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {
@@ -31,7 +31,7 @@ export const userReducer = (state = initialState, action: IUserActions): IUserSt
     case userTypes.SET_CLIENT_SECRET:
       return {...state, clientSecret: action.payload};
     case userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS:
-      return {...state, mySubscriptions: action.payload};
+      return {...state, subscription: action.payload};
     default: return state;
   }
 };

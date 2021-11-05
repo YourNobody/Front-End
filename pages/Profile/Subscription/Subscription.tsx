@@ -17,7 +17,7 @@ export const Subscription: FC<SubscriptionProps> = () => {
   const { register, handleSubmit } = useInput();
   const [ chosenSub, setChosenSub ] = useState<any>(null);
   const { getClientSecretAndSubscribe, getAllSubscriptionsProducts } = useActions();
-  const { mySubscriptions, loading, user: { email } } = useTypedSelector(state => state.user);
+  const { subscription, loading, user: { email } } = useTypedSelector(state => state.user);
   const { subscriptions, loading: loadingApp } = useTypedSelector(state => state.app);
   console.log(subscriptions)
   const stripe = useStripe();
@@ -33,12 +33,10 @@ export const Subscription: FC<SubscriptionProps> = () => {
 
   const handleSubmitSubscription = async (formData) => {
     if (!stripe || !elements) return;
-    getClientSecretAndSubscribe(stripe, formData.email || email ,{
+    getClientSecretAndSubscribe(chosenSub.price.id, stripe, email ,{
       type: 'card',
       card: elements.getElement(CardElement),
-      billing_details: {
-        email: email
-      },
+      billing_details: { email },
     });
   };
   if (loadingApp) return <Card className={styles.loadingCard}>

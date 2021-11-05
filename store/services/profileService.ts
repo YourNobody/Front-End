@@ -29,7 +29,7 @@ export function* getAvailableSubscriptionsSaga() {
   }
 }
 
-export function* getClientSecretAndSubscribeSaga({ payload: { stripe, method, email } }) {
+export function* getClientSecretAndSubscribeSaga({ payload: { priceId, stripe, method, email } }) {
   try {
     const result: PaymentMethodResult = yield call(() => stripe.createPaymentMethod(method));
     if (result.error && result.error.message) throw new Error(result.error.message);
@@ -38,7 +38,7 @@ export function* getClientSecretAndSubscribeSaga({ payload: { stripe, method, em
         client_secret: string;
         status: string;
         id: string;
-      } = yield call(() => request('/profile/payment/sub', 'POST', { payment_method: result.paymentMethod.id, email }));
+      } = yield call(() => request('/profile/payment/sub', 'POST', { payment_method: result.paymentMethod.id, email, priceId }));
       const {client_secret, status, id} = res;
       let payment = null;
       if (status === 'requires_action') {
