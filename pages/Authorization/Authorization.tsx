@@ -23,7 +23,6 @@ const Login: FC<AuthorizationProps> = () => {
   const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
     userLogin(formData);
-    history.push(routes.HOME);
     clearValues(formData);
   };
   

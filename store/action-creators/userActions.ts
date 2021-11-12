@@ -17,7 +17,7 @@ import {
   IUserChangeInfo,
   IUserGetClientSecret,
   IUserSetClientSecret,
-  IUserPayForSubscription, IUserPayForSubscriptionSuccess,
+  IUserPayForSubscription, IUserSetSubscriptions, IUserCancelSubscription,
 } from '../interfaces-reducers/userReducer.interface'
 
 export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
@@ -76,12 +76,16 @@ export const payForSubscription = (stripe: any, clientSecret: string, method: an
   return { type: userTypes.PAY_FOR_SUBSCRIPTION, payload: { stripe, clientSecret, method } };
 }
 
-export const payForSubscriptionSuccess = (payload): IUserPayForSubscriptionSuccess => {
-  return { type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS, payload };
+export const setUserSubscriptions = (payload): IUserSetSubscriptions => {
+  return { type: userTypes.SET_SUBSCRIPTIONS, payload };
 };
 
 export const getClientSecretAndSubscribe = (priceId, stripe, email, method): IUserGetClientSecret => {
   return { type: userTypes.GET_CLIENT_SECRET, payload: { stripe, method, email, priceId } };
+};
+
+export const cancelSubscription = (payload): IUserCancelSubscription => {
+  return { type: userTypes.CANCEL_SUBSCRIPTION, payload };
 };
 
 export default {
@@ -92,5 +96,6 @@ export default {
   fetchUserSuccess,
   userChangeInfo,
   payForSubscription,
-  getClientSecretAndSubscribe
+  getClientSecretAndSubscribe,
+  cancelSubscription
 };

@@ -11,6 +11,7 @@ import {
   getSelfQuizzesWithStatsSaga, saveQuizAnswerSaga,
 } from './services/quizService';
 import {
+  cancelSubscriptionSaga,
   changeSaga,
   getAvailableSubscriptionsSaga,
   getClientSecretAndSubscribeSaga,
@@ -28,11 +29,12 @@ export function* rootWatcher() {
 }
 
 function* profileWatcher() {
-  const { CHANGE_INFO, GET_CLIENT_SECRET } = userTypes;
+  const { CHANGE_INFO, GET_CLIENT_SECRET, CANCEL_SUBSCRIPTION } = userTypes;
   const { GET_ALL_SUBSCRIPTIONS_PRODUCTS } = appActionTypes;
   yield takeEvery(CHANGE_INFO, changeSaga);
   yield takeEvery(GET_CLIENT_SECRET, getClientSecretAndSubscribeSaga);
   yield takeEvery(GET_ALL_SUBSCRIPTIONS_PRODUCTS, getAvailableSubscriptionsSaga);
+  yield takeEvery(CANCEL_SUBSCRIPTION, cancelSubscriptionSaga);
 }
 
 function* authWatcher() {

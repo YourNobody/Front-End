@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Subscription.module.css';
 import { Button, Card, HTag, Input } from '../../../components';
 import { useInput } from '../../../hooks/useInput.hook';
@@ -7,7 +7,8 @@ import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import { useActions } from '../../../hooks/useActions.hook';
 import { useTypedSelector } from '../../../hooks/useTypedSelector.hook';
 import './Subscription.module.css';
-import { formatPrice } from '../../../helpers/custom.helper'
+import { formatPrice } from '../../../helpers/custom.helper';
+import cn from 'classnames';
 
 const CARD_ELEMENT_OPTIONS = {
   hidePostalCode: true
@@ -16,8 +17,8 @@ const CARD_ELEMENT_OPTIONS = {
 export const Subscription: FC<SubscriptionProps> = () => {
   const { register, handleSubmit } = useInput();
   const [ chosenSub, setChosenSub ] = useState<any>(null);
-  const { getClientSecretAndSubscribe, getAllSubscriptionsProducts } = useActions();
-  const { subscription, loading, user: { email } } = useTypedSelector(state => state.user);
+  const { getClientSecretAndSubscribe, getAllSubscriptionsProducts, cancelSubscription } = useActions();
+  const { subscriptions: mySubs, loading, user: { email } } = useTypedSelector(state => state.user);
   const { subscriptions, loading: loadingApp } = useTypedSelector(state => state.app);
   console.log(subscriptions)
   const stripe = useStripe();
@@ -29,6 +30,10 @@ export const Subscription: FC<SubscriptionProps> = () => {
 
   const handleChoice = (sub: any) => {
     setChosenSub(sub);
+  };
+
+  const handleSubscriptionCancel = (id: string) => {
+    cancelSubscription(id);
   };
 
   const handleSubmitSubscription = async (formData) => {
@@ -47,14 +52,26 @@ export const Subscription: FC<SubscriptionProps> = () => {
     {
       subscriptions.length && <div className={styles.allSubs}>
         {
-          subscriptions.map(sub => <Card className={styles.sub} key={sub.id}>
+          subscriptions.map(sub => <Card
+            className={cn(styles.sub, {
+              [styles.has]: mySubs.find(my => my.plan.product === sub.id && my.active),
+              [styles.expired]: mySubs.find(my => my.plan.product === sub.id && !my.active)
+            })}
+            key={sub.id}
+          >
             <HTag size="m" className={sub.unit_label === 'gold' ? styles.gold : ''}>{sub.name}</HTag>
             <p>{sub.description}</p>
             <Button
+              disabled={!!mySubs.find(my => my.plan.product === sub.id && my.active)}
               className={sub.unit_label === 'gold' ? styles.gold : ''}
               color={sub.unit_label === 'silver' ? 'ghost' : 'primary'}
               onClick={() => handleChoice(sub)}
             >Pay {formatPrice(sub.price.unit_amount / 100)}</Button>
+            {mySubs.find(my => my.plan.product === sub.id && my.active) && <Card className={styles.subscribed}>
+                <HTag>You subscribed!</HTag>
+                <Button color="danger" onClick={() => handleSubscriptionCancel(mySubs.find(my => my.plan.product === sub.id).id)}>Cancel Subscription</Button>
+              </Card>
+            }
           </Card>)
         }
       </div>

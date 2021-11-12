@@ -6,7 +6,6 @@
   font-size: 16px;
   padding: 10px 4px;
   height: auto;
-  position: static;
   margin-top: 10px;
 }
 
@@ -33,6 +32,7 @@
 }
 
 .sub {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
@@ -41,6 +41,7 @@
   background: var(--white-transparent);
   width: 100%;
   max-width: 300px;
+  transition: 0.2s all;
 }
 
 .sub h2.gold {
@@ -55,6 +56,11 @@
   background-color: var(--yellow);
 }
 
+.sub button.gold:hover {
+  background-color: var(--yellow);
+  box-shadow: 0 0 7px var(--yellow-transparent);
+}
+
 .formTitle {
   margin: 12px 0;
 }
@@ -66,4 +72,52 @@
 
 .description {
 
+}
+
+.sub.has {
+  border: 1px solid var(--blue);
+}
+
+.sub.expired {
+  border: 1px solid var(--red-bright);
+}
+
+.sub .subscribed {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  opacity: 0;
+  height: 0;
+  justify-items: center;
+  align-items: center;
+  position: absolute;
+  background: var(--white-transparent);
+  bottom: 0;
+  left: -1px;
+  right: -1px;
+  transform: translateY(100%);
+  color: var(--yellow);
+  transition: 0.2s all;
+}
+
+.sub .subscribed button {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  width: 100%;
+}
+
+.sub .subscribed h2 {
+  font-weight: 300;
+  margin: 5px 0;
+}
+
+.sub:hover {
+  border-bottom: none;
+}
+.sub:hover .subscribed {
+  opacity: 1;
+  height: 104px;
+  border: 1px solid var(--blue);
+  border-top: 0;
 }

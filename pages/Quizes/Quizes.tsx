@@ -16,9 +16,9 @@ import { useTypedSelector } from '../../hooks/useTypedSelector.hook'
 export const Quizes: FC<QuizesProps> = ({ className, ...props }) => {
   const { setQuizSelected } = useActions();
   const { pathname } = useLocation();
-  const { subscription, isAuthenticated } = useTypedSelector(state => state.user);
+  const { subscriptions: mySubs, isAuthenticated } = useTypedSelector(state => state.user);
   const { subscriptions } = useTypedSelector(state => state.app);
-  const hasSubscription = subscriptions.find(s => s.id === subscription.id);
+  const hasSubscription = true
   let alreadySelected: any = null;
   if (Object.values(routes.QUIZES.TYPES).includes(pathname)) {
     const pathSplitted = pathname.split('/');

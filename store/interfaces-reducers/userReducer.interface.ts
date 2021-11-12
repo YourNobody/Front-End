@@ -10,7 +10,7 @@ export interface IUserState {
   isAuthenticated: boolean;
   resetToken?: string;
   clientSecret?: string;
-  subscription?: any;
+  subscriptions?: any[];
 }
 
 export interface IUserActionDefault {
@@ -91,9 +91,14 @@ export interface IUserSetClientSecret {
   payload: string;
 }
 
-export interface IUserPayForSubscriptionSuccess {
-  type: userTypes.PAY_FOR_SUBSCRIPTION_SUCCESS;
+export interface IUserSetSubscriptions {
+  type: userTypes.SET_SUBSCRIPTIONS;
   payload: any;
+}
+
+export interface IUserCancelSubscription {
+  type: userTypes.CANCEL_SUBSCRIPTION;
+  payload: string;
 }
 
 export enum userTypes {
@@ -110,9 +115,10 @@ export enum userTypes {
   DELETE_RESET_TOKEN='DELETE_RESET_TOKEN',
   CHANGE_INFO='CHANGE_INFO',
   PAY_FOR_SUBSCRIPTION='PAY_FOR_SUBSCRIPTION',
-  PAY_FOR_SUBSCRIPTION_SUCCESS='PAY_FOR_SUBSCRIPTION_SUCCESS',
+  SET_SUBSCRIPTIONS='SET_SUBSCRIPTIONS',
   SET_CLIENT_SECRET='SET_CLIENT_SECRET',
-  GET_CLIENT_SECRET='GET_CLIENT_SECRET'
+  GET_CLIENT_SECRET='GET_CLIENT_SECRET',
+  CANCEL_SUBSCRIPTION='CANCEL_SUBSCRIPTION'
 }
 
 export type IUserActions = IUserActionFetchUserBegining |
@@ -127,4 +133,4 @@ export type IUserActions = IUserActionFetchUserBegining |
   IUserSetClientSecret |
   IUserGetClientSecret |
   IUserPayForSubscription |
-  IUserPayForSubscriptionSuccess;
+  IUserSetSubscriptions;

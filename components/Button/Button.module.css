@@ -23,11 +23,11 @@
 	background-color: var(--white);
 }
 
-.primary:hover {
+.primary:not(:disabled):hover {
 	background-color: var(--blue-hover);
 }
 
-.ghost:hover {
+.ghost:not(:disabled):hover {
 	background-color: var(--blue);
 }
 
@@ -37,7 +37,7 @@
 	box-shadow: 0 0 0 1px var(--red);
 }
 
-.danger:hover {
+.danger:not(:disabled):hover {
 	color: var(--black);
 	background-color: var(--red);
 }

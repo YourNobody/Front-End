@@ -1,5 +1,9 @@
 import { call, put } from '@redux-saga/core/effects'
-import { fetchUserBegining, fetchUserSuccess, payForSubscriptionSuccess } from '../action-creators/userActions'
+import {
+  fetchUserBegining,
+  fetchUserSuccess,
+  setUserSubscriptions,
+} from '../action-creators/userActions'
 import { request } from '../../helpers/request.helper'
 import { loadingStart, setAllSubscriptionsProducts, setAppAlert } from '../action-creators/appActions'
 import { statuses } from '../../constants/app'
@@ -21,8 +25,9 @@ export function* changeSaga({ payload }) {
 export function* getAvailableSubscriptionsSaga() {
   try {
     yield put(loadingStart());
-    const data: { subscriptions: any[] } & WithMessage = yield call(() => request('/profile/payment/sub', 'GET'));
+    const data: { subscriptions: any[], userSubscriptions: any[] } & WithMessage = yield call(() => request('/profile/payment/sub', 'GET'));
     yield put(setAllSubscriptionsProducts(data.subscriptions));
+    yield put(setUserSubscriptions(data.userSubscriptions));
     yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e: any) {
     yield put(setAppAlert(e.message, statuses.ERROR));
@@ -46,13 +51,24 @@ export function* getClientSecretAndSubscribeSaga({ payload: { priceId, stripe, m
         if (payment.error) throw new Error('Subscription payment failed. Try later');
       }
       if (status === 'succeeded' || !payment.error) {
-        const data: { confirmed: string; subscriptions: string[] } & WithMessage =  yield call(() => request('/profile/payment/sub/confirm', 'POST', { id }));
+        const data: { confirmed: boolean; subscriptions?: any } & WithMessage =  yield call(() => request('/profile/payment/sub/confirm', 'POST', { id }));
         if (data.confirmed) {
           yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
-          yield put(payForSubscriptionSuccess(data.subscriptions));
+          yield put(setUserSubscriptions(data.subscriptions));
         } else yield put(setAppAlert(data.message, statuses.SUCCESS));
       }
     }
+  } catch (e: any) {
+    yield put(setAppAlert(e.message, statuses.ERROR));
+  }
+}
+
+export function* cancelSubscriptionSaga({ payload }) {
+  try {
+    yield put(loadingStart());
+    const data: { subscriptions: any[], deleted: any} & WithMessage = yield call(() => request('/profile/payment/sub/cancel', 'POST', { id: payload }));
+    yield put(setUserSubscriptions(data.subscriptions));
+    yield put(setAppAlert(data.message, statuses.SUCCESS));
   } catch (e: any) {
     yield put(setAppAlert(e.message, statuses.ERROR));
   }
