@@ -94,7 +94,8 @@ const config = {
         test: /\.(css|scss)$/,
         use: [
           'style-loader',
-          'css-loader'
+          'css-loader',
+          'sass-loader'
         ],
         exclude: /\.module\.css$/
       },

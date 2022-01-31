@@ -13,12 +13,16 @@ export interface IUserState {
   subscriptions?: any[];
 }
 
+interface WithRedirectFunction {
+  redirectFunc?: () => any;
+}
+
 export interface IUserActionDefault {
   type: userTypes.DEFAULT;
 }
 
-export interface IUserActionFetchUserBegining {
-  type: userTypes.FETCH_USER_BEGINING;
+export interface IUserActionFetchUserBeginning {
+  type: userTypes.FETCH_USER_BEGINNING;
 }
 
 export interface IUserActionFetchUserSuccess {
@@ -27,23 +31,27 @@ export interface IUserActionFetchUserSuccess {
 }
 
 export interface IUserActionFetchUserError {
-  type: userTypes.FETCH_USER_ERROR;
+  type: userTypes.FETCH_USER_ENDING;
 }
 
 export interface IUserActionClearError {
   type: userTypes.CLEAR_ERROR;
 }
 
-export interface IUserActionLogOut {
+export interface IUserActionLogOut extends WithRedirectFunction {
   type: userTypes.USER_LOGOUT;
 }
 
-export interface IUserRegister {
+export interface IUserActionLogOutSuccess {
+  type: userTypes.USER_LOGOUT_SUCCESSFUL;
+}
+
+export interface IUserRegister extends WithRedirectFunction {
   type: userTypes.REGISTER_USER;
   payload: any;
 }
 
-export interface IUserLogin {
+export interface IUserLogin extends WithRedirectFunction {
   type: userTypes.LOGIN_USER;
   payload: any;
 }
@@ -103,25 +111,26 @@ export interface IUserCancelSubscription {
 
 export enum userTypes {
   DEFAULT = 'DEFAULT',
-  REGISTER_USER='REGISTER_USER',
-  LOGIN_USER='LOGIN_USER',
-  RESET_USER='RESET_USER',
-  FETCH_USER_BEGINING = 'FETCH_USER_BEGINING',
+  REGISTER_USER = 'REGISTER_USER',
+  LOGIN_USER = 'LOGIN_USER',
+  RESET_USER = 'RESET_USER',
+  USER_LOGOUT_SUCCESSFUL = 'USER_LOGOUT_SUCCESSFUL',
+  FETCH_USER_BEGINNING = 'FETCH_USER_BEGINNING',
   FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
-  FETCH_USER_ERROR = 'FETCH_USER_ERROR',
+  FETCH_USER_ENDING = 'FETCH_USER_ENDING',
   CLEAR_ERROR = 'CLEAR_ERROR',
   USER_LOGOUT = 'USER_LOGOUT',
-  SET_RESET_TOKEN='SET_RESET_TOKEN',
-  DELETE_RESET_TOKEN='DELETE_RESET_TOKEN',
-  CHANGE_INFO='CHANGE_INFO',
-  PAY_FOR_SUBSCRIPTION='PAY_FOR_SUBSCRIPTION',
-  SET_SUBSCRIPTIONS='SET_SUBSCRIPTIONS',
-  SET_CLIENT_SECRET='SET_CLIENT_SECRET',
-  GET_CLIENT_SECRET='GET_CLIENT_SECRET',
-  CANCEL_SUBSCRIPTION='CANCEL_SUBSCRIPTION'
+  SET_RESET_TOKEN = 'SET_RESET_TOKEN',
+  DELETE_RESET_TOKEN = 'DELETE_RESET_TOKEN',
+  CHANGE_INFO = 'CHANGE_INFO',
+  PAY_FOR_SUBSCRIPTION = 'PAY_FOR_SUBSCRIPTION',
+  SET_SUBSCRIPTIONS = 'SET_SUBSCRIPTIONS',
+  SET_CLIENT_SECRET = 'SET_CLIENT_SECRET',
+  GET_CLIENT_SECRET = 'GET_CLIENT_SECRET',
+  CANCEL_SUBSCRIPTION = 'CANCEL_SUBSCRIPTION'
 }
 
-export type IUserActions = IUserActionFetchUserBegining |
+export type IUserActions = IUserActionFetchUserBeginning |
   IUserActionFetchUserSuccess |
   IUserActionFetchUserError |
   IUserActionDefault |
@@ -133,4 +142,5 @@ export type IUserActions = IUserActionFetchUserBegining |
   IUserSetClientSecret |
   IUserGetClientSecret |
   IUserPayForSubscription |
-  IUserSetSubscriptions;
+  IUserSetSubscriptions |
+  IUserActionLogOutSuccess;

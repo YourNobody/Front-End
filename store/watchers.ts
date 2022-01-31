@@ -1,7 +1,6 @@
-import { all } from '@redux-saga/core/effects';
+import {all, takeEvery} from '@redux-saga/core/effects';
 import { userTypes } from './interfaces-reducers/userReducer.interface';
 import { loginSaga, logoutSaga, registerSaga, resetSaga } from './services/authService';
-import * as Eff from 'redux-saga/effects'
 import { quizActionTypes } from './interfaces-reducers/quizReducer.interface';
 import {
   createQuizSaga,
@@ -18,8 +17,6 @@ import {
 } from './services/profileService'
 import { appActionTypes } from './interfaces-reducers/appReducer.interface';
 
-const takeEvery: any = Eff.takeEvery;
-
 export function* rootWatcher() {
   yield all([
     authWatcher(),
@@ -29,8 +26,8 @@ export function* rootWatcher() {
 }
 
 function* profileWatcher() {
-  const { CHANGE_INFO, GET_CLIENT_SECRET, CANCEL_SUBSCRIPTION } = userTypes;
-  const { GET_ALL_SUBSCRIPTIONS_PRODUCTS } = appActionTypes;
+  const { CHANGE_INFO, GET_CLIENT_SECRET, CANCEL_SUBSCRIPTION } = userTypes as any;
+  const { GET_ALL_SUBSCRIPTIONS_PRODUCTS } = appActionTypes as any;
   yield takeEvery(CHANGE_INFO, changeSaga);
   yield takeEvery(GET_CLIENT_SECRET, getClientSecretAndSubscribeSaga);
   yield takeEvery(GET_ALL_SUBSCRIPTIONS_PRODUCTS, getAvailableSubscriptionsSaga);
@@ -38,7 +35,7 @@ function* profileWatcher() {
 }
 
 function* authWatcher() {
-  const { REGISTER_USER, RESET_USER, LOGIN_USER, USER_LOGOUT } = userTypes;
+  const { REGISTER_USER, RESET_USER, LOGIN_USER, USER_LOGOUT } = userTypes as any;
   yield takeEvery(REGISTER_USER, registerSaga);
   yield takeEvery(LOGIN_USER, loginSaga);
   yield takeEvery(RESET_USER, resetSaga);
@@ -46,7 +43,7 @@ function* authWatcher() {
 }
 
 function* quizzesWatcher() {
-  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS, SAVA_QUIZ_ANSWER, CREATE_QUIZ } = quizActionTypes;
+  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS, SAVA_QUIZ_ANSWER, CREATE_QUIZ } = quizActionTypes as any;
   yield takeEvery(FETCH_SELF_QUIZZES, getSelfQuizzesSaga);
   yield takeEvery(FETCH_SELECTED_QUIZZES, getSelectedQuizzesSaga);
   yield takeEvery(DELETE_QUIZ, deleteQuizSaga);

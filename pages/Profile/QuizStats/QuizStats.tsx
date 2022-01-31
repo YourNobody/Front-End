@@ -38,7 +38,12 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
   };
 
   const handleRemoveQuiz = () => {
-    openModal(getModalBoilerplate(`Do you want to delete this quiz?\nTitle: ${quizData.title} and type: ${quizData.type}`, handleDeleteQuiz, 'Delete', closeModal));
+    openModal({
+      actionFunc: handleDeleteQuiz,
+      actionButtonName: 'Delete',
+      closeButtonName: 'No',
+      modalQuestion: `Do you want to delete this quiz?\nTitle: ${quizData.title} and type: ${quizData.type}`
+    });
   };
 
   if (!quizData) return <></>;

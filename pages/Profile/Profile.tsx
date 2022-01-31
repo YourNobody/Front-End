@@ -12,6 +12,7 @@ import { QuizStats } from './QuizStats/QuizStats';
 import { Subscription } from './Subscription/Subscription';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js'
+import {Change} from "./Change/Change";
 
 export const Profile: FC<ProfileProps> = (props) => {
   const history = useHistory();
@@ -19,21 +20,18 @@ export const Profile: FC<ProfileProps> = (props) => {
   const { stripeToken } = useTypedSelector(state => state.app);
   const { userLogOut, openModal, closeModal } = useActions();
 
-  const handleLogOut = async (): Promise<void> => {
-    userLogOut();
+  const handleLogOut = () => {
+    userLogOut(() => history.push(routes.HOME));
     closeModal();
-    history.push(routes.HOME);
   };
 
   const handleOpenModal = () => {
-    const ModalLogOut = <>
-      <HTag size="m" className={styles.modalTitle}>Do you really want to log out?</HTag>
-      <div className={styles.modalActions}>
-        <Button color="ghost" onClick={closeModal}>No</Button>
-        <Button color="danger" onClick={handleLogOut}>Log Out</Button>
-      </div>
-    </>;
-    openModal(ModalLogOut);
+    openModal({
+      actionFunc: handleLogOut,
+      actionButtonName: 'Log Out',
+      closeButtonName: 'Stay on page',
+      modalQuestion: 'Do you really want to log out?'
+    });
   };
 
   return (
@@ -55,6 +53,15 @@ export const Profile: FC<ProfileProps> = (props) => {
       <Switch>
         <Route path={routes.PROFILE.ACCOUNT} exact>
           <AccountInfo nickname={user?.nickname} email={user?.email} />
+        </Route>
+        <Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>
+          <Change changeOption="name" />
+        </Route>
+        <Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>
+          <Change changeOption="email" />
+        </Route>
+        <Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>
+          <Change changeOption="password" />
         </Route>
         <Route path={routes.PROFILE.QUESTIONS} exact>
           <QuizStats/>

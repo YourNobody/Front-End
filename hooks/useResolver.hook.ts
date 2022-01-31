@@ -133,28 +133,28 @@ class Quiz {
 const validators = {
   User: {
     resolver: classValidatorResolver(User, {
-      skipMissingProperties: true,
-      skipUndefinedProperties: true
-    }, {
-      mode: 'sync'
+        skipMissingProperties: true,
+        skipUndefinedProperties: true
+      }, {
+        mode: 'sync'
     }),
     initial: User
   },
   Quiz: {
     resolver: classValidatorResolver(Quiz, {
-      skipMissingProperties: true,
-      skipUndefinedProperties: true
-    }, {
-      mode: 'sync'
+        skipMissingProperties: true,
+        skipUndefinedProperties: true
+      }, {
+        mode: 'sync'
     }),
     initial: Quiz
   },
   Card: {
     resolver: classValidatorResolver(Card, {
-      skipMissingProperties: true,
-      skipUndefinedProperties: true
-    }, {
-      mode: 'sync'
+        skipMissingProperties: true,
+        skipUndefinedProperties: true
+      }, {
+        mode: 'sync'
     }),
     initial: Card
   },

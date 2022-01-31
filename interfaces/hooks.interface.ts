@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, FormEvent, HTMLAttributes } from 'react'
+import {DetailedHTMLProps, FormEvent, HTMLAttributes, MutableRefObject} from 'react'
 
 export interface IUseRequest {
   error: Error | string;
@@ -6,20 +6,27 @@ export interface IUseRequest {
   clearError: () => void;
 }
 
+export interface IUseInputInitialState {
+  values: Record<string, any>,
+  elements: Record<string, any>
+}
+
 export interface IUseInput {
   getValues?: (name?: string) => string | Record<string, unknown>;
-  clearValues?: (name?: string) => void;
+  clearValues?: (formName?: string, name?: string) => void;
   register?: (name: string, options?: IUseInputOptions, additionalOptions?: IUseInputOptionsAdditional) => IUseInputOptions;
-  handleSubmit?: (cb?: (formData: Record<string, unknown>) => Promise<any> | any) => any;
+  handleSubmit?: (formName: string, cb?: (formData: Record<string, unknown>) => Promise<any> | any) => any;
   formState?: {
     errors?: Record<string, { message: string }>;
-    state?: Record<string, string>;
+    state?: IUseInputInitialState;
   }
 }
 
 export interface IUseInputOptions extends DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   'data-exclude'?: 1 | 0 | '1' | '0';
   error?: string | null;
+  value?: string;
+  useInputRef?: (ref: MutableRefObject<HTMLInputElement>) => void;
 }
 
 export interface IUseInputOptionsAdditional {

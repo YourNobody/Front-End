@@ -18,8 +18,12 @@ export const getModalBoilerplate = (question: string, actionFunc: () => void, ac
   );
 };
 
-export const Modal: FC<ModalProps> = ({ children, className, ...props }) => {
-  const { modalTemplate } = useTypedSelector(state => state.app);
+export const Modal: FC<ModalProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  const { modalConfig } = useTypedSelector(state => state.app);
   const { closeModal } = useActions();
 
   const handleCloseModal = (e) => {
@@ -31,13 +35,17 @@ export const Modal: FC<ModalProps> = ({ children, className, ...props }) => {
   return (
     <>
       {children}
-      {modalTemplate && <div {...props}
+      {modalConfig && <div {...props}
         className={cn(styles.modalWrapper, className)}
         onClick={handleCloseModal}
         data-wrapper
       >
         <Card className={styles.modal}>
-          {modalTemplate}
+            <HTag size="m" className={styles.modalTitle}>{modalConfig.modalQuestion}</HTag>
+            <div className={styles.modalActions}>
+              <Button color="ghost" onClick={modalConfig.closeFunc || closeModal}>{modalConfig.closeButtonName || 'No'}</Button>
+              <Button color="danger" onClick={modalConfig.actionFunc}>{modalConfig.actionButtonName}</Button>
+            </div>
         </Card>
       </div>
       }

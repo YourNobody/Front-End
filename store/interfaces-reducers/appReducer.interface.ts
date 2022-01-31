@@ -1,19 +1,32 @@
 import { statuses } from "../../constants/app";
+import {Observable, Subject, Subscription} from "rxjs";
 
-interface IAppStatus {
+export interface IAppStatus {
   message: string;
   status: statuses;
-  id: string | number;
+  id: string;
+}
+
+export interface IAppAlertOptions {
+  isAutoDeleted?: boolean;
+  toDeleteStream?: Subject<{ readyToDelete: boolean }>;
+  toDeleteAllBefore?: boolean;
 }
 
 export interface IAppState {
   alerts: IAppStatus[];
   newAlert: {
-    id: string | number;
-    isAutoDeleted: boolean;
+    id: string;
+    options?: IAppAlertOptions
   };
   loading: boolean;
-  modalTemplate: JSX.Element;
+  modalConfig: {
+    actionFunc: (params?: any) => any;
+    actionButtonName: string;
+    closeButtonName: string;
+    modalQuestion: string;
+    closeFunc?: (params?: any) => any;
+  };
   subscriptions: any[];
   stripeToken: string;
 }
@@ -22,6 +35,7 @@ export enum appActionTypes {
   DEFAULT = 'DEFAULT',
   SET_ALERT = 'SET_ALERT',
   CLEAR_ALERT = 'CLEAR_ALERT',
+  CLEAR_ALL_ALERTS = 'CLEAR_ALL_ALERTS',
   OPEN_MODAL = 'OPEN_MODAL',
   CLOSE_MODAL = 'CLOSE_MODAL',
   SET_ALL_SUBSCRIPTIONS_PRODUCTS = 'SET_ALL_SUBSCRIPTIONS_PRODUCTS',
@@ -39,17 +53,26 @@ export interface IAppDefault {
 
 export interface IAppSetAlert {
   type: appActionTypes.SET_ALERT;
-  payload: IAppStatus & { isAutoDeleted?: boolean; };
+  payload: IAppStatus & { options?: IAppAlertOptions };
 }
 
 export interface IAppClearAlert {
   type: appActionTypes.CLEAR_ALERT;
-  payload: string | number;
+  payload: string;
+}
+
+export interface IAppClearAllAlerts {
+  type: appActionTypes.CLEAR_ALL_ALERTS;
 }
 
 export interface IAppOpenModal {
   type: appActionTypes.OPEN_MODAL;
-  payload: JSX.Element;
+  payload: {
+    actionFunc: (params: any) => any;
+    actionButtonName: string;
+    closeButtonName: string;
+    modalQuestion: string;
+  }
 }
 
 export interface IAppCloseModal {
@@ -65,4 +88,5 @@ export interface IAppGetStripeToken {
   type: appActionTypes.GET_ALL_SUBSCRIPTIONS_PRODUCTS;
 }
 
-export type IAppActions = IAppDefault | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal | IAppSetStripeToken | IAppGetStripeToken | IAppLoadingStart;
+export type IAppActions = IAppDefault | IAppClearAllAlerts
+  | IAppSetAlert | IAppClearAlert | IAppOpenModal | IAppCloseModal | IAppSetStripeToken | IAppGetStripeToken | IAppLoadingStart;

@@ -8,14 +8,24 @@ import { useActions } from '../../hooks/useActions.hook';
 
 export const Alerter: FC<AlerterProps> = ({children, ...props}) => {
   const { alerts, newAlert } = useTypedSelector(state => state.app);
-  const { clearAppAlert } = useActions();
+  const { clearAppAlert, clearAllAppAlerts } = useActions();
   
-  const handleCloseIcon = (e, id: string | number) => {
-    setTimeout(() => clearAppAlert(id), 300);
+  const handleCloseIcon = (e, id: string) => {
+    setTimeout(() => clearAppAlert(id), 0);
   };
 
   useEffect(() => {
-    if (newAlert && newAlert.id && newAlert.isAutoDeleted) {
+    if (!newAlert && !newAlert.id) return;
+    const { toDeleteStream, toDeleteAllBefore, isAutoDeleted } = newAlert.options;
+    if (toDeleteStream) {
+      const sub = toDeleteStream.subscribe(value => {
+        if (value.readyToDelete) {
+          clearAppAlert(newAlert.id);
+          sub.unsubscribe();
+          toDeleteAllBefore && clearAllAppAlerts();
+        }
+      })
+    } else if (newAlert && newAlert.id && isAutoDeleted) {
       setTimeout(() => clearAppAlert(newAlert.id), ALERT_BEFORE_DISAPPEAR);
     }
   }, [newAlert]);

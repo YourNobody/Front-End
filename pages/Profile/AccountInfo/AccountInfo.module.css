@@ -49,61 +49,19 @@
 	grid-area: change;
 }
 
-.changeInfo > form:not(:last-of-type) {
-	margin-bottom: 15px;
+.changeInfo a {
+	font-size: 16px;
+	color: var(--white);
+	margin-bottom: 20px;
+	transition: 0.2s all;
 }
 
-.change {
-	overflow: hidden;
-
-	padding: 20px 10px;
-
-	cursor: pointer;
-	transition: all 0.2s;
-
-	background-color: var(--mega-white-transparent);
-}
-
-.change:hover {
+.changeInfo a:hover {
 	color: var(--blue);
-	background-color: var(--white-transparent);
+	margin-left: 10px;
 }
 
-.change:last-of-type {
-	margin-bottom: 0;
+.changeInfo .changeInfoTitle {
+	margin-bottom: 25px;
 }
 
-.changeOpened {
-	color: var(--blue);
-}
-
-.changeOpened:hover {
-	background-color: var(--black);
-}
-
-.unfilled {
-	cursor: pointer;
-
-	color: var(--red);
-}
-
-.changeBlock {
-	display: none;
-
-	padding-right: 20px;
-	padding-left: 20px;
-
-	transition: all 0.2s;
-
-	background-color: var(--white-transparent);
-}
-
-.changeBlockOpened {
-	display: block;
-
-	padding: 20px;
-}
-
-.changeBlock input {
-	margin-bottom: 10px;
-}

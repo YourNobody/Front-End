@@ -14,20 +14,36 @@ export const getFirstLetters = (initials: string): string => {
   return 'YOU';
 };
 
-export const getEmptyObject = <T>(data: T): T => {
+export const getEmptyObject = <T>(data: T, returnTheComingObject = false): T => {
   if (!data) return {} as T;
-  return Object.keys(data).reduce((R, key) => {
+  if (!returnTheComingObject) {
+    return Object.keys(data).reduce((R, key) => {
+      if (typeof data[key] === 'function') {
+        R[key] = null;
+      } else if (data[key] instanceof Array) {
+        R[key] = [];
+      } else if (data[key] instanceof Object) {
+        R[key] = {};
+      } else {
+        R[key] = '';
+      }
+      return R;
+    }, {}) as T || {} as T;
+  }
+
+  Object.keys(data).forEach(key => {
     if (typeof data[key] === 'function') {
-      R[key] = null;
+      data[key] = null;
     } else if (data[key] instanceof Array) {
-      R[key] = [];
+      data[key] = [];
     } else if (data[key] instanceof Object) {
-      R[key] = {};
+      data[key] = {};
     } else {
-      R[key] = '';
+      data[key] = '';
     }
-    return R;
-  }, {}) as T || {} as T;
+  });
+
+  return data;
 };
 
 export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string | Record<string, unknown | string>): any => {

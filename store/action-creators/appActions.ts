@@ -5,20 +5,32 @@ import {
   IAppClearAlert,
   IAppOpenModal,
   IAppCloseModal,
-  IAppSetStripeToken, IAppGetStripeToken, IAppLoadingStart,
+  IAppSetStripeToken, IAppGetStripeToken, IAppLoadingStart, IAppAlertOptions,
 } from '../interfaces-reducers/appReducer.interface'
+import {Subscription} from "rxjs";
 
-export const setAppAlert = (message: string, status: statuses, isAutoDeleted = true): IAppSetAlert => {
+export const setAppAlert = (message: string, status: statuses, options: IAppAlertOptions = {
+  isAutoDeleted: true,
+  toDeleteStream: null
+}): IAppSetAlert => {
   const id = String(Date.now() * Math.random());
-  return {type: appActionTypes.SET_ALERT, payload: { message, status, id, isAutoDeleted }};
+  return {type: appActionTypes.SET_ALERT, payload: { message, status, id, options }};
 };
 
-export const clearAppAlert = (id: string | number): IAppClearAlert => {
+export const clearAllAppAlerts = () => {
+  return {type: appActionTypes.CLEAR_ALL_ALERTS}
+}
+
+export const clearAppAlert = (id: string): IAppClearAlert => {
   return {type: appActionTypes.CLEAR_ALERT, payload: id};
 };
 
-export const openModal = (template: JSX.Element): IAppOpenModal => {
-  return { type: appActionTypes.OPEN_MODAL, payload: template };
+export const openModal = (config: {
+  actionFunc: (params?: any) => any;
+  actionButtonName: string;
+  closeButtonName: string;
+  modalQuestion: string;}): IAppOpenModal => {
+  return { type: appActionTypes.OPEN_MODAL, payload: config };
 };
 
 export const closeModal = (): IAppCloseModal => {
@@ -41,6 +53,7 @@ export const loadingStart = (): IAppLoadingStart => {
 export default {
   setAppAlert,
   clearAppAlert,
+  clearAllAppAlerts,
   openModal,
   closeModal,
   getAllSubscriptionsProducts

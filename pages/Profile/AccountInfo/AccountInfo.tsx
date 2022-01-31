@@ -7,6 +7,8 @@ import { profileChangeKeys, profileChangeOptions } from '../../../constants/data
 import { useInput } from '../../../hooks/useInput.hook';
 import { useRequest } from '../../../hooks/useRequest';
 import { useActions } from '../../../hooks/useActions.hook';
+import { Link } from 'react-router-dom';
+import {routes} from "../../../constants/routes";
 
 export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoProps): JSX.Element => {
   const [openBlocks, setOpenBlocks] = useState<string[]>([]);
@@ -67,38 +69,10 @@ export const AccountInfo = ({nickname, email, imageUrl, ...props}: AccountInfoPr
         }
       </div>
       <div className={styles.changeInfo}>
-        <hr className={styles.hr} />
-        {
-          Object.entries(profileChangeOptions).map(opt => {
-            const name = opt[0] as profileChangeKeys;
-            const data = opt[1];
-            return (
-              <form key={name} onSubmit={handleSubmit(handleChange)}>
-                <div className={cn(styles.change, { [styles.changeOpened]: openBlocks.includes(name) })} data-change={name} onClick={() => handleBlockToggling(name)}>
-                  Change {name[0].toUpperCase() + name.slice(1)}
-                </div>
-                <div className={cn(styles.changeBlock, {
-                  [styles.changeBlockOpened]: openBlocks.includes(name)
-                })}>
-                  {
-                    data.inputs.map((props, i) => <Input
-                      key={i}
-                      {...props}
-                      {...register(props.name)}
-                      autoComplete="off"
-                    />)
-                  }
-                  <Button
-                    color='ghost' type='submit'
-                    onClick={() => setSelectedChangeKey(name)}
-                  >
-                    Change {name[0].toUpperCase() + name.slice(1)}
-                  </Button>
-                </div>
-              </form>
-            );
-          })
-        }
+        <HTag className={styles.changeInfoTitle}>Account actions:</HTag>
+        <Link to={routes.PROFILE.ACCOUNT_CHANGE_NAME}>Change name</Link>
+        <Link to={routes.PROFILE.ACCOUNT_CHANGE_EMAIL}>Change email</Link>
+        <Link to={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD}>Change password</Link>
       </div>
     </Card>
   );

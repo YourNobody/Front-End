@@ -23,7 +23,7 @@ const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
 
 //questionAnswers
 const Create: FC<CreateProps> = (): JSX.Element => {
-  const { createQuiz } = useActions();
+  const { createQuiz, openModal } = useActions();
   const { loading } = useTypedSelector(state => state.quiz);
   const { register, clearValues, handleSubmit, getValues } = useInput();
   const [allEditorState, setAllEditorState] = useState({});
@@ -64,6 +64,15 @@ const Create: FC<CreateProps> = (): JSX.Element => {
       [type]: questionAnswers[type].filter((item, i) => i !== index)
     });
   };
+
+  const handleQuizCreation = (formData) => {
+    openModal({
+      actionFunc: handleQuizCreation.bind(formData),
+      actionButtonName: 'Create',
+      closeButtonName: 'No',
+      modalQuestion: 'Do you really want to create a Quiz?'
+    })
+  }
 
   const handleQuestionCreation = async (formData) => {
     const body: any = {};
@@ -205,7 +214,7 @@ const Create: FC<CreateProps> = (): JSX.Element => {
     <div className={styles.createPage}>
       <HTag size="l" className={styles.createPageTitle}>Create Quiz!</HTag>
       <Card>
-        <form onSubmit={handleSubmit(handleQuestionCreation)} ref={formRef}>
+        <form onSubmit={handleSubmit('', handleQuizCreation)} ref={formRef}>
           <div className={styles.selecType}>
             <HTag size="m" className={styles.selectTypeTitle}>Select your a type of a Quiz:</HTag>
             <div className={styles.types}>

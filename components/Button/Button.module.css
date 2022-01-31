@@ -11,6 +11,10 @@
 	font-weight: 500;
 }
 
+.primary {
+	background-color: var(--blue);
+}
+
 .button:active {
 	transform: scale(0.95);
 }

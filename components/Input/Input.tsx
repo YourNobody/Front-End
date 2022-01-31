@@ -1,11 +1,29 @@
-import React, { FC, forwardRef, useRef, useState } from 'react';
+import React, {createRef, FC, forwardRef, useEffect, useRef} from 'react';
 import { InputProps } from './Input.props';
 import styles from './Input.module.css';
 import cn from 'classnames';
 import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
 
-export const Input: FC<InputProps> = ({ value = '', label, error, className, type, name, ...props }) => {
+export const Input: FC<InputProps> = ({
+      label,
+      error,
+      value= '',
+      className,
+      type= 'text',
+      name,
+      useInputRef,
+      ...props
+}) => {
   const inputId: string = label ? createId(label) : null;
+
+  const ref = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    if (ref.current) {
+      useInputRef(ref);
+    }
+  }, [ref])
+
   return (
     <div className={styles.wrapper}>
       {label && <label
@@ -23,12 +41,13 @@ export const Input: FC<InputProps> = ({ value = '', label, error, className, typ
         type={type}
         name={name}
         id={inputId}
+        ref={ref}
       />
       {
         error && <ErrorMessage className={styles.error}>{error}</ErrorMessage>
       }
     </div>
-  );
+  )
 };
 
 function createId(str: string): string {

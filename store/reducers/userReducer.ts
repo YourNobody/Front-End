@@ -7,7 +7,7 @@ const initialState: IUserState = {
     email: '',
     id: '',
   },
-  isAuthenticated: false,
+  isAuthenticated: true,
   loading: false,
   resetToken: null,
   clientSecret: null,
@@ -16,13 +16,13 @@ const initialState: IUserState = {
 
 export const userReducer = (state = initialState, action: IUserActions): IUserState => {
   switch (action.type) {
-    case userTypes.FETCH_USER_BEGINING:
+    case userTypes.FETCH_USER_BEGINNING:
       return {...state, loading: true};
     case userTypes.FETCH_USER_SUCCESS:
       return {...state, user: action.payload, isAuthenticated: true, loading: false};
-    case userTypes.USER_LOGOUT:
+    case userTypes.USER_LOGOUT_SUCCESSFUL:
       return {...state, user: getEmptyObject<IUserReducer>(state.user), isAuthenticated: false, loading: false};
-    case userTypes.FETCH_USER_ERROR:
+    case userTypes.FETCH_USER_ENDING:
       return {...state, loading: false};
     case userTypes.SET_RESET_TOKEN:
       return {...state, resetToken: action.payload, loading: false};

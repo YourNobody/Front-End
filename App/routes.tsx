@@ -91,7 +91,7 @@ export const Routes: FC<any> = () => {
   // }, []);
 
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
-  
+
   if (isAuthenticated) {
     return buildAllRoutes();
   }

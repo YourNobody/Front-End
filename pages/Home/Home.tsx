@@ -1,15 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
-import { HTag, Button } from '../../components';
-import { HomeProps } from './Home.props';
+import React, { FC } from 'react';
+import {Link} from 'react-router-dom';
+import {withMainLayout} from '../../layouts/MainLayout/MainLayout';
+import {Button, HTag, Input} from '../../components';
+import {HomeProps} from './Home.props';
 import styles from './Home.module.css';
-import { routes } from '../../constants/routes';
-import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
+import {routes} from '../../constants/routes';
+import {useTypedSelector} from '../../hooks/useTypedSelector.hook';
 
 const Home: FC<HomeProps> = (props) => {
   const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
-  
+
   return (
     <div {...props} className={styles.home}>
       <HTag size="large" className={styles.appTitle}>Hi, you're on <span className={styles.appName}>Quiz App</span></HTag>

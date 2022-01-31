@@ -1,0 +1,15 @@
+.changeWrapper input {
+  margin-bottom: 15px;
+}
+
+.changeWrapper div:last-of-type input {
+  margin-bottom: 0;
+}
+
+.changeWrapper button[type=submit] {
+  margin-top: 20px;
+}
+
+.formTitle {
+  margin-bottom: 20px;
+}

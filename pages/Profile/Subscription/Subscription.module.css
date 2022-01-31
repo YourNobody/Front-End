@@ -44,7 +44,7 @@
   transition: 0.2s all;
 }
 
-.sub h2.gold {
+.sub h2.gold, .formTitle.gold {
   color: var(--yellow);
 }
 
@@ -63,6 +63,10 @@
 
 .formTitle {
   margin: 12px 0;
+}
+
+.formTitle.silver {
+  color: rgb(192, 192, 192);
 }
 
 .subTitle {

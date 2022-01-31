@@ -20,22 +20,24 @@ const Login: FC<AuthorizationProps> = () => {
   const { userLogin } = useActions();
   const history = useHistory();
 
-  const onSubmit = async (formData) => {
-    if (Object.keys(errors).length) return;
-    userLogin(formData);
-    clearValues(formData);
+  const onSubmit = (formData) => {
+    console.log('errors: ', Object.keys(errors).length)
+    // if (Object.keys(errors).length) return;
+    console.log(formData)
+    // userLogin(formData, () => history.push(routes.HOME));
+    clearValues('login');
   };
   
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
-      <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} action="post" onSubmit={handleSubmit('login', onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
           <Input
             type='text'
             label='Email'
-            {...register('email')}
+            {...register('login.email')}
             disabled={loading}
           />
         </div>
@@ -43,7 +45,7 @@ const Login: FC<AuthorizationProps> = () => {
           <Input
             type="password"
             label="Password"
-            {...register('password')}
+            {...register('login.password')}
             disabled={loading}
           />
         </div>
@@ -66,7 +68,7 @@ const Register: FC<AuthorizationProps> = () => {
   const onSubmit = async (formData) => {
     if (Object.keys(errors).length) return;
     if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
-    userRegister(formData);
+    userRegister(formData, () => history.push(routes.AUTH.LOGIN));
     history.push(routes.AUTH.LOGIN);
     clearValues(getEmptyObject(formData));
   };
@@ -74,13 +76,13 @@ const Register: FC<AuthorizationProps> = () => {
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={handleSubmit('register', onSubmit)}>
         <HTag size="large" className={styles.title}>Sign Up</HTag>
         <div className={styles.inputBlock}>
           <Input
             type="text"
             label='Nickname'
-            {...register('nickname')}
+            {...register('register.nickname')}
             disabled={loading}
           />
         </div>
@@ -88,7 +90,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type="text"
             label="Email"
-            {...register('email')}
+            {...register('register.email')}
             disabled={loading}
           />
         </div>
@@ -96,7 +98,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type="password"
             label="Password"
-            {...register('password')}
+            {...register('register.password')}
             disabled={loading}
           />
         </div>
@@ -104,7 +106,7 @@ const Register: FC<AuthorizationProps> = () => {
           <Input
             type='password'
             label='Confirm Password'
-            {...register('confirm')}
+            {...register('register.confirm')}
             disabled={loading}
           />
         </div>
@@ -174,13 +176,13 @@ const Reset: FC<AuthorizationProps> = () => {
                   <Link to={routes.AUTH.LOGIN}>Back to login</Link>
                 </div>
             </Card>
-            : <form className={styles.form} onSubmit={handleSubmit(handleEmailSending)}>
+            : <form className={styles.form} onSubmit={handleSubmit('reset', handleEmailSending)}>
               <HTag size="large" className={styles.title}>Access Recovery</HTag>
               <div className={styles.inputBlock}>
                 <Input
                   type="text"
                   label="Email for recovery process"
-                  {...register('email')}
+                  {...register('reset.email')}
                   disabled={loading}
                 />
               </div>

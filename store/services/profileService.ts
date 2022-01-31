@@ -1,6 +1,6 @@
 import { call, put } from '@redux-saga/core/effects'
 import {
-  fetchUserBegining,
+  fetchUserBeginning,
   fetchUserSuccess,
   setUserSubscriptions,
 } from '../action-creators/userActions'
@@ -13,7 +13,7 @@ import { PaymentMethodResult } from '@stripe/stripe-js'
 
 export function* changeSaga({ payload }) {
   try {
-    yield put(fetchUserBegining());
+    yield put(fetchUserBeginning());
     const { token, user, message }: IUserWithToken & WithMessage = yield call(() => request('/profile/change', 'POST', payload));
     yield put(fetchUserSuccess({ token, user }));
     yield put(setAppAlert(message, statuses.SUCCESS));

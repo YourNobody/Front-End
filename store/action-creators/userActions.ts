@@ -2,7 +2,7 @@ import { LOCALSTORAGE_USER_DATA_NAME } from "../../constants/app";
 import {
   IUserReducer,
   IUserActionDefault,
-  IUserActionFetchUserBegining,
+  IUserActionFetchUserBeginning,
   IUserActionFetchUserError,
   IUserActionFetchUserSuccess,
   userTypes,
@@ -17,10 +17,10 @@ import {
   IUserChangeInfo,
   IUserGetClientSecret,
   IUserSetClientSecret,
-  IUserPayForSubscription, IUserSetSubscriptions, IUserCancelSubscription,
+  IUserPayForSubscription, IUserSetSubscriptions, IUserCancelSubscription, IUserActionLogOutSuccess,
 } from '../interfaces-reducers/userReducer.interface'
 
-export const fetchUserBegining = (): IUserActionFetchUserBegining => ({ type: userTypes.FETCH_USER_BEGINING });
+export const fetchUserBeginning = (): IUserActionFetchUserBeginning => ({ type: userTypes.FETCH_USER_BEGINNING });
 
 export const fetchUserSuccess = (payload: Omit<IUserState, 'loading' | 'isAuthenticated'> & { token: string }): IUserActionFetchUserSuccess => {
   localStorage.removeItem(LOCALSTORAGE_USER_DATA_NAME);
@@ -32,24 +32,33 @@ export const fetchUserSuccess = (payload: Omit<IUserState, 'loading' | 'isAuthen
 
 export const fetchUserError = (): IUserActionFetchUserError => {
   localStorage.removeItem(LOCALSTORAGE_USER_DATA_NAME);
-  return { type: userTypes.FETCH_USER_ERROR };
+  return { type: userTypes.FETCH_USER_ENDING };
+};
+
+export const fetchUserEnding = (): IUserActionFetchUserError => {
+  localStorage.removeItem(LOCALSTORAGE_USER_DATA_NAME);
+  return { type: userTypes.FETCH_USER_ENDING };
 };
 
 export const fetchUserDefault = (): IUserActionDefault => ({ type: userTypes.DEFAULT });
 
 export const clearError = (): IUserActionClearError => ({ type: userTypes.CLEAR_ERROR });
 
-export const userLogOut = (): IUserActionLogOut => {
+export const userLogOut = (redirectFunc?: () => void): IUserActionLogOut => {
+  return { type: userTypes.USER_LOGOUT, redirectFunc };
+};
+
+export const userLogOutSuccessful = (): IUserActionLogOutSuccess => {
   localStorage.removeItem(LOCALSTORAGE_USER_DATA_NAME);
-  return { type: userTypes.USER_LOGOUT };
+  return { type: userTypes.USER_LOGOUT_SUCCESSFUL };
 };
 
-export const userRegister = (payload): IUserRegister => {
-  return { type: userTypes.REGISTER_USER, payload };
+export const userRegister = (payload, redirectFunc?: () => void): IUserRegister => {
+  return { type: userTypes.REGISTER_USER, payload, redirectFunc };
 };
 
-export const userLogin = (payload): IUserLogin => {
-  return { type: userTypes.LOGIN_USER, payload };
+export const userLogin = (payload, redirectFunc?: () => void): IUserLogin => {
+  return { type: userTypes.LOGIN_USER, payload, redirectFunc };
 };
 
 export const userReset = (payload, resetToken?: string): IUserReset => {
@@ -97,5 +106,7 @@ export default {
   userChangeInfo,
   payForSubscription,
   getClientSecretAndSubscribe,
-  cancelSubscription
+  cancelSubscription,
+  fetchUserEnding,
+  userLogOutSuccessful
 };

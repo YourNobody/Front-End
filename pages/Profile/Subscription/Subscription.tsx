@@ -20,9 +20,10 @@ export const Subscription: FC<SubscriptionProps> = () => {
   const { getClientSecretAndSubscribe, getAllSubscriptionsProducts, cancelSubscription } = useActions();
   const { subscriptions: mySubs, loading, user: { email } } = useTypedSelector(state => state.user);
   const { subscriptions, loading: loadingApp } = useTypedSelector(state => state.app);
-  console.log(subscriptions)
   const stripe = useStripe();
   const elements = useElements();
+
+  console.log('chosen: ', chosenSub)
 
   useEffect(() => {
     getAllSubscriptionsProducts();
@@ -76,8 +77,11 @@ export const Subscription: FC<SubscriptionProps> = () => {
         }
       </div>
     }
-    { chosenSub && <form onSubmit={handleSubmit(handleSubmitSubscription)}>
-        <HTag size="m" className={styles.formTitle}>For payment: {chosenSub.description}</HTag>
+    { chosenSub && <form onSubmit={handleSubmit('', handleSubmitSubscription)}>
+        <HTag size="m" className={cn(styles.formTitle, {
+          [styles.gold]: chosenSub.unit_label === 'gold',
+          [styles.silver]: chosenSub.unit_label === 'silver'
+        })}>For payment: {chosenSub.description}</HTag>
         <Input
           label="Email"
           disabled={!!email}
