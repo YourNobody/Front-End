@@ -1,5 +1,7 @@
 import { IsAlphanumeric, IsEmail, IsNotEmpty, IsString, Length, MaxLength, MinLength, NotContains, ValidationOptions } from 'class-validator';
 
+export const ValidatorsClassNames: string[] = [];
+
 export const M = {
   isString: 'This\'s something wrong, not a string',
   IsNotEmpty: 'This field is required, believe me',

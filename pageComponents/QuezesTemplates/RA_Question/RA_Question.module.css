@@ -75,8 +75,8 @@
 
 .markWrapper {
 	position: relative;
+	top: 0;
 	left: 30px;
-	top: 0px;
 }
 
 .markWrapper span {

@@ -1,3 +1,6 @@
+import {FC, ReactFragment} from "react";
+import {wrapWithFragment} from "./react.helper";
+
 export const checkForValideImageLink = (src: string): boolean => {
   if (!src) return false;
   return !!src.match(/(\.jpg|\.png|\.jpeg|\.jfif|\.gif)$/);
@@ -93,3 +96,19 @@ export const changeStatisticsTooltipLabel = (value: number | string, name: strin
     }
   };
 };
+
+export const saveTemplateHelper = (salt: string) => {
+  const templates = {};
+
+  function getTemplate(templateKey: string, props: any): JSX.Element {
+    return wrapWithFragment(templates[salt + templateKey], props);
+  }
+
+  function toTemplates<T>(templateKey: string, template: FC<T>) {
+    templates[salt + templateKey] = template;
+  }
+
+  return {
+    getTemplate, toTemplates
+  };
+}

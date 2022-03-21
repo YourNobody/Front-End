@@ -30,7 +30,8 @@ export const useEstimation = ({
   };
 
   return {
-    value: mark,
+    value: mark === -1 ? 0 : mark + 1,
+    range: range || MAX_RATING_NUMBER,
     getEstimationElement: (props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => {
       return <Estimation
         {...props}

@@ -17,6 +17,8 @@
 	transition: all 0.3s;
 
 	opacity: 1;
+
+	color: var(--white);
 	grid-template-columns: auto 400px;
 }
 
@@ -46,7 +48,8 @@
 }
 
 .success {
-	background-color: var(--green-transparent);
+	color: var(--black);
+	background-color: var(--green);
 }
 
 .success .close:hover {
@@ -55,19 +58,20 @@
 }
 
 .warning {
-	background-color: var(--yellow-transparent);
-}
-
-.warning .close:hover {
 	color: var(--black);
 	background-color: var(--yellow);
 }
 
+.warning .close:hover {
+	color: var(--black);
+	background-color: var(--yellow-noopacity);
+}
+
 .error {
-	background-color: var(--red-transparent);
+	background-color: var(--red-noopacity);
 }
 
 .error .close:hover {
 	color: var(--black);
-	background-color: var(--red);
+	background-color: var(--red-noopacity);
 }

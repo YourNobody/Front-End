@@ -7,17 +7,17 @@ import { useTypedSelector } from './../hooks/useTypedSelector.hook';
 import { useEffect } from 'react';
 import { LOCALSTORAGE_USER_DATA_NAME, statuses } from './../constants/app';
 import { IUserWithToken } from "../interfaces/user.interface";
-import { useRequest } from "../hooks/useRequest";
+import {Card} from "@Components";
 
 const buildBaseRoutes = (): JSX.Element => (
   <Switch>
     <Route path={routes.HOME} exact>
     <Home title="Home" />
     </Route>
-    <Route path={routes.QUIZES.ROOT + '/:qType' + '/:title'} exact>
+    <Route path={routes.QUIZZES.ROOT + '/:qType/:orderNumber/:title'} exact>
       <Quiz title="Quiz" />
     </Route>
-    <Route path={routes.QUIZES.ROOT}>
+    <Route path={routes.QUIZZES.ROOT}>
       <Quizes title="Quizes" />
     </Route>
     <Route path={routes.AUTH.ROOT}>
@@ -34,16 +34,16 @@ const buildAllRoutes = (): JSX.Element => (
     <Route path={routes.HOME} exact>
       <Home title="Home" />
     </Route>
-    <Route path={routes.QUIZES.ROOT + '/:qType' + '/:title'} exact>
-      <Quiz title="Quiz" />
-    </Route>
-    <Route path={routes.QUIZES.CREATE} exact>
+    <Route path={routes.QUIZZES.ROOT + '/:qType/create'} exact>
       <Create title="Create Question" />
     </Route>
-    <Route path={routes.QUIZES.ROOT}>
+    <Route path={routes.QUIZZES.ROOT + '/:qType/:orderNumber/:title'} exact>
+      <Quiz title="Quiz" />
+    </Route>
+    <Route path={routes.QUIZZES.ROOT}>
       <Quizes title="Quizes" />
     </Route>
-    <Route path={routes.PROFILE.ACCOUNT}>
+    <Route path={routes.PROFILE.ROOT}>
       <Profile title="Profile" />
     </Route>
     <Route path={routes.AUTH.ROOT}>
@@ -56,41 +56,13 @@ const buildAllRoutes = (): JSX.Element => (
 );
 
 export const Routes: FC<any> = () => {
-  const { userLogOut, setAppAlert } = useActions();
-  const { request, loading, error, clearError } = useRequest();
-  const history = useHistory();
+  const { checkUserAuth } = useActions();
 
-  // const checkForAuthed = async (): Promise<void> => {
-  //   try {
-  //     if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-  //       const data: IUserWithToken = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-  //       const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
-  //
-  //       if (!isAuthed) {
-  //         userLogOut();
-  //       } else {
-  //         const expirationData = JSON.parse(atob(data.token.split('.')[1]));
-  //         const { expiresIn, expiresAt } = expirationData;
-  //         const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
-  //         const now = Date.now();
-  //         const diff = expiresAt - now;
-  //         if (diff < 0) {
-  //           setAppAlert('Your session has expired', statuses.WARNING, false);
-  //           userLogOut();
-  //         }
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     userLogOut();
-  //   }
-  // };
+  useEffect(() => {
+    checkUserAuth();
+  }, []);
 
-  // useEffect(() => {
-  //   checkForAuthed();
-  // }, []);
-
-  const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
+  const { accessToken: isAuthenticated } = useTypedSelector(state => state.user);
 
   if (isAuthenticated) {
     return buildAllRoutes();

@@ -1,4 +1,5 @@
 import {DetailedHTMLProps, FormEvent, HTMLAttributes, MutableRefObject} from 'react'
+import {ValidationError} from "class-validator";
 
 export interface IUseRequest {
   error: Error | string;
@@ -7,19 +8,29 @@ export interface IUseRequest {
 }
 
 export interface IUseInputInitialState {
-  values: Record<string, any>,
+  values: Record<string, any>;
   elements: Record<string, any>
+}
+
+export type IUseInputValidatorsErrorsState = Record<string, Record<string, { message: string }>>;
+export type IUseInputArrayValues = Record<string, Record<string, unknown[]>>;
+
+export interface IUpdateValidatorsErrorsOptions {
+  inputToBeDeleted?: string;
 }
 
 export interface IUseInput {
   getValues?: (name?: string) => string | Record<string, unknown>;
   clearValues?: (formName?: string, name?: string) => void;
+  addFormArrayValues?: (arrayName: string, relatedFormName: string, inputToBeTaken: string) => any;
   register?: (name: string, options?: IUseInputOptions, additionalOptions?: IUseInputOptionsAdditional) => IUseInputOptions;
   handleSubmit?: (formName: string, cb?: (formData: Record<string, unknown>) => Promise<any> | any) => any;
   formState?: {
-    errors?: Record<string, { message: string }>;
+    errors?: Record<string, Record<string, { message: string }>>;
     state?: IUseInputInitialState;
+    arrayState?: IUseInputArrayValues;
   }
+  disableSubmit?: (formName: string) => boolean;
 }
 
 export interface IUseInputOptions extends DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement> {
@@ -36,20 +47,19 @@ export interface IUseInputOptionsAdditional {
   initialValue?: string;
 }
 
-export interface IUseAuth {
-  login: (userId: string, jwtToken: string) => void,
-  logout: () => void;
-  userId: string;
-  token: string;
+export interface IUseResolver {
+  validators: Record<string, unknown>;
+  validate: (validators: any[], property: string, propertyValue: string) => Promise<ValidationError | null>;
 }
 
 export interface IUseEstimationReturn {
   value: number,
+  range: number,
   getEstimationElement: (props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => JSX.Element;
 }
 
 export interface IUseEstimation {
-  range?: number | string;
+  range?: number;
   onRatingClick?: (index?: number | string) => void;
   onRatingHover?: (index?: number | string) => void;
   onRatingOut?: () => void;

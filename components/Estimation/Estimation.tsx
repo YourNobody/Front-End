@@ -1,9 +1,7 @@
 import React, { FC, useState } from 'react'
 import { EstimationProps } from './Estimation.props';
-import styles from './Estimation.module.css';
+import styles from './Estimation.module.scss';
 import cn from 'classnames'
-import { MAX_RATING_NUMBER } from '../../constants/app'
-import Star from '../../src/assets/icons/star.svg'
 
 export const Estimation: FC<EstimationProps> = ({
   ratingArray,

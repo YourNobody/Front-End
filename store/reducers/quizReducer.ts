@@ -1,50 +1,48 @@
-import { IQuizActions, IQuizReducer, quizActionTypes } from '../interfaces-reducers/quizReducer.interface'
+import { IQuizActions, IQuizReducer, quizActionTypes } from '../store-interfaces/quizReducer.interface'
+import {createSlice} from "@reduxjs/toolkit";
+import {act} from "react-dom/test-utils";
+import {ExternalActions} from "@ActionCreators/externalActions";
 
-const initialAppState: IQuizReducer = {
+const initialState: IQuizReducer = {
   loading: false,
   selectedQuiz: null,
-  selfQuizzes: [],
+  allSelectedQuizzes: [],
   selfQuizzesWithStats: {
     loading: false,
     quizzes: []
   },
-  allSelectedQuizzes: []
+  selfQuizzes: []
 };
 
-export const quizReducer = (state = initialAppState, action : IQuizActions): IQuizReducer => {
-  switch (action.type) {
-    case quizActionTypes.FETCH_QUIZZES_START:
-      return {...state, loading: true};
-    case quizActionTypes.SET_SELECTED_QUIZ:
-      return {...state, selectedQuiz: action.payload};
-    case quizActionTypes.FETCH_SELF_QUIZZES_SUCCESS:
-      return {...state, loading: false, selfQuizzes: action.payload};
-    case quizActionTypes.FETCH_SELECTED_QUIZZES_SUCCESS:
-      return {...state, loading: false, allSelectedQuizzes: action.payload};
-    case quizActionTypes.DELETE_QUIZ_SUCCESS:
-      return {...state, loading: false,
-        selfQuizzes: state.selfQuizzes.filter(quiz => quiz.id !== action.payload),
-        allSelectedQuizzes: state.allSelectedQuizzes.filter(quiz => quiz.id !== action.payload)
-      };
-    case quizActionTypes.GET_QUIZ_STATS: return {
-      ...state,
-      selfQuizzesWithStats: {
-        ...state.selfQuizzesWithStats,
-        loading: true
-      }
-    };
-    case quizActionTypes.GET_QUIZ_STATS_SUCCESS:
-      return {...state,
-        selfQuizzesWithStats: {
-          loading: false,
-          quizzes: state.selfQuizzesWithStats.quizzes.find(q => q.id === action.payload.id)
-            ? [...state.selfQuizzesWithStats.quizzes.slice(0, state.selfQuizzesWithStats.quizzes.findIndex(q => q.id === action.payload.id)),
-              { id: action.payload.id, usersAnswers: action.payload.usersAnswers },
-              ...state.selfQuizzesWithStats.quizzes.slice(state.selfQuizzesWithStats.quizzes.findIndex(q => q.id === action.payload.id))
-            ]
-            : [...state.selfQuizzesWithStats.quizzes, { id: action.payload.id, usersAnswers: action.payload.usersAnswers }]
-        }
-      };
-    default: return state;
+const QuizActions = ExternalActions.Quiz;
+
+export const name = 'quiz';
+export const { reducer, actions } = createSlice({
+  name, initialState,
+  reducers: {
+    quizLoadingStart: state => {
+      state.loading = true;
+    },
+    quizLoadingEnd: state => {
+      state.loading = false;
+    },
+    setQuizzes: (state, action) => {
+      state.allSelectedQuizzes = action.payload;
+    },
+    deleteQuiz: (state, action) => {
+      state.selfQuizzes = state.selfQuizzes.filter(quiz => quiz.id !== action.payload);
+      state.allSelectedQuizzes = state.allSelectedQuizzes.filter(quiz => quiz.id !== action.payload);
+    },
+    setSelfQuizzes: (state, action) => {
+      state.selfQuizzes = action.payload;
+    },
+    setSelfQuizzesWithStats: (state, action) => {
+      state.selfQuizzesWithStats.quizzes.push(action.payload);
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(QuizActions.setSelectedQuiz, (state, action) => {
+      state.selectedQuiz = action.payload;
+    })
   }
-};
+})

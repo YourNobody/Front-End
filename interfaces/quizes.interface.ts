@@ -1,28 +1,28 @@
-export enum QuestionTypes {
-  SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
-}
+export const QuizzesTypes = {
+  sa: 'sa', ta: 'ta', ra: 'ra', ab: 'ab'
+};
 
 export interface WithMessage {
   message?: string;
 }
 
 export type QuestionParamsTypes = {
-  qType: QuestionTypes;
+  qType: string;
   title: string;
 };
 
 export interface IQuizData {
   title: string;
-  src: string;
   description: string;
-  type: QuestionTypes;
+  type: string;
   withSubscription: boolean;
 }
 
 export interface MainQuestionsProps {
-  title?: string;
-  question?: string;
-  usersAnswers?: IUserAnswer[];
+  title: string;
+  question: string;
+  answers: IUserAnswer[];
+  premium: boolean;
   creator?: string;
   id?: string;
 }
@@ -48,6 +48,7 @@ export interface IQuiz {
   quizAnswers: IQuizAnswer[];
   usersAnswers: IUserAnswer[];
   userId: string;
+  orderNumber: number;
   id: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -1,21 +1,36 @@
 import {all, takeEvery} from '@redux-saga/core/effects';
-import { userTypes } from './interfaces-reducers/userReducer.interface';
-import { loginSaga, logoutSaga, registerSaga, resetSaga } from './services/authService';
-import { quizActionTypes } from './interfaces-reducers/quizReducer.interface';
-import {
-  createQuizSaga,
-  deleteQuizSaga,
-  getSelectedQuizzesSaga,
-  getSelfQuizzesSaga,
-  getSelfQuizzesWithStatsSaga, saveQuizAnswerSaga,
-} from './services/quizService';
-import {
-  cancelSubscriptionSaga,
-  changeSaga,
-  getAvailableSubscriptionsSaga,
-  getClientSecretAndSubscribeSaga,
-} from './services/profileService'
-import { appActionTypes } from './interfaces-reducers/appReducer.interface';
+import * as AuthSagas from './saga-services/authService';
+import * as QuizSagas from './saga-services/quizService';
+import * as ProfileSagas from './saga-services/profileService';
+import {SagaActionsTypes} from "@ActionCreators/sagaActionsTypes";
+const { User, Auth, Quiz } = SagaActionsTypes as any;
+
+function* profileWatcher() {
+  yield takeEvery(User.CHANGE_INFO, ProfileSagas.changeSaga);
+  yield takeEvery(User.CHANGE_AVATAR, ProfileSagas.changeAvatar);
+  yield takeEvery(User.GET_CLIENT_SECRET, ProfileSagas.getClientSecretAndSubscribeSaga);
+  yield takeEvery(User.GET_ALL_SUBSCRIPTIONS_PRODUCTS, ProfileSagas.getAvailableSubscriptionsSaga);
+  yield takeEvery(User.CANCEL_SUBSCRIPTION, ProfileSagas.cancelSubscriptionSaga);
+}
+
+function* authWatcher() {
+  yield takeEvery(Auth.REGISTER_USER, AuthSagas.registerSaga);
+  yield takeEvery(Auth.LOGIN_USER, AuthSagas.loginSaga);
+  yield takeEvery(Auth.RESET_USER_PASSWORD, AuthSagas.resetSaga);
+  yield takeEvery(Auth.LOGOUT_USER, AuthSagas.logoutSaga);
+  yield takeEvery(Auth.CHECK_AUTH, AuthSagas.checkAuthSaga);
+  yield takeEvery(User.ACTIVATE_ACCOUNT, AuthSagas.activateSaga);
+}
+
+function* quizzesWatcher() {
+  yield takeEvery(Quiz.GET_SELF_QUIZZES, QuizSagas.getSelfQuizzesSaga);
+  yield takeEvery(Quiz.GET_QUIZZES, QuizSagas.getSelectedQuizzesSaga);
+  yield takeEvery(Quiz.GET_QUIZ, QuizSagas.getQuizSaga);
+  yield takeEvery(Quiz.DELETE_QUIZ, QuizSagas.deleteQuizSaga);
+  yield takeEvery(Quiz.GET_QUIZ_STATS, QuizSagas.getSelfQuizWithStats);
+  yield takeEvery(Quiz.SAVE_QUIZ_ANSWER, QuizSagas.saveQuizAnswerSaga);
+  yield takeEvery(Quiz.CREATE_QUIZ, QuizSagas.createQuizSaga);
+}
 
 export function* rootWatcher() {
   yield all([
@@ -23,31 +38,4 @@ export function* rootWatcher() {
     quizzesWatcher(),
     profileWatcher()
   ]);
-}
-
-function* profileWatcher() {
-  const { CHANGE_INFO, GET_CLIENT_SECRET, CANCEL_SUBSCRIPTION } = userTypes as any;
-  const { GET_ALL_SUBSCRIPTIONS_PRODUCTS } = appActionTypes as any;
-  yield takeEvery(CHANGE_INFO, changeSaga);
-  yield takeEvery(GET_CLIENT_SECRET, getClientSecretAndSubscribeSaga);
-  yield takeEvery(GET_ALL_SUBSCRIPTIONS_PRODUCTS, getAvailableSubscriptionsSaga);
-  yield takeEvery(CANCEL_SUBSCRIPTION, cancelSubscriptionSaga);
-}
-
-function* authWatcher() {
-  const { REGISTER_USER, RESET_USER, LOGIN_USER, USER_LOGOUT } = userTypes as any;
-  yield takeEvery(REGISTER_USER, registerSaga);
-  yield takeEvery(LOGIN_USER, loginSaga);
-  yield takeEvery(RESET_USER, resetSaga);
-  yield takeEvery(USER_LOGOUT, logoutSaga);
-}
-
-function* quizzesWatcher() {
-  const { FETCH_SELF_QUIZZES, FETCH_SELECTED_QUIZZES, DELETE_QUIZ, GET_QUIZ_STATS, SAVA_QUIZ_ANSWER, CREATE_QUIZ } = quizActionTypes as any;
-  yield takeEvery(FETCH_SELF_QUIZZES, getSelfQuizzesSaga);
-  yield takeEvery(FETCH_SELECTED_QUIZZES, getSelectedQuizzesSaga);
-  yield takeEvery(DELETE_QUIZ, deleteQuizSaga);
-  yield takeEvery(GET_QUIZ_STATS, getSelfQuizzesWithStatsSaga);
-  yield takeEvery(SAVA_QUIZ_ANSWER, saveQuizAnswerSaga);
-  yield takeEvery(CREATE_QUIZ, createQuizSaga);
 }

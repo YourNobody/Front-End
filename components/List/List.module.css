@@ -6,10 +6,16 @@
 }
 
 .li {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+
 	align-items: center;
 
-	font-size: 16px;
+	font-size: 14px;
+}
+
+.li:last-of-type {
+	margin-bottom: 0;
 }
 
 .li::before {
@@ -17,28 +23,16 @@
 
 	content: '\1405';
 
-	color: var(--blue);
+	color: var(--blue-hover);
 }
 
 .close {
-	position: relative;
-	top: -4px;
-	left: 10px;
-
 	display: inline-block;
 
-	padding: 8px 10px 12px 10px;
+	margin: 0;
+	padding: 4px 8px 8px 8px;
 
-	color: var(--white) !important;
-	border: 1px solid var(--red);
-	background-color: var(--red-transparent);
-
-	font-size: 30px;
+	font-size: 24px;
 	font-weight: 300;
 	line-height: 18px;
-}
-
-.close:hover {
-	color: var(--black) !important;
-	background-color: var(--red);
 }

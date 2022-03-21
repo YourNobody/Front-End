@@ -1,100 +1,153 @@
-import styles from "./Change.module.css";
+import styles from "./Change.module.scss";
 import {Button, Card, HTag, Image, Input} from "../../../components";
-import {Link} from "react-router-dom";
-import {routes} from "../../../constants/routes";
-import React, {FC} from "react";
+import React, {FC, useRef, useState} from "react";
 import {ChangeProps} from "./Change.props";
-import {useInput} from "../../../hooks/useInput.hook";
+import {useForm} from "react-hook-form";
+import {useActions} from "../../../hooks/useActions.hook";
+import {useTypedSelector} from "../../../hooks/useTypedSelector.hook";
+import cn from "classnames";
+import {Link} from "react-router-dom";
+import {routes, userInfoChangeOptions} from "@Constants";
+import {handleImagesProcessing} from "../../../helpers/react.helper";
 
-export const Change: FC<ChangeProps> = ({changeOption,...props}) => {
-    const { register, clearValues, handleSubmit, getValues } = useInput();
+export const Change: FC<ChangeProps> = ({className, ...props}) => {
+	const { register, handleSubmit, reset, setValue, formState } = useForm();
+	const [avatar, setAvatar] = useState<string>('');
+	const { loading, user } = useTypedSelector(state => state.user);
+	const { changeUserInfo, setAppAlert, openModal } = useActions();
 
-    const handleChangeSubmit = (formData) => {
-        console.log('changeOption: ', changeOption);
-        console.log(formData);
-    };
+	const changeOption = userInfoChangeOptions[document.location.pathname.toLowerCase()];
 
-    const changeNameTemplate = <>
-        <Input
-            label="Your new name:"
-            type="text"
-            placeholder="Write you new name"
-            {...register("name")}
-        />
-        <Input
-            label="Password for the confirmation:"
-            type="text"
-            placeholder="Your password"
-            {...register("password")}
-        />
-    </>;
+	const inputAvatarRef = useRef<HTMLInputElement>(null);
 
-    const changePasswordTemplate = <>
-        <Input
-            label="New password:"
-            type="text"
-            placeholder="New password"
-            {...register("password")}
-        />
-        <Input
-            label="Confirm password:"
-            type="text"
-            placeholder="Confirm password"
-            {...register("confirm")}
-        />
-        <Input
-            label="Old password:"
-            type="text"
-            placeholder="Old password"
-            {...register("old_password")}
-        />
-    </>;
+	const submitChangeInfo = (formData) => {
+		formData = Object.keys(formData).reduce((acc: any, key) => {
+			if (formData[key]) acc[key] = formData[key];
+			return acc;
+		}, {});
 
-    const changeEmailTemplate = <>
-        <Input
-            label="New Email:"
-            type="text"
-            placeholder="New Email"
-            {...register("email")}
-        />
-        <Input
-            label="Password for the confirmation:"
-            type="text"
-            placeholder="Your password"
-            {...register("password")}
-        />
-    </>;
+		openModal({
+			actionFunc: () => {},
+			actionButtonName: 'Change',
+			modalQuestion: `Do you really want to change ${changeOption === 'avatar' ? 'account image' : changeOption}`
+		})
+		console.log('formData: ', formData)
+		// changeUserInfo(changeOption, formData);
+	};
 
-    const templates = {
-      name: changeNameTemplate,
-      email: changeEmailTemplate,
-      password: changePasswordTemplate
-    };
+	const changeNameTemplate = <>
+		<Input
+			label="Your new name:"
+			type="text"
+			placeholder="Write you new name"
+			disabled={loading}
+			{...register("nickname")}
+		/>
+		<Input
+			label="Password for the confirmation:"
+			type="password"
+			placeholder="Your password"
+			disabled={loading}
+			{...register("password")}
+		/>
+	</>;
 
-    const titles = {
-      name: {
-				title: 'Change of the account name',
-	      button: 'Change Name'
-      },
-      email: {
-				title: 'Change of the account email',
-	      button: 'Change Password'
-      },
-      password: {
-				title: 'Change of the password',
-	      button: 'Change Email'
-      }
-    };
+	const changePasswordTemplate = <>
+		<Input
+		    label="New password:"
+		    type="password"
+		    placeholder="New password"
+		    disabled={loading}
+		    {...register("password")}
+		/>
+		<Input
+		    label="Confirm password:"
+		    type="password"
+		    placeholder="Confirm password"
+		    disabled={loading}
+		    {...register("confirm")}
+		/>
+		<Input
+		    label="Old password:"
+		    type="password"
+		    placeholder="Old password"
+		    disabled={loading}
+		    {...register("oldPassword")}
+		/>
+	</>;
 
-    return (
-			<Card {...props} className={styles.changeWrapper}>
-				<form onSubmit={handleSubmit('', handleChangeSubmit)}>
-          <HTag className={styles.formTitle} size="l">{titles[changeOption].title}</HTag>
-	          {
-							templates[changeOption]
-	          }
-          <Button type="submit">{titles[changeOption].button}</Button>
-        </form>
-      </Card>
-    );
+	const changeEmailTemplate = <>
+		<Input
+		    label="New Email:"
+		    type="email"
+		    formNoValidate={true}
+		    disabled={loading}
+		    placeholder="New Email"
+		    {...register("email")}
+		/>
+		<Input
+		    label="Password for the confirmation:"
+		    type="password"
+		    placeholder="Your password"
+		    disabled={loading}
+		    {...register("password")}
+		/>
+	</>;
+
+	const changeAvatarTemplate = <>
+		<Input
+			type="file"
+			disabled={loading}
+			ref={inputAvatarRef}
+			onChange={e => handleImagesProcessing(e as any, {
+				maxImagesQuantity: 1,
+				existingImagesQuantity: 0,
+				callback: (image) => {
+					setAvatar(image.imageBase64);
+					setValue('avatar', image);
+				},
+				alertFunction: setAppAlert
+			})}
+		/>
+		<Button onClick={() => inputAvatarRef.current.click()}>Choose image</Button>
+		<Image src={avatar} fit="cover" text="No image loaded" fully={true} className={styles.previewAvatar}/>
+	</>;
+
+	const templates = {
+		nickname: changeNameTemplate,
+		email: changeEmailTemplate,
+		password: changePasswordTemplate,
+		avatar: changeAvatarTemplate
+	};
+
+	const titles = {
+		nickname: {
+			title: 'Change of the account name',
+			button: 'Change Name'
+		},
+		email: {
+			title: 'Change of the account email',
+			button: 'Change Password'
+		},
+		password: {
+			title: 'Change of the password',
+			button: 'Change Email'
+		},
+		avatar: {
+			title: 'Account image change',
+			button: 'Change image'
+		}
+	};
+
+	return (
+		<Card {...props} className={cn(className, styles.changeWrapper)}>
+			<form onSubmit={handleSubmit(submitChangeInfo)}>
+				<HTag className={styles.formTitle} size="l">{titles[changeOption].title}</HTag>
+				{
+					templates[changeOption]
+				}
+				<Button type="submit" disabled={loading}>{titles[changeOption].button}</Button>
+			</form>
+		</Card>
+	);
 };

@@ -1,54 +1,52 @@
-import React, {createRef, FC, forwardRef, useEffect, useRef} from 'react';
+import React, {FC, forwardRef, RefObject, useEffect, useRef} from 'react';
 import { InputProps } from './Input.props';
-import styles from './Input.module.css';
+import styles from './Input.module.scss';
 import cn from 'classnames';
 import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
 
-export const Input: FC<InputProps> = ({
+export const Input: FC<InputProps> = forwardRef(({
       label,
       error,
-      value= '',
+      type,
       className,
-      type= 'text',
-      name,
-      useInputRef,
+      hasValue = false,
       ...props
-}) => {
+}, ref) => {
   const inputId: string = label ? createId(label) : null;
 
-  const ref = useRef<HTMLInputElement>();
-
-  useEffect(() => {
-    if (ref.current) {
-      useInputRef(ref);
-    }
-  }, [ref])
+  if (type === 'file') {
+    return <input
+      {...props}
+      ref={ref}
+      type={type}
+      style={{display: 'none'}}
+    />
+  }
 
   return (
     <div className={styles.wrapper}>
       {label && <label
         className={cn(styles.label, {
-          // [styles.has]: value && String(value).length
+          [styles.has]: hasValue,
+          [styles.hasError]: error
         })}
         htmlFor={inputId}
       >{label}</label>}
       <input
         {...props}
-        value={value}
+        type={type || 'text'}
         className={cn(styles.input, className, {
           [styles.errorInput]: error
         })}
-        type={type}
-        name={name}
         id={inputId}
         ref={ref}
       />
       {
-        error && <ErrorMessage className={styles.error}>{error}</ErrorMessage>
+        error && error.message && <ErrorMessage className={styles.error}>{error.message}</ErrorMessage>
       }
     </div>
   )
-};
+});
 
 function createId(str: string): string {
   if (!str) return '';

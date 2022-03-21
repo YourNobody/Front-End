@@ -1,0 +1,135 @@
+.profile {
+	display: grid;
+	grid-template-columns: minmax(auto, 180px) 1fr;
+	gap: 20px;
+
+	height: 100%;
+}
+
+.avatarWrapper {
+	min-height: 180px;
+	max-height: 180px;
+	height: 180px;
+}
+
+.avatar {
+	min-height: 180px;
+	max-height: 180px;
+	height: 180px;
+	background-color: var(--gray-light);
+	border: 1px solid transparent;
+	transition: all 0.2s;
+
+	&:hover {
+		border: 1px solid var(--black-light);
+		box-shadow: inset 0 0 4px var(--gray);
+	}
+}
+
+.sidebar {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	gap: 10px;
+}
+
+.nickname {
+	padding: 10px 0;
+	font-style: italic;
+	font-weight: 300;
+	font-size: 1.4rem;
+}
+
+.logout {
+	width: 100%;
+	margin-bottom: 10px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.2s;
+
+	&:hover {
+		color: var(--red);
+	}
+}
+
+.cardInner {
+	height: 100%;
+}
+
+.right {
+	height: 100%;
+}
+
+.navList {
+	width: 100%;
+	background-color: var(--white);
+
+	font-size: 16px;
+
+	li {
+		width: 100%;
+		padding: 0;
+
+		cursor: pointer;
+		will-change: hover;
+		transition: all 0.2s;
+
+		color: var(--black);
+
+		margin-bottom: 8px;
+		border-bottom: 1px solid gray;
+
+		a {
+			display: block;
+			padding: 8px 0px;
+			transition: all 0.2s;
+			width: 100%;
+			height: 100%;
+		}
+
+		&:hover {
+			border-bottom: 1px solid var(--blue-hover);
+			a {
+				color: var(--blue-hover);
+			}
+		}
+	}
+}
+
+.modalTitle {
+	text-align: center;
+}
+
+.modalActions {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+
+	margin: 25px 0 0 0;
+}
+
+.cardPage {
+	min-height: 100%;
+}
+
+.cardRootPage {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column nowrap;
+
+	.buttons {
+		margin-top: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-flow: column nowrap;
+	}
+
+	.buttons > button {
+		width: 300px;
+		background-color: transparent;
+		padding: 15px 25px;
+		margin-bottom: 10px;
+	}
+}

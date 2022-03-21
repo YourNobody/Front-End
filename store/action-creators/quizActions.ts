@@ -2,7 +2,6 @@ import {
   quizActionTypes,
   IQuizSetSelected,
   IQuizState,
-  IQuizFetchQuizzesStart,
   IQuizFetchSelectedQuizzes,
   IQuizFetchSelfQuizzes,
   IQuizFetchSelfQuizzesSuccess,
@@ -13,15 +12,19 @@ import {
   IQuizGetQuizStatsSuccess,
   IQuizSaveAnswer,
   IQuizSaveAnswerSuccess,
-  IQuizCreate, IQuizCreateSuccess,
-} from '../interfaces-reducers/quizReducer.interface'
+  IQuizCreateSuccess,
+} from '../store-interfaces/quizReducer.interface'
 
 export const setQuizSelected = (payload: IQuizState): IQuizSetSelected => {
   return {type: quizActionTypes.SET_SELECTED_QUIZ, payload};
 };
 
-export const fetchQuizStart = (): IQuizFetchQuizzesStart => {
+export const quizFetchingStart = () => {
   return {type: quizActionTypes.FETCH_QUIZZES_START};
+};
+
+export const quizFetchingEnd = () => {
+  return {type: quizActionTypes.FETCH_QUIZZES_END};
 };
 
 export const fetchSelectedQuizzesSuccess = (payload): IQuizFetchSelectedQuizzesSuccess => {
@@ -60,25 +63,33 @@ export const saveQuizAnswer = (type, payload): IQuizSaveAnswer => {
   return {type: quizActionTypes.SAVA_QUIZ_ANSWER, payload, quizType: type};
 };
 
-export const saveQuizAnswerSucess = (payload): IQuizSaveAnswerSuccess => {
+export const saveQuizAnswerSuccess = (payload): IQuizSaveAnswerSuccess => {
   return {type: quizActionTypes.SAVA_QUIZ_ANSWER_SUCCESS};
 };
 
-export const createQuiz = (payload): IQuizCreate => {
-  return {type: quizActionTypes.CREATE_QUIZ, payload};
+export const createQuiz = (type: string, payload: any, redirectFunc: () => void) => {
+  return {type: quizActionTypes.CREATE_QUIZ, payload, quizType: type, redirectFunc};
 };
 
 export const createQuizSuccess = (): IQuizCreateSuccess => {
   return {type: quizActionTypes.CREATE_QUIZ_SUCCESS};
 };
 
+export const getQuiz = (path: string, id: string) => {
+  return { type: quizActionTypes.GET_QUIZ, path, id };
+}
+
+export const getQuizSuccess = (quiz: any) => {
+  return { type: quizActionTypes.GET_QUIZ_SUCCESS, payload: quiz };
+}
+
 export default {
   setQuizSelected,
-  fetchQuizStart,
   fetchSelectedQuizzes,
   fetchSelfQuizzes,
   deleteQuiz,
   getQuizStats,
   saveQuizAnswer,
-  createQuiz
+  createQuiz,
+  getQuiz,
 };

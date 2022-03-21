@@ -5,17 +5,19 @@
 
 	padding: 10px 50px;
 
-	background-color: var(--black-light);
+	opacity: var(--opac);
+
+	background-color: var(--white);
 
 	font-size: 16px;
 }
 
 .appName {
-	color: var(--blue);
+	color: var(--black);
 }
 
 .footer a {
 	text-decoration: none;
 
-	color: var(--white);
+	color: var(--black);
 }

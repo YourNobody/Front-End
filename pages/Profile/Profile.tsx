@@ -1,79 +1,175 @@
-import React, { FC, useEffect, useState } from 'react';
-import { ProfileProps } from './Profile.props';
-import styles from './Profile.module.css';
-import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
-import { routes } from '../../constants/routes';
-import { AccountInfo } from './AccountInfo/AccountInfo';
-import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
-import { useActions } from '../../hooks/useActions.hook';
-import { HTag, Button } from '../../components';
-import { QuizStats } from './QuizStats/QuizStats';
-import { Subscription } from './Subscription/Subscription';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js'
+import React, {FC, useEffect, useRef, useState} from 'react';
+import {ProfileProps} from './Profile.props';
+import styles from './Profile.module.scss';
+import {withMainLayout} from '@Layouts';
+import {Link, Route, Switch, useHistory} from 'react-router-dom';
+import {routes} from '@Constants';
+import {useTypedSelector, useActions} from '@Hooks';
+import {QuizStats} from './QuizStats/QuizStats';
+import {Subscription} from './Subscription/Subscription';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js'
+import {Button, Card, HTag, Image, Input} from "@Components";
 import {Change} from "./Change/Change";
+import cn from "classnames";
+import {Settings} from "./Settings/Settings";
+
+const acceptedFiles = ".jpg,.png,.jpeg";
 
 export const Profile: FC<ProfileProps> = (props) => {
-  const history = useHistory();
-  const { user } = useTypedSelector(state => state.user);
-  const { stripeToken } = useTypedSelector(state => state.app);
-  const { userLogOut, openModal, closeModal } = useActions();
+	const history = useHistory();
+	const {stripeToken} = useTypedSelector(state => state.app);
+	const {user} = useTypedSelector(state => state.user);
+	const {logoutUser, openModal, closeModal, changeUserAvatar} = useActions();
 
-  const handleLogOut = () => {
-    userLogOut(() => history.push(routes.HOME));
-    closeModal();
-  };
+	const inputLoadAvatarRef = useRef<HTMLInputElement>(null);
 
-  const handleOpenModal = () => {
-    openModal({
-      actionFunc: handleLogOut,
-      actionButtonName: 'Log Out',
-      closeButtonName: 'Stay on page',
-      modalQuestion: 'Do you really want to log out?'
-    });
-  };
+	useEffect(() => {}, [user])
 
-  return (
-    <div {...props} className={styles.profile}>
-      <ul className={styles.navList}>
-        <Link to={routes.PROFILE.ACCOUNT}>
-          <li>Account</li>
-        </Link>
-        <Link to={routes.PROFILE.QUESTIONS}>
-          <li>My Quizzes</li>
-        </Link>
-        <Link to={routes.PROFILE.SUBSCRIPTION}>
-          <li>Subscription</li>
-        </Link>
-        <a>
-          <li onClick={handleOpenModal}>Log Out</li>
-        </a>
-      </ul>
-      <Switch>
-        <Route path={routes.PROFILE.ACCOUNT} exact>
-          <AccountInfo nickname={user?.nickname} email={user?.email} />
-        </Route>
-        <Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>
-          <Change changeOption="name" />
-        </Route>
-        <Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>
-          <Change changeOption="email" />
-        </Route>
-        <Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>
-          <Change changeOption="password" />
-        </Route>
-        <Route path={routes.PROFILE.QUESTIONS} exact>
-          <QuizStats/>
-        </Route>
-        <Route path={routes.PROFILE.SUBSCRIPTION} exact>
-          <Elements stripe={loadStripe(stripeToken)}>
-            <Subscription/>
-          </Elements>
-        </Route>
-      </Switch>
-    </div>
-  );
+	const handleAvatarChange = (e: any) => {
+		if (!e.target && !e.target.files[0]) return;
+
+		const file = e.target.files[0];
+		const reader = new FileReader();
+
+		reader.readAsDataURL(file);
+
+		reader.onload = ev => {
+			changeUserAvatar(ev.target.result.toString());
+		};
+	}
+
+	const handleRedirect = (event) => {
+		if (!event || !event.target) return;
+
+		const { tagName, dataset } = event.target;
+
+		if (tagName === 'BUTTON' && dataset && dataset.route) {
+			history.push(dataset.route);
+		}
+	};
+
+	const handleOpenModal = () => {
+		const callback = () => {
+			logoutUser(() => history.push(routes.HOME));
+			closeModal();
+		};
+
+		openModal({
+			actionFunc: callback,
+			actionButtonName: 'Log Out',
+			closeButtonName: 'Stay on page',
+			modalQuestion: 'Do you really want to log out?'
+		});
+	};
+
+	return (
+		<div {...props} className={styles.profile}>
+			<Card className={styles.sidebar}>
+				<div>
+					<Input
+						type="file"
+						accept={acceptedFiles}
+						ref={inputLoadAvatarRef}
+						onChange={handleAvatarChange}
+						multiple={false}
+					/>
+					<div className={styles.avatarWrapper}>
+						<Image
+							src={user.avatar}
+							className={styles.avatar}
+							onClick={() => inputLoadAvatarRef.current.click()}
+						/>
+					</div>
+					<HTag className={styles.nickname}>{user.nickname}</HTag>
+				</div>
+				<div>
+					<ul className={styles.navList}>
+						<li><Link to={routes.PROFILE.QUIZZES}>My Quizzes</Link></li>
+						<li><Link to={routes.PROFILE.SUBSCRIPTION}>Subscriptions</Link></li>
+						<li><Link to={routes.PROFILE.SETTINGS}>Settings</Link></li>
+					</ul>
+				</div>
+				<div className={styles.logout} onClick={handleOpenModal}>Log Out</div>
+			</Card>
+			<div>
+				<Switch>
+					{/*<Route path={routes.PROFILE.ACCOUNT} exact>*/}
+					{/*  <AccountInfo />*/}
+					{/*</Route>*/}
+					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>*/}
+					{/*  <Change changeOption="nickname" />*/}
+					{/*</Route>*/}
+					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>*/}
+					{/*  <Change changeOption="email" />*/}
+					{/*</Route>*/}
+					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>*/}
+					{/*  <Change changeOption="password" />*/}
+					{/*</Route>*/}
+					<Route path={routes.PROFILE.ACCOUNT} exact>
+						<Card className={cn(styles.cardPage, styles.cardRootPage)}>
+							<HTag>Hi, Pavel</HTag>
+							<div className={styles.buttons} onClick={handleRedirect}>
+								<Button data-route={routes.PROFILE.QUIZZES}>Quizzes</Button>
+								<Button data-route={routes.PROFILE.SUBSCRIPTION}>Subscriptions</Button>
+								<Button data-route={routes.PROFILE.SETTINGS}>Settings</Button>
+							</div>
+						</Card>
+					</Route>
+					<Route path={routes.PROFILE.SUBSCRIPTION} exact>
+						<Elements stripe={loadStripe(stripeToken)}>
+							<Subscription className={styles.cardPage}/>
+						</Elements>
+					</Route>
+					<Route path={routes.PROFILE.QUIZZES} exact>
+						<QuizStats />
+					</Route>
+					<Route path={routes.PROFILE.SETTINGS} exact>
+						<Settings className={styles.cardPage}/>
+					</Route>
+					<Route path={routes.PROFILE.ROOT}>
+						<Change className={styles.cardPage}/>
+					</Route>
+				</Switch>
+			</div>
+			{/*<ul className={styles.navList}>*/}
+			{/*  <Link to={routes.PROFILE.ACCOUNT}>*/}
+			{/*    <li>Account</li>*/}
+			{/*  </Link>*/}
+			{/*  <Link to={routes.PROFILE.QUIZZES}>*/}
+			{/*    <li>My Quizzes</li>*/}
+			{/*  </Link>*/}
+			{/*  <Link to={routes.PROFILE.SUBSCRIPTION}>*/}
+			{/*    <li>Subscription</li>*/}
+			{/*  </Link>*/}
+			{/*  <a>*/}
+			{/*    <li onClick={handleOpenModal}>Log Out</li>*/}
+			{/*  </a>*/}
+			{/*</ul>*/}
+			{/*<Switch>*/}
+			{/*  <Route path={routes.PROFILE.ACCOUNT} exact>*/}
+			{/*    <AccountInfo />*/}
+			{/*  </Route>*/}
+			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>*/}
+			{/*    <Change changeOption="nickname" />*/}
+			{/*  </Route>*/}
+			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>*/}
+			{/*    <Change changeOption="email" />*/}
+			{/*  </Route>*/}
+			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>*/}
+			{/*    <Change changeOption="password" />*/}
+			{/*  </Route>*/}
+			{/*  <Route path={routes.PROFILE.QUIZZES} exact>*/}
+			{/*    <QuizStats/>*/}
+			{/*  </Route>*/}
+			{/*  <Route path={routes.PROFILE.SUBSCRIPTION} exact>*/}
+			{/*    <Elements stripe={loadStripe(stripeToken)}>*/}
+			{/*      <Subscription/>*/}
+			{/*    </Elements>*/}
+			{/*  </Route>*/}
+			{/*</Switch>*/}
+		</div>
+	);
 };
 
 export default withMainLayout(Profile);

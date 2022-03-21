@@ -7,7 +7,7 @@ import cn from 'classnames';
 import { useTypedSelector } from './../../../hooks/useTypedSelector.hook';
 import { IUserAnswer } from './../../../interfaces/quizes.interface';
 
-export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title, quizAnswers, usersAnswers, ...props }) => {
+export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title, variants, answers, ...props }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const user = useTypedSelector(state => state.user.user)
 
@@ -18,11 +18,9 @@ export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title,
   const handleUserAnswerSave = () => {
     const body = {} as IUserAnswer & { quizAnswerId?: string, quizId: string };
     body.quizId = id;
-    body.quizAnswerId = quizAnswers.find((_, index) => selected === index)?._id;
+    body.quizAnswerId = variants.find((_, index) => selected === index)?._id;
     onSave(body);
   };
-
-  if (!quizAnswers || !quizAnswers.length) return <></>;
   return (
     <Card
       {...props}
@@ -32,8 +30,8 @@ export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title,
       <div className={styles.question}>{parse(question)}</div>
       <div className={styles.answers}>
         {
-          quizAnswers.reduce((tags: JSX.Element[], answer: any, index) => {
-            if (answer.answer && answer.answer.trim()) {
+          variants.reduce((tags: JSX.Element[], variant: any, index) => {
+            if (variant.answer && variant.answer.trim()) {
               tags.push(<Tagger
                 key={index}
                 onClick={() => handleTaggerClick(index)}
@@ -41,7 +39,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title,
                   [styles.unselected]: selected !== index && selected !== null,
                   [styles.selected]: selected === index
                 })}
-              >{answer.answer}</Tagger>);
+              >{variant.answer}</Tagger>);
               return tags;
             }
             return tags;
@@ -50,7 +48,7 @@ export const SA_Question: FC<SA_QuestionProps> = ({ onSave, id, question, title,
       </div>
       <HR color="gray" className={styles.hr}/>
       <div className={styles.info}>
-        <HTag size="s">Answers:&nbsp;{usersAnswers.length}</HTag>
+        <HTag size="s">Answers:&nbsp;{answers.length}</HTag>
         <div>
           {(selected !== null) ? <Button className={styles.reset} onClick={() => handleTaggerClick(null)}>Reset</Button> : <></>}
           <Button color="primary" onClick={handleUserAnswerSave}>Save answer</Button>

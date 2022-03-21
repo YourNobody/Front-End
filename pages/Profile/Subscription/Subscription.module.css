@@ -1,77 +1,88 @@
 .cardElement {
-  position: static;
-  border: 1px solid white;
-  background: var(--white);
-  color: var(--black) !important;
-  font-size: 16px;
-  padding: 10px 4px;
-  height: auto;
-  margin-top: 10px;
+	position: static;
+
+	height: auto;
+	margin-top: 10px;
+	padding: 10px 4px;
+
+	color: var(--black) !important;
+	border: 1px solid white;
+	background: var(--white);
+
+	font-size: 16px;
 }
 
 .cardElement * {
-  color: var(--black);
+	color: var(--black);
 }
 
 .loadingCard {
-  position: relative;
+	position: relative;
 }
 
 .loadingTitle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+
+	transform: translate(-50%, -50%);
+
+	font-size: 24px;
 }
 
 .allSubs {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
 }
 
 .sub {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  gap: 15px;
-  align-items: center;
-  background: var(--white-transparent);
-  width: 100%;
-  max-width: 300px;
-  transition: 0.2s all;
+	position: relative;
+
+	display: grid;
+	align-items: center;
+
+	width: 100%;
+	max-width: 300px;
+
+	transition: 0.2s all;
+
+	background: var(--white-transparent);
+	grid-template-columns: 1fr;
+	justify-items: center;
+	gap: 15px;
 }
 
-.sub h2.gold, .formTitle.gold {
-  color: var(--yellow);
+.sub h2.gold,
+.formTitle.gold {
+	color: var(--yellow);
 }
 
 .sub button {
-  margin: 0;
+	margin: 0;
 }
 
 .sub button.gold {
-  background-color: var(--yellow);
+	background-color: var(--yellow);
 }
 
 .sub button.gold:hover {
-  background-color: var(--yellow);
-  box-shadow: 0 0 7px var(--yellow-transparent);
+	background-color: var(--yellow);
+	box-shadow: 0 0 7px var(--yellow-transparent);
 }
 
 .formTitle {
-  margin: 12px 0;
+	margin: 12px 0;
 }
 
 .formTitle.silver {
-  color: rgb(192, 192, 192);
+	color: rgb(192, 192, 192);
 }
 
 .subTitle {
-  text-align: center;
-  margin-bottom: 20px;
+	margin-bottom: 20px;
+
+	text-align: center;
 }
 
 .description {
@@ -79,49 +90,57 @@
 }
 
 .sub.has {
-  border: 1px solid var(--blue);
+	border: 1px solid var(--blue);
 }
 
 .sub.expired {
-  border: 1px solid var(--red-bright);
+	border: 1px solid var(--red-bright);
 }
 
 .sub .subscribed {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  opacity: 0;
-  height: 0;
-  justify-items: center;
-  align-items: center;
-  position: absolute;
-  background: var(--white-transparent);
-  bottom: 0;
-  left: -1px;
-  right: -1px;
-  transform: translateY(100%);
-  color: var(--yellow);
-  transition: 0.2s all;
+	position: absolute;
+	right: -1px;
+	bottom: 0;
+	left: -1px;
+
+	display: grid;
+	align-items: center;
+
+	height: 0;
+
+	transition: 0.2s all;
+	transform: translateY(100%);
+
+	opacity: 0;
+	color: var(--yellow);
+	background: var(--white-transparent);
+	grid-template-columns: 1fr;
+	gap: 10px;
+	justify-items: center;
 }
 
 .sub .subscribed button {
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  width: 100%;
+	width: 100%;
+	margin: 0;
+
+	border: none;
+	border-radius: 0;
 }
 
 .sub .subscribed h2 {
-  font-weight: 300;
-  margin: 5px 0;
+	margin: 5px 0;
+
+	font-weight: 300;
 }
 
 .sub:hover {
-  border-bottom: none;
+	border-bottom: none;
 }
+
 .sub:hover .subscribed {
-  opacity: 1;
-  height: 104px;
-  border: 1px solid var(--blue);
-  border-top: 0;
+	height: 104px;
+
+	opacity: 1;
+	border: 1px solid var(--blue);
+	border-top: 0;
 }

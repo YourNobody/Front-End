@@ -32,6 +32,12 @@ export const Modal: FC<ModalProps> = ({
       closeModal();
     }
   };
+
+  const actionFunc = (cb) => {
+    if (cb) cb();
+    closeModal();
+  }
+
   return (
     <>
       {children}
@@ -44,7 +50,7 @@ export const Modal: FC<ModalProps> = ({
             <HTag size="m" className={styles.modalTitle}>{modalConfig.modalQuestion}</HTag>
             <div className={styles.modalActions}>
               <Button color="ghost" onClick={modalConfig.closeFunc || closeModal}>{modalConfig.closeButtonName || 'No'}</Button>
-              <Button color="danger" onClick={modalConfig.actionFunc}>{modalConfig.actionButtonName}</Button>
+              <Button color="danger" onClick={() => actionFunc(modalConfig.actionFunc)}>{modalConfig.actionButtonName}</Button>
             </div>
         </Card>
       </div>

@@ -50,18 +50,21 @@
 }
 
 .changeInfo a {
-	font-size: 16px;
-	color: var(--white);
 	margin-bottom: 20px;
+
 	transition: 0.2s all;
+
+	color: var(--black);
+
+	font-size: 16px;
 }
 
 .changeInfo a:hover {
-	color: var(--blue);
 	margin-left: 10px;
+
+	color: var(--blue-hover);
 }
 
 .changeInfo .changeInfoTitle {
 	margin-bottom: 25px;
 }
-
