@@ -1,13 +1,11 @@
 import { useActions } from "../hooks/useActions.hook";
-import { FC } from 'react';
+import { FC, useState } from 'react'
 import { Route, Switch, useHistory } from "react-router-dom";
 import { Home, Quizes, Profile, Authorization, Page404, Create, Quiz } from '..//pages/pages';
 import { routes } from "../constants/routes";
 import { useTypedSelector } from './../hooks/useTypedSelector.hook';
 import { useEffect } from 'react';
-import { LOCALSTORAGE_USER_DATA_NAME, statuses } from './../constants/app';
-import { IUserWithToken } from "../interfaces/user.interface";
-import {Card} from "@Components";
+import { LOCALSTORAGE_ACCESS_TOKEN_NAME } from '@Constants'
 
 const buildBaseRoutes = (): JSX.Element => (
   <Switch>
@@ -18,7 +16,7 @@ const buildBaseRoutes = (): JSX.Element => (
       <Quiz title="Quiz" />
     </Route>
     <Route path={routes.QUIZZES.ROOT}>
-      <Quizes title="Quizes" />
+      <Quizes title="Quizzes" />
     </Route>
     <Route path={routes.AUTH.ROOT}>
       <Authorization title="Authorization" />
@@ -57,16 +55,17 @@ const buildAllRoutes = (): JSX.Element => (
 
 export const Routes: FC<any> = () => {
   const { checkUserAuth } = useActions();
+  const history = useHistory();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    checkUserAuth();
+    checkUserAuth(setIsAuthenticated);
   }, []);
-
-  const { accessToken: isAuthenticated } = useTypedSelector(state => state.user);
-
+  
   if (isAuthenticated) {
+    history.location.pathname.indexOf(routes.AUTH.ROOT) !== -1 && history.push(routes.HOME);
     return buildAllRoutes();
   }
 
   return buildBaseRoutes();
-};
+}

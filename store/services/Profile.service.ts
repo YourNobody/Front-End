@@ -56,7 +56,7 @@ export class ProfileService extends AxiosService {
 		}
 	}
 
-	getSubscriptions() {
+	getAllRemoteSubscriptions(subscriptionId: string) {
 		return async () => {
 			try {
 				const response = await AxiosService.api.get<any>(this.route + '/subscriptions');

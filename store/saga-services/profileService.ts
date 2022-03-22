@@ -7,6 +7,8 @@ import {AxiosResponse} from "axios";
 import ProfileService from "../services/Profile.service";
 import {IProfileChangeAvatarResponse, IProfileChangeResponse} from "../store-interfaces/profileService.interface";
 
+const subId = 'prod_KWYsSUh0MdfBz6';
+
 export function* changeSaga({ formData, changeOption }: ReturnType<T.TChangeUserInfo>) {
   yield put(InnerActions.userLoadingStart());
 
@@ -39,7 +41,7 @@ export function* changeAvatar({ avatarBase64 }: ReturnType<T.TChangeUserAvatar>)
 
 export function* getAvailableSubscriptionsSaga() {
   yield put(InnerActions.userLoadingStart());
-  const { data, status }: AxiosResponse<any> = yield call(ProfileService.getSubscriptions);
+  const { data, status }: AxiosResponse<any> = yield call(ProfileService.getAllRemoteSubscriptions(subId));
 
   // if (status < 400) {
   //   yield put(setAllSubscriptionsProducts(data.subscriptions));

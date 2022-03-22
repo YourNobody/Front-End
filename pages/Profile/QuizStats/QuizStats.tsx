@@ -40,17 +40,22 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     return estimation / stats.length * 10;
   };
 
-  const calculateCompareAnswers = (stats) => {
+  const calculateCompareAnswers = (stats, variants) => {
     const result = {
-      left: stats.find(stat => stat.answer === 'left') ? stats.find(stat => stat.answer === 'left').count : 0,
-      right: stats.find(stat => stat.answer === 'right') ? stats.find(stat => stat.answer === 'right').count : 0
+      left: stats[variants[0].id] ? stats[variants[0].id].count : 0,
+      right: stats[variants[1].id] ? stats[variants[1].id].count : 0
     };
 
     return <HTag>Left: {result.left} | Right: {result.right}</HTag>;
-  }
+  };
 
-  useEffect(() => {
-  }, [quizData, stats]);
+  const calculateDiagramHeight = (stats) => {
+    if (hidden) return 0;
+    if (!stats.length) return 'auto';
+    return quizData.variants.length * 100;
+  };
+
+  useEffect(() => {}, [quizData, stats]);
 
   if (!quizData) return <></>;
 
@@ -58,19 +63,22 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
     if (!stats) return <></>;
     switch (quizData.type.toUpperCase()) {
       case QuizesTypes.SA: {
-        return <div className={cn(styles.sa_stats, {
-          [styles.hidden]: hidden
-        })}>
+        return <div
+          className={cn(styles.sa_stats, {
+            [styles.hidden]: hidden
+          })}
+          style={{ height: calculateDiagramHeight(stats) }}
+        >
           {
             loading ? <HTag size="m">Loading statistics...</HTag>
-              :
+              : stats.length ?
               <>
                 <HTag size="s">Answers: {quizData.answers.length}</HTag>
                 <ResponsiveContainer width="90%" height="100%">
                   <ComposedChart
                     layout="vertical"
                     width={500}
-                    height={400}
+                    height={quizData.variants.length * 100}
                     data={stats}
                     margin={{
                       top: 20,
@@ -89,6 +97,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
                   </ComposedChart>
                 </ResponsiveContainer>
               </>
+              : <HTag>No answers on this quiz</HTag>
           }
         </div>
       }
@@ -149,7 +158,7 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
             }
           </div>
           <div>
-            {calculateCompareAnswers(stats)}
+            {calculateCompareAnswers(stats, quizData.variants)}
           </div>
         </div>
       }
@@ -158,17 +167,26 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 
   return <Card
     {...props}
-    className={styles.myCard}
+    className={cn(styles.myCard, {
+      [styles.myCardHidden]: hidden
+    })}
   >
-    <HTag size="m">Title: {quizData.title}</HTag>
-    <HTag size="s" className={styles.typeQuziStat}>Type: {quizData.type}</HTag>
-    <Button color="danger" className={styles.closeCard} onClick={handleRemoveQuiz}>&#215;</Button>
-    <div className={styles.infoActions}>
-      <HTag size="s">Created at: {formatDate(quizData.createdAt)}</HTag>
-      {hidden && <Button color="ghost" onClick={() => handleShowStats()}>Show statistics</Button>}
-      {!hidden && <Button color="primary" onClick={() => setHidden(true)}>Hide</Button>}
+    <div className={quizData.quizAvatar ? styles.imageWrapper : ''}>
+      <Image className={styles.img} src={quizData.quizAvatar} text="No Image" fully/>
     </div>
+    <div className={styles.infoQuiz}>
+      <HTag size="m">Title: {quizData.title}</HTag>
+      <HTag size="s" className={styles.typeQuziStat}>Type: {quizData.type}</HTag>
+      <Button color="danger" className={styles.closeCard} onClick={handleRemoveQuiz}>&#215;</Button>
+      <div className={styles.infoActions}>
+        <HTag size="s">Created at: {formatDate(quizData.createdAt)}</HTag>
+        {hidden && <Button color="ghost" onClick={() => handleShowStats()}>Show statistics</Button>}
+        {!hidden && <Button color="primary" onClick={() => setHidden(true)}>Hide</Button>}
+      </div>
+    </div>
+    <div className={styles.stats}>
       {renderStatsAccordingToType()}
+    </div>
   </Card>;
 };
 

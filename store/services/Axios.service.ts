@@ -31,6 +31,7 @@ export class AxiosService {
 				config.headers.Authorization = `Bearer ${accessToken}`;
 				return config;
 			}
+			return config;
 		});
 	}
 
@@ -48,6 +49,7 @@ export class AxiosService {
 
 					return AxiosService.api.request(originalConfig);
 				} catch (e: any) {
+					localStorage.removeItem(LOCALSTORAGE_ACCESS_TOKEN_NAME);
 					console.log('User is unauthorized');
 				}
 			}

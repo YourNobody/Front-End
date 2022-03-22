@@ -3,11 +3,10 @@ import {HeaderProps} from './Header.props';
 import styles from './Header.module.scss';
 import cn from 'classnames';
 import {Link} from 'react-router-dom';
-import {routes} from '../../constants/routes';
-import {Image} from '../../components/index';
-import {useTypedSelector} from '../../hooks/useTypedSelector.hook';
-import {quizesNames} from "@Constants";
-import {wrapWithWindowClickEvent} from "../../helpers/react.helper";
+import {routes, quizesNames} from '@Constants';
+import {Image} from '@Components';
+import {useTypedSelector} from '@Hooks';
+import {wrapWithWindowClickEvent} from "@Helpers";
 
 export const Header: FC<HeaderProps> = ({className, ...props}) => {
 	const {user, accessToken} = useTypedSelector(state => state.user);
@@ -18,7 +17,7 @@ export const Header: FC<HeaderProps> = ({className, ...props}) => {
 		setIsToCreate(true);
 
 		wrapWithWindowClickEvent(() => setIsToCreate(false));
-	}
+	};
 
 	return (
 		<header className={cn(styles.header, className)} {...props}>

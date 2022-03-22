@@ -8,7 +8,7 @@ export type TActivateUserAccount = (activationLink: string) => { activationLink:
 export type TRegisterUser = (registerData: IRegisterData, callback?: TCallback) => { registerData: IRegisterData, callback: TCallback };
 export type TLoginUser = (loginData: ILoginData, callback?: TCallback) => { loginData: ILoginData, callback: TCallback };
 export type TLogoutUser = (callback?: TCallback) => { callback?: TCallback };
-export type TCheckUserAuth = () => void;
+export type TCheckUserAuth = (callback?: TCallback) => { callback?: TCallback };
 export type TResetUserPassword = (email: string) => { email: string };
 export type TGetQuiz = (quizType: string, quizOrderNumber: string, title: string) => { quizType: string, quizOrderNumber: string, title: string };
 export type TGetQuizzes = (quizzesType: string) => { quizzesType: string };

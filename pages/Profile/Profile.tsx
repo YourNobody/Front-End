@@ -37,7 +37,7 @@ export const Profile: FC<ProfileProps> = (props) => {
 		reader.onload = ev => {
 			changeUserAvatar(ev.target.result.toString());
 		};
-	}
+	};
 
 	const handleRedirect = (event) => {
 		if (!event || !event.target) return;
@@ -94,21 +94,9 @@ export const Profile: FC<ProfileProps> = (props) => {
 			</Card>
 			<div>
 				<Switch>
-					{/*<Route path={routes.PROFILE.ACCOUNT} exact>*/}
-					{/*  <AccountInfo />*/}
-					{/*</Route>*/}
-					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>*/}
-					{/*  <Change changeOption="nickname" />*/}
-					{/*</Route>*/}
-					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>*/}
-					{/*  <Change changeOption="email" />*/}
-					{/*</Route>*/}
-					{/*<Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>*/}
-					{/*  <Change changeOption="password" />*/}
-					{/*</Route>*/}
 					<Route path={routes.PROFILE.ACCOUNT} exact>
 						<Card className={cn(styles.cardPage, styles.cardRootPage)}>
-							<HTag>Hi, Pavel</HTag>
+							<HTag>Hi, <span className={styles.nickname}>{user.nickname}</span></HTag>
 							<div className={styles.buttons} onClick={handleRedirect}>
 								<Button data-route={routes.PROFILE.QUIZZES}>Quizzes</Button>
 								<Button data-route={routes.PROFILE.SUBSCRIPTION}>Subscriptions</Button>
@@ -132,42 +120,6 @@ export const Profile: FC<ProfileProps> = (props) => {
 					</Route>
 				</Switch>
 			</div>
-			{/*<ul className={styles.navList}>*/}
-			{/*  <Link to={routes.PROFILE.ACCOUNT}>*/}
-			{/*    <li>Account</li>*/}
-			{/*  </Link>*/}
-			{/*  <Link to={routes.PROFILE.QUIZZES}>*/}
-			{/*    <li>My Quizzes</li>*/}
-			{/*  </Link>*/}
-			{/*  <Link to={routes.PROFILE.SUBSCRIPTION}>*/}
-			{/*    <li>Subscription</li>*/}
-			{/*  </Link>*/}
-			{/*  <a>*/}
-			{/*    <li onClick={handleOpenModal}>Log Out</li>*/}
-			{/*  </a>*/}
-			{/*</ul>*/}
-			{/*<Switch>*/}
-			{/*  <Route path={routes.PROFILE.ACCOUNT} exact>*/}
-			{/*    <AccountInfo />*/}
-			{/*  </Route>*/}
-			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_NAME} exact>*/}
-			{/*    <Change changeOption="nickname" />*/}
-			{/*  </Route>*/}
-			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_EMAIL} exact>*/}
-			{/*    <Change changeOption="email" />*/}
-			{/*  </Route>*/}
-			{/*  <Route path={routes.PROFILE.ACCOUNT_CHANGE_PASSWORD} exact>*/}
-			{/*    <Change changeOption="password" />*/}
-			{/*  </Route>*/}
-			{/*  <Route path={routes.PROFILE.QUIZZES} exact>*/}
-			{/*    <QuizStats/>*/}
-			{/*  </Route>*/}
-			{/*  <Route path={routes.PROFILE.SUBSCRIPTION} exact>*/}
-			{/*    <Elements stripe={loadStripe(stripeToken)}>*/}
-			{/*      <Subscription/>*/}
-			{/*    </Elements>*/}
-			{/*  </Route>*/}
-			{/*</Switch>*/}
 		</div>
 	);
 };

@@ -15,7 +15,7 @@ export const SagaActions = {
 		registerUser: createSagaAction<T.TRegisterUser>(Auth.REGISTER_USER, (registerData, callback?) => ({ registerData, callback })),
 		loginUser: createSagaAction<T.TLoginUser>(Auth.LOGIN_USER , (loginData, callback) => ({ loginData, callback})),
 		logoutUser: createSagaAction<T.TLogoutUser>(Auth.LOGOUT_USER, (callback) => ({ callback })),
-		checkUserAuth: createSagaAction<T.TCheckUserAuth>(Auth.CHECK_AUTH),
+		checkUserAuth: createSagaAction<T.TCheckUserAuth>(Auth.CHECK_AUTH, (callback) => ({ callback })),
 		resetUserPassword: createSagaAction<T.TResetUserPassword>(Auth.RESET_USER_PASSWORD, (email: string) => ({ email }))
 	},
 	Quiz: {

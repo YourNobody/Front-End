@@ -140,7 +140,7 @@ export function* activateSaga({ activationLink }: ReturnType<T.TActivateUserAcco
   yield put(InnerActions.userLoadingEnd());
 }
 
-export function* checkAuthSaga() {
+export function* checkAuthSaga({ callback }) {
   yield put(InnerActions.userLoadingStart());
 
   const { data, status }: AxiosResponse<IRefreshResponse> = yield call(AuthService.refresh());
@@ -154,6 +154,8 @@ export function* checkAuthSaga() {
   } else {
     yield put(ExternalActions.setAppAlert(data.message, statuses.ERROR));
   }
+
+  if (callback) callback(data.accessToken ? true : false);
 
   yield put(InnerActions.setAuthCheck());
 
