@@ -1,7 +1,7 @@
 import {FC, useEffect, useRef, useState} from 'react';
 import {QuizWithStatsBoilerplateProps} from './QuizStats.props';
 import styles from './QuizStats.module.scss';
-import {Button, Card, HTag, Input} from '@Components';
+import {Button, Card, HTag, Input, Image} from '@Components';
 import {useActions} from '@Hooks';
 import {changeStatisticsTooltipLabel, formatDate} from '@Helpers';
 import './rechart.css';
@@ -29,6 +29,25 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
       modalQuestion: `Do you want to delete this quiz?\nTitle: ${quizData.title}\nType: ${quizData.type}`
     });
   };
+
+  const calculateRating = (stats) => {
+    let estimation = 0;
+
+    stats.forEach(({ rating }) => {
+      estimation += rating.rate / rating.scale;
+    });
+
+    return estimation / stats.length * 10;
+  };
+
+  const calculateCompareAnswers = (stats) => {
+    const result = {
+      left: stats.find(stat => stat.answer === 'left') ? stats.find(stat => stat.answer === 'left').count : 0,
+      right: stats.find(stat => stat.answer === 'right') ? stats.find(stat => stat.answer === 'right').count : 0
+    };
+
+    return <HTag>Left: {result.left} | Right: {result.right}</HTag>;
+  }
 
   useEffect(() => {
   }, [quizData, stats]);
@@ -89,6 +108,51 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
           }
         </div>
       }
+      case QuizesTypes.RA: {
+        return <div
+          className={cn(styles.ra_stats, {
+            [styles.hidden]: hidden
+          })}
+        >
+          <div className={styles.images}>
+            {
+              quizData.variants.map(variant => {
+                return <Image
+                  key={variant.id}
+                  src={variant.image.imageUrl}
+                  fit="cover"
+                  className={styles.img}
+                />
+              })
+            }
+          </div>
+          <div>
+            {<HTag>Average estimation: {calculateRating(stats)}</HTag>}
+          </div>
+        </div>
+      }
+      case QuizesTypes.AB: {
+        return <div
+          className={cn(styles.ab_stats, {
+            [styles.hidden]: hidden
+          })}
+        >
+          <div className={styles.images}>
+            {
+              quizData.variants.map(variant => {
+                return <Image
+                  key={variant.id}
+                  src={variant.image.imageUrl}
+                  className={styles.img}
+                />
+              })
+            }
+          </div>
+          <div>
+            {calculateCompareAnswers(stats)}
+          </div>
+        </div>
+      }
     }
   };
 
@@ -110,17 +174,13 @@ const QuizWithStatsBoilerplate: FC<QuizWithStatsBoilerplateProps> = ({ quizData,
 
 export const QuizStats: FC<any> = () => {
   const { getSelfQuizzes } = useActions();
-  const { selfQuizzes, loading, selfQuizzesWithStats} = useTypedSelector(state => state.quiz);
+  const { selfQuizzes, loading, selfQuizzesWithStats, isSelfQuizzesIsLoaded} = useTypedSelector(state => state.quiz);
   const [filteredQuizzes, setFilteredQuizzes] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!selfQuizzes.length && !loading) getSelfQuizzes();
-
-    if (selfQuizzes.length && filteredQuizzes.length !== selfQuizzes.length) {
-      console.log('check: ', filteredQuizzes.length !== selfQuizzes.length)
-      setFilteredQuizzes(selfQuizzes);
-    }
-  }, [loading]);
+    if (!isSelfQuizzesIsLoaded) getSelfQuizzes();
+    else setFilteredQuizzes(selfQuizzes);
+  }, [isSelfQuizzesIsLoaded]);
 
   const getStats = (quizId: string) => {
     const quizWithStats = selfQuizzesWithStats.quizzes.find(data => data.quiz.id === quizId);

@@ -11,7 +11,8 @@ const initialState: IQuizReducer = {
     loading: false,
     quizzes: []
   },
-  selfQuizzes: []
+  selfQuizzes: [],
+  isSelfQuizzesIsLoaded: false
 };
 
 const QuizActions = ExternalActions.Quiz;
@@ -34,7 +35,10 @@ export const { reducer, actions } = createSlice({
       state.allSelectedQuizzes = state.allSelectedQuizzes.filter(quiz => quiz.id !== action.payload);
     },
     setSelfQuizzes: (state, action) => {
-      state.selfQuizzes = action.payload;
+      if (!state.isSelfQuizzesIsLoaded) {
+        state.isSelfQuizzesIsLoaded = true;
+        state.selfQuizzes = action.payload;
+      } else return;
     },
     setSelfQuizzesWithStats: (state, action) => {
       state.selfQuizzesWithStats.quizzes.push(action.payload);

@@ -13,6 +13,7 @@ export interface IQuizReducer {
     quizzes?: any[];
   };
   allSelectedQuizzes?: IQuizWithQuizCreator[];
+  isSelfQuizzesIsLoaded?: boolean;
 }
 
 export interface IQuizState {
