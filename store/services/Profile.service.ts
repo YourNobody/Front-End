@@ -5,6 +5,7 @@ import {TUserChangeData, TUserChangeOption} from "@Interfaces/user.interface";
 
 export class ProfileService extends AxiosService {
 	private route = '/profile';
+	private subRoute = '/subscriptions';
 
 	constructor() {
 		super();
@@ -56,10 +57,22 @@ export class ProfileService extends AxiosService {
 		}
 	}
 
-	getAllRemoteSubscriptions(subscriptionId: string) {
+	paySubscription(config: { email: string, payment_method: string, priceId: string }) {
 		return async () => {
 			try {
-				const response = await AxiosService.api.get<any>(this.route + '/subscriptions');
+				const response = await AxiosService.api.post<any>(this.route + '/subscriptions', config);
+				return response;
+			} catch ({response}) {
+				return response;
+			}
+		};
+	}
+
+	getUserSubscriptions() {
+		return async () => {
+			try {
+				const response = await AxiosService.api.get<any>(this.subRoute);
+				return response;
 			} catch ({response}) {
 				return response;
 			}

@@ -22,7 +22,7 @@ export interface IAppState {
   };
   loading: boolean;
   modalConfig: IAppOpenModalConfig;
-  subscriptions: any[];
+  subProducts: any[];
   stripeToken: string;
 }
 

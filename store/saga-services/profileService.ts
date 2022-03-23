@@ -39,18 +39,18 @@ export function* changeAvatar({ avatarBase64 }: ReturnType<T.TChangeUserAvatar>)
   yield put(InnerActions.userLoadingEnd());
 }
 
-export function* getAvailableSubscriptionsSaga() {
+export function* getSelfSubscriptions() {
   yield put(InnerActions.userLoadingStart());
-  const { data, status }: AxiosResponse<any> = yield call(ProfileService.getAllRemoteSubscriptions(subId));
 
-  // if (status < 400) {
-  //   yield put(setAllSubscriptionsProducts(data.subscriptions));
-  //   yield put(setUserSubscriptions(data.userSubscriptions));
-  //   yield put(setAppAlert(data.message, statuses.SUCCESS));
-  // } else {
-  //   yield put(userDataFetchingEnd());
-  //   yield put(setAppAlert(data.message, statuses.ERROR));
-  // }
+  const { data, status }: AxiosResponse<any>= yield call(ProfileService.getUserSubscriptions());
+
+  if (status < 400) {
+    yield put(InnerActions.setSubscriptions(data.subscriptions))
+  } else {
+    yield put(ExternalActions.setAppAlert(data.message, statuses.ERROR));
+  }
+
+  yield put(InnerActions.userLoadingEnd());
 }
 
 export function* getClientSecretAndSubscribeSaga({ payload: { priceId, stripe, method, email } }) {

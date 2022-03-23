@@ -3,13 +3,14 @@ import {SagaActionsTypes} from "./sagaActionsTypes";
 import * as T from "@Interfaces/sagaActions.interface";
 import {TUserChangeOption} from "@Interfaces/user.interface";
 
-const { User, Quiz, Auth } = SagaActionsTypes;
+const { User, Quiz, Auth, App } = SagaActionsTypes;
 
 export const SagaActions = {
 	User: {
 		changeUserAvatar: createSagaAction<T.TChangeUserAvatar>(User.CHANGE_AVATAR, (avatarBase64: string) => ({ avatarBase64 })),
 		changeUserInfo: createSagaAction<T.TChangeUserInfo>(User.CHANGE_INFO, (changeOption: TUserChangeOption, formData) => ({ formData, changeOption })),
-		activateUserAccount: createSagaAction<T.TActivateUserAccount>(User.ACTIVATE_ACCOUNT, (activationLink: string) => ({ activationLink }))
+		activateUserAccount: createSagaAction<T.TActivateUserAccount>(User.ACTIVATE_ACCOUNT, (activationLink: string) => ({ activationLink })),
+		getSelfSubscriptions: createSagaAction<T.TGetSelfSybscriptions>(User.GET_SELF_SUBSCRIPTIONS)
 	},
 	Auth: {
 		registerUser: createSagaAction<T.TRegisterUser>(Auth.REGISTER_USER, (registerData, callback?) => ({ registerData, callback })),
@@ -30,11 +31,15 @@ export const SagaActions = {
 		deleteQuiz: createSagaAction<T.TDeleteQuiz>(Quiz.DELETE_QUIZ, (quizId) => ({ quizId })),
 		saveUserAnswer: createSagaAction<T.TSaveUserAnswer>(Quiz.SAVE_QUIZ_ANSWER, (quizId, answerData, callback) => ({ quizId, answerData, callback })),
 		createQuiz: createSagaAction<T.TCreateQuiz>(Quiz.CREATE_QUIZ, (quizData, callback?) => ({ quizData, callback }))
+	},
+	App: {
+		getAllAvailableSubscriptionsProducts: createSagaAction<T.TGetAllAvailableSubscriptions>(App.GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS)
 	}
 };
 
 export const allSagaActions = {
 	...SagaActions.User,
 	...SagaActions.Auth,
-	...SagaActions.Quiz
+	...SagaActions.Quiz,
+	...SagaActions.App
 };

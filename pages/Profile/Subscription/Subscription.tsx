@@ -17,21 +17,20 @@ const CARD_ELEMENT_OPTIONS = {
 export const Subscription: FC<SubscriptionProps> = ({className, ...props}) => {
   const { handleSubmit } = useForm();
   const [ chosenSub, setChosenSub ] = useState<any>(null);
-  // const { getClientSecretAndSubscribe, getAllSubscriptionsProducts, cancelSubscription } = useActions();
-  const { loading, user: { email, subscriptions: mySubs } } = useTypedSelector(state => state.user);
-  const { subscriptions, loading: loadingApp } = useTypedSelector(state => state.app);
+  const { getAllAvailableSubscriptionsProducts, getSelfSubscriptions } = useActions();
+  const { loading, subscriptions: mySubs } = useTypedSelector(state => state.user);
+  const { subProducts, loading: loadingApp } = useTypedSelector(state => state.app);
   const stripe = useStripe();
   const elements = useElements();
-
-  // console.log('chosen: ', chosenSub)
   //
-  // useEffect(() => {
-  //   getAllSubscriptionsProducts();
-  // }, []);
+  useEffect(() => {
+    getAllAvailableSubscriptionsProducts();
+    getSelfSubscriptions();
+  }, []);
   //
   // const handleChoice = (sub: any) => {
   //   setChosenSub(sub);
-  // };
+  // };бегов
   //
   // const handleSubscriptionCancel = (id: string) => {
   //   cancelSubscription(id);
@@ -45,15 +44,15 @@ export const Subscription: FC<SubscriptionProps> = ({className, ...props}) => {
   //     billing_details: { email },
   //   });
   // };
-  if (loadingApp) return <Card {...props} className={cn(className, styles.loadingCard)}>
-    <HTag size="m"  className={styles.loadingTitle}>Load subscriptions info...</HTag>
+  if (loadingApp || loading) return <Card {...props} className={cn(className, styles.loadingCard)}>
+    <HTag size="m" className={styles.loadingTitle}>Load subscriptions info...</HTag>
   </Card>;
   return <Card {...props} className={cn(className, styles.subscription)}>
     <HTag size="l" className={styles.subTitle}>Subscription to new opportunities</HTag>
     {
-      subscriptions.length && <div className={styles.allSubs}>
+      subProducts.length && <div className={styles.allSubs}>
         {
-          subscriptions.map(sub => <Card
+          subProducts.map(sub => <Card
             className={cn(styles.sub, {
               [styles.has]: mySubs.find(my => my.plan.product === sub.id && my.active),
               [styles.expired]: mySubs.find(my => my.plan.product === sub.id && !my.active)

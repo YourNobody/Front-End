@@ -2,15 +2,17 @@ import {all, takeEvery} from '@redux-saga/core/effects';
 import * as AuthSagas from './saga-services/authService';
 import * as QuizSagas from './saga-services/quizService';
 import * as ProfileSagas from './saga-services/profileService';
+import * as AppSagas from './saga-services/appService';
 import {SagaActionsTypes} from "@ActionCreators/sagaActionsTypes";
-const { User, Auth, Quiz } = SagaActionsTypes as any;
+
+const { User, Auth, Quiz, App } = SagaActionsTypes as any;
 
 function* profileWatcher() {
   yield takeEvery(User.CHANGE_INFO, ProfileSagas.changeSaga);
   yield takeEvery(User.CHANGE_AVATAR, ProfileSagas.changeAvatar);
   yield takeEvery(User.GET_CLIENT_SECRET, ProfileSagas.getClientSecretAndSubscribeSaga);
-  yield takeEvery(User.GET_ALL_SUBSCRIPTIONS_PRODUCTS, ProfileSagas.getAvailableSubscriptionsSaga);
   yield takeEvery(User.CANCEL_SUBSCRIPTION, ProfileSagas.cancelSubscriptionSaga);
+  yield takeEvery(User.GET_SELF_SUBSCRIPTIONS, ProfileSagas.getSelfSubscriptions)
 }
 
 function* authWatcher() {
@@ -32,10 +34,15 @@ function* quizzesWatcher() {
   yield takeEvery(Quiz.CREATE_QUIZ, QuizSagas.createQuizSaga);
 }
 
+function* appWatcher() {
+  yield takeEvery(App.GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS, AppSagas.getAllAvailableSubscriptionsProducts);
+}
+
 export function* rootWatcher() {
   yield all([
     authWatcher(),
     quizzesWatcher(),
-    profileWatcher()
+    profileWatcher(),
+    appWatcher()
   ]);
 }

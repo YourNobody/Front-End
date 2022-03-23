@@ -24,5 +24,5 @@ export const ExternalActions = {
 
 export const allExternalActions = {
 	...ExternalActions.App,
-	...ExternalActions.Quiz
+	...ExternalActions.Quiz,
 };

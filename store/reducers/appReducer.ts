@@ -16,7 +16,7 @@ const initialState: IAppState = {
 	},
 	loading: false,
 	modalConfig: null,
-	subscriptions: [],
+	subProducts: [],
 	stripeToken: 'pk_test_51JpUsRHGtSgh6m0CCqMQpncG0FWtJrMw2t2L7RhH0TxmJmdp9JK1HyG1VyI3ONMDzlE0OlZVOwR7JD3ZQazKBuXJ00iREhwXp9'
 };
 
@@ -32,8 +32,8 @@ export const {reducer, actions, caseReducers} = createSlice({
 			},
 			prepare: (id: string) => ({payload: id, ...generateMetaAndError()})
 		},
-		setAllSubscriptionsProducts: (state, action) => {
-			state.subscriptions = action.payload;
+		setAllAvailableSubscriptionProducts: (state, action) => {
+			state.subProducts = action.payload;
 		},
 		appLoadingStart: state => {
 			state.loading = true;

@@ -4,10 +4,10 @@ export const SagaActionsTypes = {
 	User: generateTypes('userSaga/',
 		'CHANGE_INFO',
 		'GET_CLIENT_SECRET',
-		'GET_ALL_SUBSCRIPTIONS_PRODUCTS',
 		'CANCEL_SUBSCRIPTION',
 		'ACTIVATE_ACCOUNT',
-		'CHANGE_AVATAR'
+		'CHANGE_AVATAR',
+		'GET_SELF_SUBSCRIPTIONS'
 	),
 	Quiz: generateTypes('quizSaga/',
 		'GET_SELF_QUIZZES',
@@ -24,5 +24,8 @@ export const SagaActionsTypes = {
 		'RESET_USER_PASSWORD',
 		'LOGOUT_USER',
 		'CHECK_AUTH',
+	),
+	App: generateTypes('appSaga/',
+		'GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS'
 	)
 };
