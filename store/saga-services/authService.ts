@@ -32,7 +32,7 @@ export function* loginSaga({ loginData, callback }: ReturnType<T.TLoginUser>) {
 
     yield put(ExternalActions.setAppAlert(data.message, statuses.SUCCESS));
 
-    if (callback) yield call(callback);
+    // if (callback) yield call(callback);
   } else {
     stream$.next({ readyToDelete: true});
 
@@ -45,7 +45,6 @@ export function* loginSaga({ loginData, callback }: ReturnType<T.TLoginUser>) {
 
 export function* registerSaga({ registerData, callback }: ReturnType<T.TRegisterUser>) {
   const stream$ = new Subject<{ readyToDelete: boolean }>();
-
   yield put(InnerActions.userLoadingStart());
   yield put(ExternalActions.setAppAlert(loadingMessage, statuses.WARNING, { isAutoDeleted: false, toDeleteStream: stream$, toDeleteAllBefore: true }));
 
@@ -145,7 +144,7 @@ export function* checkAuthSaga({ callback }) {
 
   const { data, status }: AxiosResponse<IRefreshResponse> = yield call(AuthService.refresh());
 
-  if (status < 400) {
+  if (status <= 400) {
     yield put(InnerActions.setUser(data.user));
 
     localStorage.setItem(LOCALSTORAGE_ACCESS_TOKEN_NAME, data.accessToken);

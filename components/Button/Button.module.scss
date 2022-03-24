@@ -28,6 +28,21 @@
 	background-color: var(--white);
 }
 
+.silver {
+	&:hover {
+		background-color: var(--white);
+	}
+}
+
+.gold {
+	background-color: var(--yellow);
+
+	&:hover {
+		color: var(--black);
+		background-color: var(--yellow);
+	}
+}
+
 .primary:not(:disabled):hover {
 	color: var(--white);
 	background-color: var(--blue-hover);

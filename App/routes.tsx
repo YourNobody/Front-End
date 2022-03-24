@@ -39,7 +39,7 @@ const buildAllRoutes = (): JSX.Element => (
       <Quiz title="Quiz" />
     </Route>
     <Route path={routes.QUIZZES.ROOT}>
-      <Quizes title="Quizes" />
+      <Quizes title="Quizzes" />
     </Route>
     <Route path={routes.PROFILE.ROOT}>
       <Profile title="Profile" />
@@ -56,13 +56,13 @@ const buildAllRoutes = (): JSX.Element => (
 export const Routes: FC<any> = () => {
   const { checkUserAuth } = useActions();
   const history = useHistory();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { accessToken, isAuthChecked } = useTypedSelector(state => state.user);
 
   useEffect(() => {
-    checkUserAuth(setIsAuthenticated);
-  }, []);
+    if (!isAuthChecked) checkUserAuth();
+  }, [accessToken]);
   
-  if (isAuthenticated) {
+  if (accessToken) {
     history.location.pathname.indexOf(routes.AUTH.ROOT) !== -1 && history.push(routes.HOME);
     return buildAllRoutes();
   }

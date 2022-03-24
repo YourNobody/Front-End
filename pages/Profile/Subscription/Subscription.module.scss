@@ -1,3 +1,16 @@
+.subscriptionWrapper {
+	button {
+		margin: 0;
+		transition: 0.2s all ease-in-out;
+
+		&.silver, &.gold {
+			&:hover {
+				box-shadow: 0 0 0 1px var(--black);
+			}
+		}
+	}
+}
+
 .cardElement {
 	position: static;
 
@@ -47,36 +60,22 @@
 
 	transition: 0.2s all;
 
-	background: var(--white-transparent);
+	background: var(--gray-light);
 	grid-template-columns: 1fr;
 	justify-items: center;
 	gap: 15px;
-}
 
-.sub h2.gold,
-.formTitle.gold {
-	color: var(--yellow);
-}
+	.formTitle {
+		margin: 12px 0;
 
-.sub button {
-	margin: 0;
-}
+		&.silver {
+			color: rgb(192, 192, 192);
+		}
 
-.sub button.gold {
-	background-color: var(--yellow);
-}
-
-.sub button.gold:hover {
-	background-color: var(--yellow);
-	box-shadow: 0 0 7px var(--yellow-transparent);
-}
-
-.formTitle {
-	margin: 12px 0;
-}
-
-.formTitle.silver {
-	color: rgb(192, 192, 192);
+		&.gold {
+			color: var(--yellow);
+		}
+	}
 }
 
 .subTitle {
@@ -143,4 +142,12 @@
 	opacity: 1;
 	border: 1px solid var(--blue);
 	border-top: 0;
+}
+
+.paySub {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 15px;
+	margin: 20px 0;
+	padding: 0 32px;
 }

@@ -7,17 +7,18 @@ const { User, Quiz, Auth, App } = SagaActionsTypes;
 
 export const SagaActions = {
 	User: {
-		changeUserAvatar: createSagaAction<T.TChangeUserAvatar>(User.CHANGE_AVATAR, (avatarBase64: string) => ({ avatarBase64 })),
+		changeUserAvatar: createSagaAction<T.TChangeUserAvatar>(User.CHANGE_AVATAR, (avatarBase64) => ({ avatarBase64 })),
 		changeUserInfo: createSagaAction<T.TChangeUserInfo>(User.CHANGE_INFO, (changeOption: TUserChangeOption, formData) => ({ formData, changeOption })),
-		activateUserAccount: createSagaAction<T.TActivateUserAccount>(User.ACTIVATE_ACCOUNT, (activationLink: string) => ({ activationLink })),
-		getSelfSubscriptions: createSagaAction<T.TGetSelfSybscriptions>(User.GET_SELF_SUBSCRIPTIONS)
+		activateUserAccount: createSagaAction<T.TActivateUserAccount>(User.ACTIVATE_ACCOUNT, (activationLink) => ({ activationLink })),
+		getSelfSubscriptions: createSagaAction<T.TGetSelfSybscriptions>(User.GET_SELF_SUBSCRIPTIONS),
+		cancelSubscription: createSagaAction<T.TCancelSubscription>(User.CANCEL_SUBSCRIPTION, (subId, callback) => ({ subId, callback })),
 	},
 	Auth: {
 		registerUser: createSagaAction<T.TRegisterUser>(Auth.REGISTER_USER, (registerData, callback?) => ({ registerData, callback })),
 		loginUser: createSagaAction<T.TLoginUser>(Auth.LOGIN_USER , (loginData, callback) => ({ loginData, callback})),
 		logoutUser: createSagaAction<T.TLogoutUser>(Auth.LOGOUT_USER, (callback) => ({ callback })),
 		checkUserAuth: createSagaAction<T.TCheckUserAuth>(Auth.CHECK_AUTH, (callback) => ({ callback })),
-		resetUserPassword: createSagaAction<T.TResetUserPassword>(Auth.RESET_USER_PASSWORD, (email: string) => ({ email }))
+		resetUserPassword: createSagaAction<T.TResetUserPassword>(Auth.RESET_USER_PASSWORD, (email) => ({ email }))
 	},
 	Quiz: {
 		getQuiz: createSagaAction<T.TGetQuiz>(Quiz.GET_QUIZ, (quizType, quizOrderNumber, title) => ({
