@@ -6,6 +6,10 @@ import { statuses } from '../../constants/app'
 import {AxiosResponse} from "axios";
 import ProfileService from "../services/Profile.service";
 import {IProfileChangeAvatarResponse, IProfileChangeResponse} from "../store-interfaces/profileService.interface";
+import {PaymentMethodResult} from '@stripe/stripe-js';
+import {IClientTokenDataFromStripe} from '@Interfaces/http.interface';
+import AppService from '../services/Subscription.service';
+import {sagaAsyncWrap} from '@Helpers';
 
 const subId = 'prod_KWYsSUh0MdfBz6';
 
@@ -51,35 +55,6 @@ export function* getSelfSubscriptions() {
   }
 
   yield put(InnerActions.userLoadingEnd());
-}
-
-export function* getClientSecretAndSubscribeSaga({ payload: { priceId, stripe, method, email } }) {
-  // try {
-  //   const result: PaymentMethodResult = yield call(() => stripe.createPaymentMethod(method));
-  //   if (result.error && result.error.message) throw new Error(result.error.message);
-  //   else {
-  //     const res: {
-  //       client_secret: string;
-  //       status: string;
-  //       id: string;
-  //     } = yield call(() => request('/profile/payment/sub', 'POST', { payment_method: result.paymentMethod.id, email, priceId }));
-  //     const {client_secret, status, id} = res;
-  //     let payment = null;
-  //     if (status === 'requires_action') {
-  //       payment = yield call(() => stripe.confirmCardPayment(client_secret));
-  //       if (payment.error) throw new Error('Subscription payment failed. Try later');
-  //     }
-  //     if (status === 'succeeded' || !payment.error) {
-  //       const data: { confirmed: boolean; subscriptions?: any } & WithMessage =  yield call(() => request('/profile/payment/sub/confirm', 'POST', { id }));
-  //       if (data.confirmed) {
-  //         yield put(setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
-  //         yield put(setUserSubscriptions(data.subscriptions));
-  //       } else yield put(setAppAlert(data.message, statuses.SUCCESS));
-  //     }
-  //   }
-  // } catch (e: any) {
-  //   yield put(setAppAlert(e.message, statuses.ERROR));
-  // }
 }
 
 export function* cancelSubscriptionSaga({ payload }) {

@@ -1,4 +1,17 @@
+$chosenShadow: 3px 3px 7px var(--gray);
+
 .subscriptionWrapper {
+	display: grid;
+	grid-template-areas:
+		"title title"
+		"cards form"
+	;
+	grid-template-columns: auto 1fr;
+	align-content: flex-start;
+	//align-items: flex-start;
+	//justify-content: flex-start;
+	//justify-items: flex-start;
+
 	button {
 		margin: 0;
 		transition: 0.2s all ease-in-out;
@@ -8,6 +21,19 @@
 				box-shadow: 0 0 0 1px var(--black);
 			}
 		}
+	}
+
+	@media (max-width: 1300px) {
+
+	}
+
+	@media (max-width: 1000px) {
+		grid-template-areas:
+			"title title"
+			"cards cards"
+			"form form"
+		;
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -44,9 +70,24 @@
 }
 
 .allSubs {
+	grid-area: cards;
+
 	display: flex;
+	flex-flow: column nowrap;
 	align-items: center;
 	justify-content: space-evenly;
+
+	.sub:not(:last-of-type) {
+		margin-bottom: 15px;
+	}
+
+	@media (max-width: 1000px) {
+		flex-flow: row wrap;
+
+		.sub {
+			margin-bottom: 0 !important;
+		}
+	}
 }
 
 .sub {
@@ -56,7 +97,9 @@
 	align-items: center;
 
 	width: 100%;
-	max-width: 300px;
+	max-width: 500px;
+	height: auto;
+	border: 2px solid transparent;
 
 	transition: 0.2s all;
 
@@ -76,9 +119,17 @@
 			color: var(--yellow);
 		}
 	}
+
+	@media (max-width: 1300px) {
+	}
+
+	@media (max-width: 1000px) {
+	}
 }
 
 .subTitle {
+	grid-area: title;
+
 	margin-bottom: 20px;
 
 	text-align: center;
@@ -132,10 +183,6 @@
 	font-weight: 300;
 }
 
-.sub:hover {
-	border-bottom: none;
-}
-
 .sub:hover .subscribed {
 	height: 104px;
 
@@ -145,9 +192,23 @@
 }
 
 .paySub {
+	grid-area: form;
+
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 15px;
 	margin: 20px 0;
 	padding: 0 32px;
+}
+
+.chosen {
+	box-shadow: $chosenShadow;
+}
+
+.chosenGold {
+	border: 2px solid var(--yellow);
+}
+
+.chosenSilver {
+	border: 2px solid var(--gray);
 }

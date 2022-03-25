@@ -15,7 +15,7 @@ const CARD_ELEMENT_OPTIONS = {
 
 export const Subscription: FC<SubscriptionProps> = ({className, ...props}) => {
   const { handleSubmit, register } = useForm();
-  const { getAllAvailableSubscriptionsProducts, getSelfSubscriptions, cancelSubscription } = useActions();
+  const { getAllAvailableSubscriptionsProducts, getSelfSubscriptions, cancelSubscription, getClientSecretAndSubscribeStripe } = useActions();
   const { loading, subscriptions: mySubs, user } = useTypedSelector(state => state.user);
   const { subProducts, loading: loadingApp } = useTypedSelector(state => state.app);
   const [ chosenSub, setChosenSub ] = useState<any>(subProducts[0]);
@@ -37,12 +37,16 @@ export const Subscription: FC<SubscriptionProps> = ({className, ...props}) => {
 
   const handleSubmitSubscription = async (formData) => {
     console.log('fd: ', formData);
-    // if (!stripe || !elements) return;
-    // getClientSecretAndSubscribe(chosenSub.price.id, stripe, email ,{
-    //   type: 'card',
-    //   card: elements.getElement(CardElement),
-    //   billing_details: { email },
-    // });
+    if (!stripe || !elements || !user.email || !chosenSub) return;
+    getClientSecretAndSubscribeStripe({
+      stripe,
+      priceId: chosenSub.price.id,
+      method: {
+        type: 'card',
+        card: elements.getElement(CardElement),
+        billing_details: { email: user.email },
+      }
+    });
   };
 
   if (loadingApp || loading) return <Card {...props} className={cn(className, styles.loadingCard)}>
@@ -56,7 +60,10 @@ export const Subscription: FC<SubscriptionProps> = ({className, ...props}) => {
           subProducts.map(sub => <Card
             className={cn(styles.sub, {
               [styles.has]: mySubs.find(my => my.plan.product === sub.id && my.active),
-              [styles.expired]: mySubs.find(my => my.plan.product === sub.id && !my.active)
+              [styles.expired]: mySubs.find(my => my.plan.product === sub.id && !my.active),
+              [styles.chosen]: chosenSub && sub.id === chosenSub.id,
+              [styles.chosenGold]: chosenSub && sub.id === chosenSub.id && sub.unit_label === 'gold',
+              [styles.chosenSilver]: chosenSub && sub.id === chosenSub.id && sub.unit_label === 'silver'
             })}
             key={sub.id}
           >

@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import {ArgumentNames} from "tapable";
+import {AxiosService} from '../store/services/Axios.service';
 
 export const generateMetaAndError = (meta: any = null, error: string = null) => {
   const metaPayload = { meta, error };
@@ -23,4 +24,10 @@ export const createSagaAction = <T extends Function>(type: string, cb?: T): T =>
     const dataToTransfer = cb(...rest);
     return { type, ...dataToTransfer };
   } as any;
+};
+
+export const sagaAsyncWrap = (func: any, ...restArguments: any[]) => {
+  return async function() {
+    return func(...restArguments);
+  };
 };

@@ -1,4 +1,5 @@
 import {ILoginData, IRegisterData, TUserChangeData, TUserChangeOption} from "@Interfaces/user.interface";
+import {IAppStripeSubscriptionProcessConfig} from '@Interfaces/actions.interface';
 
 type TCallback = (...params: any[]) => void;
 
@@ -17,7 +18,8 @@ export type TDeleteQuiz = (quizId: string) => { quizId: string };
 export type TSaveUserAnswer = (quizId: string, answerData: any, callback?: TCallback) => { quizId: string, answerData: any, callback?: TCallback };
 export type TCreateQuiz = (quizData: any, callback?: TCallback) => { quizData: any, callback?: TCallback };
 export type TCancelSubscription = (subId: string, callback?: TCallback) => { subId: string, callback?: TCallback };
+export type TStripeSubscriptionProcess = (stripeProcessPaymentConfig: IAppStripeSubscriptionProcessConfig) => { stripeProcessPaymentConfig: IAppStripeSubscriptionProcessConfig };
 
 export type TGetSelfQuizzes = () => void;
 export type TGetAllAvailableSubscriptions = () => void;
-export type TGetSelfSybscriptions = () => void;
+export type TGetSelfSubscriptions = () => void;

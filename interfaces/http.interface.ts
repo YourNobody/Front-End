@@ -24,3 +24,9 @@ export interface IAxiosRegisterPayload {
 	password: string;
 	confirm: string;
 }
+
+export interface IClientTokenDataFromStripe {
+	client_secret: string;
+	status: string;
+	id: string;
+}

@@ -3,7 +3,6 @@ import {generateTypes} from "@Helpers";
 export const SagaActionsTypes = {
 	User: generateTypes('userSaga/',
 		'CHANGE_INFO',
-		'GET_CLIENT_SECRET',
 		'ACTIVATE_ACCOUNT',
 		'CHANGE_AVATAR',
 		'GET_SELF_SUBSCRIPTIONS',
@@ -26,6 +25,7 @@ export const SagaActionsTypes = {
 		'CHECK_AUTH',
 	),
 	App: generateTypes('appSaga/',
-		'GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS'
+		'GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS',
+		'GET_CLIENT_SECRET_AND_SUBSCRIBE_USER'
 	)
 };

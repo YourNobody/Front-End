@@ -2,6 +2,7 @@ import {createSagaAction} from "@Helpers";
 import {SagaActionsTypes} from "./sagaActionsTypes";
 import * as T from "@Interfaces/sagaActions.interface";
 import {TUserChangeOption} from "@Interfaces/user.interface";
+import {TGetSelfSubscriptions, TStripeSubscriptionProcess} from '@Interfaces/sagaActions.interface';
 
 const { User, Quiz, Auth, App } = SagaActionsTypes;
 
@@ -10,7 +11,7 @@ export const SagaActions = {
 		changeUserAvatar: createSagaAction<T.TChangeUserAvatar>(User.CHANGE_AVATAR, (avatarBase64) => ({ avatarBase64 })),
 		changeUserInfo: createSagaAction<T.TChangeUserInfo>(User.CHANGE_INFO, (changeOption: TUserChangeOption, formData) => ({ formData, changeOption })),
 		activateUserAccount: createSagaAction<T.TActivateUserAccount>(User.ACTIVATE_ACCOUNT, (activationLink) => ({ activationLink })),
-		getSelfSubscriptions: createSagaAction<T.TGetSelfSybscriptions>(User.GET_SELF_SUBSCRIPTIONS),
+		getSelfSubscriptions: createSagaAction<T.TGetSelfSubscriptions>(User.GET_SELF_SUBSCRIPTIONS),
 		cancelSubscription: createSagaAction<T.TCancelSubscription>(User.CANCEL_SUBSCRIPTION, (subId, callback) => ({ subId, callback })),
 	},
 	Auth: {
@@ -34,7 +35,11 @@ export const SagaActions = {
 		createQuiz: createSagaAction<T.TCreateQuiz>(Quiz.CREATE_QUIZ, (quizData, callback?) => ({ quizData, callback }))
 	},
 	App: {
-		getAllAvailableSubscriptionsProducts: createSagaAction<T.TGetAllAvailableSubscriptions>(App.GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS)
+		getAllAvailableSubscriptionsProducts: createSagaAction<T.TGetAllAvailableSubscriptions>(App.GET_ALL_AVAILABLE_SUBSCRIPTIONS_PRODUCTS),
+		getClientSecretAndSubscribeStripe: createSagaAction<T.TStripeSubscriptionProcess>(
+			App.GET_CLIENT_SECRET_AND_SUBSCRIBE_USER,
+	stripeProcessPaymentConfig => ({ stripeProcessPaymentConfig })
+		)
 	}
 };
 
