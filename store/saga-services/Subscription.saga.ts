@@ -6,7 +6,12 @@ import SubscriptionService from '../services/Subscription.service';
 import { statuses } from '@Constants';
 import * as T from '@Interfaces/sagaActions.interface';
 import {PaymentMethodResult} from '@stripe/stripe-js';
-import {IClientTokenDataFromStripe} from '@Interfaces/http.interface';
+import {
+  ISubscription,
+  ISubscriptionConfirmationData,
+  ISubscriptionResponse,
+  ISubscriptionSuccess,
+} from '@Interfaces/http.interface';
 import {WithMessage} from '@Interfaces/quizes.interface';
 
 export function* getAllAvailableSubscriptionsProducts() {
@@ -29,27 +34,27 @@ export function* getClientSecretAndSubscribeStripeSaga({ stripeProcessPaymentCon
 
   if (result.error && result.error.message) throw new Error(result.error.message);
 
-  const { data: preconfirmedData, status: responseStatus }: AxiosResponse<IClientTokenDataFromStripe & WithMessage> = yield call(SubscriptionService.beforeConfirmPayment({
+  const { data: { subscriptionData, message }, status: responseStatus }: AxiosResponse<ISubscriptionResponse & WithMessage> = yield call(SubscriptionService.beforeConfirmPayment({
     priceId, payment_method: result.paymentMethod.id
   }));
 
-  if (responseStatus >= 400) throw new Error(preconfirmedData.message || 'Error');
+  if (responseStatus >= 400) throw new Error(message || 'Error');
 
-  // let payment = null;
-  //
-  // if (preconfirmedData.status === 'requires_action') {
-  //   payment = yield call(() => stripe.confirmCardPayment(preconfirmedData.client_secret));
-  //   if (payment.error) throw new Error('Subscription payment failed. Try later');
-  // }
-  //
-  // if (preconfirmedData.status !== 'succeeded' || payment.error) throw new Error(payment.error.message)
-  //
-  // const { data: confirmationData, status }: AxiosResponse<any> = yield call(SubscriptionService.confirmPayment(preconfirmedData.id));
-  //
-  // if (status >= 400) throw new Error(confirmationData.message || 'Error confirm payment');
-  //
-  // if (confirmationData.confirmed) {
-  //   yield put(ExternalActions.setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
-  //   // yield put(InnerActions.(data.subscriptions));
-  // } else yield put(ExternalActions.setAppAlert(confirmationData.message, statuses.SUCCESS));
+  console.log('sd: ', subscriptionData);
+
+  if (subscriptionData.status === 'requires_action') {
+    const payment = yield call(() => stripe.confirmCardPayment(subscriptionData.clientSecret));
+    if (payment.error) throw new Error('Subscription payment failed. Try later');
+  }
+
+  if (subscriptionData.status !== 'succeeded') throw new Error(message);
+
+  const { data: confirmationData, status }: AxiosResponse<ISubscriptionConfirmationData & WithMessage> = yield call(SubscriptionService.confirmPayment(subscriptionData));
+
+  if (status >= 400) throw new Error(confirmationData.message || 'Error confirm payment');
+
+  if (confirmationData.confirmed) {
+    yield put(ExternalActions.setAppAlert('Subscription has been paid successfully', statuses.SUCCESS));
+    // yield put(InnerActions.(data.subscriptions));
+  } else yield put(ExternalActions.setAppAlert(confirmationData.message, statuses.SUCCESS));
 }

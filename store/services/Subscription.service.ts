@@ -1,5 +1,6 @@
 import { AxiosService } from './Axios.service';
 import {IAppBeforeConfirmConfig, IAppStripePaymentMethod} from '@Interfaces/actions.interface';
+import {ISubscriptionSuccess} from '@Interfaces/http.interface';
 
 export class SubscriptionService extends AxiosService {
   private subRoute = '/subscriptions';
@@ -22,7 +23,7 @@ export class SubscriptionService extends AxiosService {
   beforeConfirmPayment = (method: IAppBeforeConfirmConfig) => {
     return async () => {
       try {
-        const response = await AxiosService.api.post<any>(this.subRoute + '/', { ...method });
+        const response = await AxiosService.api.post<any>(this.subRoute + '/subscribe', { ...method });
         return response;
       } catch ({response}) {
         return response;
@@ -30,10 +31,10 @@ export class SubscriptionService extends AxiosService {
     };
 	}
 
-  confirmPayment(id: string) {
+  confirmPayment(subscriptionData: ISubscriptionSuccess) {
     return async () => {
       try {
-        const response = await AxiosService.api.post<any>(this.subRoute + '/confirm', { id });
+        const response = await AxiosService.api.post<any>(this.subRoute + '/confirm', { subscriptionData });
         return response;
       } catch ({response}) {
         return response;

@@ -25,8 +25,32 @@ export interface IAxiosRegisterPayload {
 	confirm: string;
 }
 
-export interface IClientTokenDataFromStripe {
-	client_secret: string;
+export interface ISubscriptionResponse {
+	subscriptionData: ISubscriptionSuccess
+}
+
+export interface ISubscriptionSuccess {
+	clientSecret: string;
+	level: string;
+	createdAt: number;
+	endedAt: number;
+	subId: string;
+	isExpired: boolean;
 	status: string;
-	id: string;
+}
+
+
+export interface ISubscription {
+	subId: string;
+	userId: string;
+	createdAt: Date;
+	endAt: Date;
+	isExpired: boolean;
+	level: string;
+	productId: string;
+}
+
+export interface ISubscriptionConfirmationData {
+	sub: ISubscription;
+	confirmed: boolean;
 }

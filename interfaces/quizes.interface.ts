@@ -3,7 +3,7 @@ export const QuizzesTypes = {
 };
 
 export interface WithMessage {
-  message?: string;
+  message: string;
 }
 
 export type QuestionParamsTypes = {
