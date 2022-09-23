@@ -1,79 +1,86 @@
 .questionWrapper {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto minmax(50px, 1fr) auto auto;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto minmax(50px, 1fr) auto auto;
 }
 
 .question {
-  font-size: 18px;
-  margin: 15px 0px 25px 0;
+	margin: 15px 0 25px 0;
+
+	font-size: 18px;
 }
 
 .answersWrraper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
 }
 
 .hr {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .image {
-  background-color: var(--mega-white-transparent);
-  transition: all 0.2s;
-  cursor: pointer;
+	cursor: pointer;
+	transition: all 0.2s;
+
+	background-color: var(--mega-white-transparent);
 }
 
 .image:hover {
-  box-shadow: 0 0 5px var(--blue);
+	box-shadow: 0 0 5px var(--blue);
 }
 
 .imageText {
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  transition: all 0.2s;
-  cursor: pointer;
+	width: 100%;
+	height: 100%;
+
+	cursor: pointer;
+	cursor: pointer;
+	transition: all 0.2s;
+
+	border-radius: 10px;
 }
 
 .imageText:hover {
-  box-shadow: 0 0 5px var(--blue);
+	box-shadow: 0 0 5px var(--blue);
 }
 
 .imageText span {
-  transition: all 0.2s;
+	transition: all 0.2s;
 }
 
 .selected {
-  box-shadow: 0 0 7px 1px var(--blue);
+	box-shadow: 0 0 7px 1px var(--blue);
 }
 
 .selected:hover {
-  box-shadow: 0 0 7px 1px var(--blue);
+	box-shadow: 0 0 7px 1px var(--blue);
 }
 
 .selected span {
-  color: var(--blue);
+	color: var(--blue);
 }
 
 .info {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  padding: 10px 0;
+	display: grid;
+	grid-template-columns: 1fr auto auto;
+
+	align-items: center;
+
+	padding: 10px 0;
 }
 
 .reset {
-  background-color: var(--red);
-  margin-right: 15px;
+	margin-right: 15px;
+
+	background-color: var(--red);
 }
 
 .reset:hover {
-  background-color: var(--red-hover);
+	background-color: var(--red-hover);
 }
 
 .allAnswers {
-  justify-self: flex-start;
+	justify-self: flex-start;
 }

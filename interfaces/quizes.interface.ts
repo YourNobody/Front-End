@@ -1,29 +1,30 @@
-export enum QuestionTypes {
-  SA = 'SA', TA = 'TA', RA ='RA', AB ='AB'
-}
+export const QuizzesTypes = {
+  sa: 'sa', ta: 'ta', ra: 'ra', ab: 'ab'
+};
 
 export interface WithMessage {
-  message?: string;
+  message: string;
 }
 
 export type QuestionParamsTypes = {
-  qType: QuestionTypes;
+  qType: string;
   title: string;
 };
 
 export interface IQuizData {
   title: string;
-  src: string;
   description: string;
-  type: QuestionTypes;
+  type: string;
+  withSubscription: boolean;
 }
 
 export interface MainQuestionsProps {
-  title?: string;
-  question?: string;
-  usersAnswers?: any[];
+  title: string;
+  question: string;
+  answers: IUserAnswer[];
+  premium: boolean;
   creator?: string;
-  _id?: string; 
+  id?: string;
 }
 
 export interface IUserAnswer {
@@ -47,13 +48,14 @@ export interface IQuiz {
   quizAnswers: IQuizAnswer[];
   usersAnswers: IUserAnswer[];
   userId: string;
+  orderNumber: number;
   id: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface IResponseQuiz extends WithMessage {
-  quizes: IQuiz[];
+  quizzes: IQuiz[];
 }
 
 export interface IQuizStatistic {
@@ -62,7 +64,7 @@ export interface IQuizStatistic {
   users: Array<{
     nickname: string | null;
     email: string | null;
-    isAnonimous: boolean;
+    isAnonymous: boolean;
   }>  
 }
 

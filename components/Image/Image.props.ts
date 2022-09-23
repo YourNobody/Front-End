@@ -5,5 +5,6 @@ export interface ImageProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElem
   fit?: 'contain' | 'cover' | 'fill' | 'none';
   text?: string;
   isCircled?: boolean;
+  effect?: 'blur' | 'black-and-white' | 'opacity';
   fully?: boolean;
 }

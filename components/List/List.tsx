@@ -19,7 +19,7 @@ export const List: FC<ListProps> = ({ list, onClose, className,  ...props }) => 
               className={styles.li}
             >
               <span>{item}</span>
-              {onClose && <Button className={styles.close} onClick={() => onClose(index)}>&#215;</Button>}
+              {onClose && <Button className={styles.close} color="danger" onClick={() => onClose(index)}>&#215;</Button>}
             </li>
           );
         })

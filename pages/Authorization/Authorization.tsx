@@ -1,59 +1,68 @@
-import { FC, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React, {FC, FormEvent, useEffect, useMemo, useState} from 'react'
+import { Controller, Resolver, useForm, UseFormHandleSubmit } from 'react-hook-form';
 import { AuthorizationProps } from './Authorization.props';
-import { withAuthLayout } from '../..//layouts/AuthLayout/AuthLayout';
-import styles from './Authorization.module.css';
-import { HTag, Input, Button } from '../../components';
-import { routes } from '../../constants/routes';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { withAuthLayout } from '@Layouts';
+import styles from './Authorization.module.scss';
+import { HTag, Input, Button, Card, HR } from '@Components';
+import { routes } from '@Constants';
+import {Link, Route, Switch, useHistory, useLocation, useParams} from 'react-router-dom';
 import { useActions } from '../../hooks/useActions.hook';
-import { useRequest } from '../../hooks/useRequest';
 import { statuses } from '../../constants/app';
-import { getEmptyObject } from '../../helpers/custom.helper';
+import { IUserResetPassword } from '../../interfaces/user.interface';
+import { useTypedSelector } from '../../hooks/useTypedSelector.hook';
+import {
+  addClassValidationResolver,
+  User
+} from "../../helpers/addValidationResolver.helper";
+
+const UserResolver = addClassValidationResolver<User>(User);
 
 const Login: FC<AuthorizationProps> = () => {
-  const { register, handleSubmit, reset } = useForm();
-  const { setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request, loading } = useRequest();
+  const { register, handleSubmit, reset, watch, formState: { errors }, getValues} = useForm<User>({ resolver: UserResolver });
+
+  const { loading } = useTypedSelector(state => state.user);
+  const { loginUser } = useActions();
   const history = useHistory();
 
-  const onSubmit = async (formData) => {
-    try {
-      const data: any = await request('/auth/login', 'POST', formData);
-      setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess({ user: data.user, token: data.token });
+  const onSubmit = (formData) => {
+    const loginData = formData
+    loginUser(loginData, () => {
+      reset();
       history.push(routes.HOME);
-    } catch (err: any) {
-      setAppAlert(err.message, statuses.ERROR);
-      fetchUserError();
-      clearError();
-    }
-    reset(getEmptyObject(formData));
+    })
   };
-  
+
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
-      <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Log In</HTag>
         <div className={styles.inputBlock}>
-          <Input type="email" label="Email" name="email" {...register('email', {
-            required: true,
-            disabled: loading
-          })}/>
+          <Input
+            {...register('email')}
+            type='email'
+            formNoValidate={true}
+            label='Email'
+            error={errors.email}
+            disabled={loading}
+          />
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" name="password" label="Password" {...register('password', {
-            required: true,
-            minLength: 6,
-            maxLength: 18,
-            disabled: loading
-          })}/>
+          <Input
+            {...register('password')}
+            type="password"
+            label="Password"
+            error={errors.password}
+            disabled={loading}
+          />
         </div>
-        <Button className={styles.button} type="submit">Log In</Button>
+        <Button className={styles.button} type="submit" disabled={loading}>Log In</Button>
         <div className={styles.info}>
           <Link to={routes.AUTH.REGISTER}>No account?</Link>
-          <Link to={routes.AUTH.REGISTER}>Forgot password?</Link>
+          <Link to={routes.AUTH.RESET}>Forgot password?</Link>
+        </div>
+        <div className={styles.info}>
+          <Link to={routes.HOME}>Go Home page</Link>
         </div>
       </form>
     </div>
@@ -61,84 +70,203 @@ const Login: FC<AuthorizationProps> = () => {
 };
 
 const Register: FC<AuthorizationProps> = () => {
-  const { register, handleSubmit, reset } = useForm();
-  const { fetchUserBegining, setAppAlert, fetchUserError, fetchUserSuccess } = useActions();
-  const { error, clearError, request, loading } = useRequest();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<User>({ resolver: UserResolver });
+  const { registerUser, setAppAlert } = useActions();
+
+  const { loading } = useTypedSelector(state => state.user);
   const history = useHistory();
 
   const onSubmit = async (formData) => {
-    console.log(formData);
-    
-    try {
-      fetchUserBegining();
-      const data: any = await request('/auth/register', 'POST', formData);
-      history.push(routes.AUTH.LOGIN);
-      setAppAlert(data.message, statuses.SUCCESS);
-      fetchUserSuccess(data.user);
-    } catch (err) {
-      setAppAlert(error, statuses.ERROR);
-      fetchUserError();
-      clearError();
-    }
-    reset(getEmptyObject(formData));
+    console.log(formData)
+    if (formData.password !== formData.confirm) return setAppAlert('Password wasn\'t confirmed', statuses.ERROR);
+    registerUser(formData, () => history.push(routes.AUTH.LOGIN));
+    reset();
   };
 
   return (
     <div className={styles.authorization}>
       <HTag size="large" className={styles.naming}>Quiz App</HTag>
-      <form className={styles.form} action="post" onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <HTag size="large" className={styles.title}>Sign Up</HTag>
         <div className={styles.inputBlock}>
-          <Input type="text" label="Nickname" name="nickname" {...register('nickname', {
-            required: true,
-            minLength: 4,
-            maxLength: 16,
-            // pattern: '/^[a-zA-Z][a-zA-Z\s]{1,16}$/',
-            // onInvalid: (e: any) => e.target.setCustomValidity('Only latin letters and spaces are acceptable'),
-            disabled: loading
-          })}/>
+          <Input
+            {...register('nickname')}
+            error={errors.nickname}
+            type="text"
+            label='Nickname'
+            disabled={loading}
+          />
         </div>
         <div className={styles.inputBlock}>
-          <Input type="email" label="Email" name="email" {...register('email', {
-            required: true,
-            disabled: loading
-          })}/>
+          <Input
+            {...register('email')}
+            error={errors.email}
+            type="text"
+            label="Email"
+            disabled={loading}
+          />
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" label="Password" {...register('password', {
-            required: true,
-            minLength: 6,
-            maxLength: 18,
-            disabled: loading
-          })}/>
+          <Input
+            {...register('password')}
+            error={errors.password}
+            type="password"
+            label="Password"
+            disabled={loading}
+          />
         </div>
         <div className={styles.inputBlock}>
-          <Input type="password" label="Confirm Password" {...register('confirm', {
-            required: true,
-            minLength: 6,
-            maxLength: 18,
-            disabled: loading
-          })}/>
+          <Input
+            {...register('confirm')}
+            error={errors.confirm}
+            type='password'
+            label='Confirm Password'
+            disabled={loading}
+          />
         </div>
-        <Button className={styles.button} type="submit">Sign Up</Button>
+        <Button className={styles.button} type="submit" disabled={loading}>Sign Up</Button>
+        <div className={styles.info}>
+          <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+          <Link to={routes.HOME}>Go Home page</Link>
+        </div>
       </form>
     </div>
   );
 };
 
-export const Authorization: FC<AuthorizationProps> = (props): JSX.Element => {
+const Reset: FC<AuthorizationProps> = () => {
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const { register, handleSubmit, formState: { errors } } = useForm<User>()
+  const { setAppAlert, resetUserPassword } = useActions();
+  const { loading } = useTypedSelector(state => state.user);
+  const [isSent, setIsSent] = useState<boolean>(loading);
+  const [isResetting, setIsResetting] = useState<boolean>(false);
+
+  useEffect(() => {
+    // const resetToken = pathname.split('/')[pathname.split('/').length - 1]
+    // if (resetToken && resetToken !== 'reset') {
+    //   const getAccess = async () => {
+    //     try {
+    //       const data = await request<IUserResetPassword>(pathname + '/' + resetToken, 'GET');
+    //       setIsResetting(data.isAccessed);
+    //     } catch (err: any) {
+    //       setIsResetting(false);
+    //       setAppAlert(err.message, statuses.ERROR)
+    //     }
+    //   }
+    //   getAccess();
+    // }
+  }, []);
+
+  const handleEmailSending = async (formData) => {
+    resetUserPassword(formData);
+    !loading && setIsSent(true);
+  };
+
+  const handleReset = async (formData) => {
+    if (formData.password !== formData.confirm) throw new Error('Password wasn\'t confirmed');
+    // userReset(formData, resetToken);
+    history.push(routes.AUTH.LOGIN);
+  };
+
   return (
-    <Switch>
-      <Route path={routes.AUTH.ROOT} exact>
-        <Login {...props}/>
-      </Route>
-      <Route path={routes.AUTH.LOGIN}>
-        <Login {...props}/>
-      </Route>
-      <Route path={routes.AUTH.REGISTER} exact>
-        <Register {...props}/>
-      </Route>
-    </Switch>
+    <div className={styles.authorization}>
+      <HTag size="large" className={styles.naming}>Quiz App</HTag>
+      {
+        !isResetting ?
+          isSent
+            ? <Card className={styles.text}>
+                <HTag size="m">
+                  We have sent you the email with a link for password reset
+                  <br />
+                  Please, follow the link, if you get the message
+                  <br />
+                  (If you don't see our email, check the spam please)
+                </HTag>
+                <HR />
+                <div className={styles.info}>
+                  <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+                  <Link to={routes.HOME}>Go Home page</Link>
+                </div>
+            </Card>
+            : <form className={styles.form} onSubmit={handleSubmit(handleEmailSending)}>
+              <HTag size="large" className={styles.title}>Access Recovery</HTag>
+              <div className={styles.inputBlock}>
+                {/*<Input*/}
+                {/*  type="text"*/}
+                {/*  label="Email for recovery process"*/}
+                {/*  {...register('email')}*/}
+                {/*  disabled={loading}*/}
+                {/*/>*/}
+              </div>
+              <Button className={styles.button} type="submit" disabled={loading}>Send email message</Button>
+              <div className={styles.info}>
+                <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+                <Link to={routes.HOME}>Go Home page</Link>
+              </div>
+            </form>
+          : <>
+            <form className={styles.form} onSubmit={handleReset}>
+              <HTag size="large" className={styles.title}>Access Recovery</HTag>
+              <div className={styles.inputBlock}>
+                <Input
+                  type='password'
+                  label='Enter new password'
+                  {...register('password')}
+                  disabled={loading}
+                />
+              </div>
+              <div className={styles.inputBlock}>
+                <Input
+                  type='password'
+                  label='Confirm new password'
+                  {...register('confirm')}
+                  disabled={loading}
+                />
+              </div>
+              <Button className={styles.button} type="submit" disabled={loading}>Reset</Button>
+              <div className={styles.info}>
+                <Link to={routes.AUTH.LOGIN}>Back to login</Link>
+                <Link to={routes.HOME}>Go Home page</Link>
+              </div>
+            </form>
+          </>
+      }
+    </div>
+  );
+};
+
+const Activate: FC<any> = () => {
+  const { activationLink } = useParams<{ activationLink: string; }>();
+  const { activateUserAccount } = useActions();
+  useEffect(() => {
+    activateUserAccount(activationLink);
+  });
+  return <></>;
+}
+
+export const Authorization: FC<AuthorizationProps> = (props) => {
+  return (
+    <div className={styles.authorizationWrapper}>
+      <Switch>
+        <Route path={routes.AUTH.ROOT} exact>
+          <Login {...props}/>
+        </Route>
+        <Route path={routes.AUTH.LOGIN}>
+          <Login {...props}/>
+        </Route>
+        <Route path={routes.AUTH.REGISTER} exact>
+          <Register {...props}/>
+        </Route>
+        <Route path={routes.AUTH.RESET} exact>
+          <Reset {...props}/>
+        </Route>
+        <Route path={routes.AUTH.ACTIVATE + '/:activationLink'} exact>
+          <Activate {...props}/>
+        </Route>
+      </Switch>
+    </div>
   );
 };
 

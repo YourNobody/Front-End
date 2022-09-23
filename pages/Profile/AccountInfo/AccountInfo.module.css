@@ -1,101 +1,70 @@
 .info {
-  display: grid;
-  grid-template-areas:
-    'info image'
-    'change change'
-  ;
-  gap: 30px;
-  grid-template-columns: 1fr 150px;
+	display: grid;
+	grid-template-areas:
+		'info image'
+		'change change';
+	gap: 30px;
+	grid-template-columns: 1fr 150px;
 }
 
 .content {
-  grid-area: info;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr;
+	grid-area: info;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto auto 1fr;
 }
 
 .content > div {
-  margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 .infoLine {
-  display: grid;
-  grid-template-columns: minmax(120px, 200px) auto;
+	display: grid;
+	grid-template-columns: minmax(120px, 200px) auto;
 }
 
 .image {
-  grid-area: image;
-  width: 150px;
-  height: 150px;
+	grid-area: image;
+
+	width: 150px;
+	height: 150px;
 }
 
 .imageWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
-
 .imageWrapper button {
-  background-color: var(--red);
+	background-color: var(--red);
 }
 
 .changeInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  grid-area: change;
-  overflow: hidden;
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+	justify-content: flex-end;
+	grid-area: change;
 }
 
-.changeInfo > div:not(:last-of-type) {
-  margin-bottom: 15px;
+.changeInfo a {
+	margin-bottom: 20px;
+
+	transition: 0.2s all;
+
+	color: var(--black);
+
+	font-size: 16px;
 }
 
-.change {
-  padding: 20px 10px;
-  background-color: var(--mega-white-transparent);
-  cursor: pointer;
-  transition: all 0.2s;
-  overflow: hidden;
+.changeInfo a:hover {
+	margin-left: 10px;
+
+	color: var(--blue-hover);
 }
 
-.change:hover {
-  color: var(--blue);
-  background-color: var(--white-transparent);
-}
-
-.change:last-of-type {
-  margin-bottom: 0;
-}
-
-.changeOpened {
-  color: var(--blue);
-}
-
-.changeOpened:hover {
-  background-color: var(--black);
-}
-
-.unfilled {
-  color: var(--red);
-  cursor: pointer;
-}
-
-.changeBlock {
-  background-color: var(--white-transparent);
-  padding-left: 20px;
-  padding-right: 20px;
-  display: none;
-  transition: all 0.2s;
-}
-
-.changeBlockOpened {
-  display: block;
-  padding: 20px;
-}
-
-.changeBlock input {
-  margin-bottom: 10px;
+.changeInfo .changeInfoTitle {
+	margin-bottom: 25px;
 }

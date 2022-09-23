@@ -1,271 +1,322 @@
-import React, { FC, useRef, useState } from 'react';
-import { CreateProps } from './Create.props';
-import styles from './Create.module.css';
-import { withMainLayout } from '../../layouts/MainLayout/MainLayout';
-import { Card, Button, HTag, HR, Editor, Tagger, Input, List } from '../../components/index';
-import { QuestionTypes } from '../../interfaces/quizes.interface';
-import { useInput } from './../../hooks/useInput.hook';
-import cn from 'classnames';
-import { Controller, useForm } from 'react-hook-form';
-import { EditorState } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
-import { useRequest } from '../../hooks/useRequest';
-import { useActions } from '../../hooks/useActions.hook';
-import { statuses } from '../../constants/app';
-import { useHistory } from 'react-router';
-import { routes } from '../../constants/routes';
-import { LOCALSTORAGE_USER_DATA_NAME } from './../../constants/app';
+import React, {FC, useEffect, useRef, useState} from 'react';
+import {CreateProps} from './Create.props';
+import styles from './Create.module.scss';
+import {withMainLayout} from '../../layouts/MainLayout/MainLayout';
+import {Button, Card, Editor, HR, HTag, Image, Input} from '../../components/index';
+import {QuizzesTypes} from '../../interfaces/quizes.interface';
+import {useActions} from '../../hooks/useActions.hook';
+import {useHistory} from 'react-router';
+import {useTypedSelector} from '../../hooks/useTypedSelector.hook'
+import {Controller, useFieldArray, useForm, UseFormReturn} from "react-hook-form";
+import {addClassValidationResolver, Quiz} from "../../helpers/addValidationResolver.helper";
+import {useParams} from "react-router-dom";
+import {routes, statuses} from "@Constants";
 
-const questionTypesWithDescription: Array<[QuestionTypes, string, string]> = [
-  [QuestionTypes.SA, 'Select Question', 'User can choose one of the answers that you provide'], 
-  [QuestionTypes.TA, 'Text Question', 'User can answer using a text editor'], 
-  [QuestionTypes.RA, 'Rating Question', ' User can estimate your image or a qustion from 1 to 10 points'], 
-  [QuestionTypes.AB, 'A/B Question', 'User can choose only one of two answers']
-];
+const QuizResolver = addClassValidationResolver<Quiz>(Quiz);
+
+const quizzesTypesWithDescription: any = {
+	[QuizzesTypes.sa]: {
+		title: 'Select Quiz',
+		description: 'User can choose one of the answers that you provide'
+	},
+	[QuizzesTypes.ta]: {
+		title: 'Text Quiz',
+		description: 'User can answer using a text editor'
+	},
+	[QuizzesTypes.ra]: {
+		title: 'Rating Quiz',
+		description: 'User can estimate your image or a quiz from 1 to 10 points'
+	},
+	[QuizzesTypes.ab]: {
+		title: 'A/B Quiz',
+		description: 'User can choose only one of two answers'
+	}
+};
+
+const acceptedFiles = ".jpg,.png,.jpeg";
 
 //questionAnswers
 const Create: FC<CreateProps> = (): JSX.Element => {
-  const { error, clearError, request, loading} = useRequest();
-  const { setAppAlert } = useActions();
-  const { control, handleSubmit, setValue } = useForm();
-  const { getValue, clearValue, onChange } = useInput();
-  const [selectedType, setSelectedType] = useState<QuestionTypes | null>(null);
-  const [questionAnswers, setQuestionAnswers] = useState<Record<QuestionTypes, string[]>>({} as Record<QuestionTypes, string[]>);
-  const formRef = useRef<HTMLFormElement>(null);
-  const history = useHistory();
+	const {createQuiz, openModal} = useActions();
+	const {loading} = useTypedSelector(state => state.quiz);
+	const history = useHistory();
+	const formState = useForm<Quiz>({resolver: QuizResolver});
+	const {control, register, setValue, reset, getValues, handleSubmit, formState: {errors, dirtyFields}} = formState;
+	const {qType} = useParams<{ qType: string }>();
+	const inputAddQuizPreview = useRef<HTMLInputElement>(null);
+	const [a, setA] = useState<string>(null);
 
-  const handleAnswerAdd = (): void => {
-    const value = getValue(selectedType).trim();
-    if (value && questionAnswers[selectedType] && questionAnswers[selectedType].find(a => a === value)) {
-      clearValue(selectedType);
-      return;
-    }
-    if (value && selectedType) {
-      if (!questionAnswers[selectedType]) {
-        setQuestionAnswers({
-          ...questionAnswers,
-          [selectedType]: [value]
-        });  
-      } else {
-        setQuestionAnswers({
-          ...questionAnswers,
-          [selectedType]: [value, ...questionAnswers[selectedType]]
-        });
-      }
-      clearValue(selectedType);
-    }
-  };
+	useEffect(() => {
+	}, [history])
 
-  const handleAnswerDelete = (index: number) => {
-    setQuestionAnswers({
-      ...questionAnswers,
-      [selectedType]: questionAnswers[selectedType].filter((item, i) => i !== index)
-    });
-  };
+	const handleQuizCreation = (formData) => {
+		const callbackAfter = () => {
+			history.push(routes.QUIZZES.ROOT);
+			reset();
+		};
 
-  const handleQuestionCreation = async (formData) => {
-    const body: any = {};
-    Object.keys(QuestionTypes).forEach(key => {
-      if (formData[key + '_editor']) {
-        body.question = stateToHTML(formData[key + '_editor'].getCurrentContent());
-      }
-    });
-    body.type = selectedType;
-    body.title = getValue(selectedType + '_title');
-    body.quizAnswers = questionAnswers[selectedType];
+		openModal({
+			actionFunc: () => createQuiz(Object.assign(formData, {type: qType}), callbackAfter),
+			actionButtonName: 'Create',
+			closeButtonName: 'No',
+			modalQuestion: 'Do you really want to create a QuizSA?'
+		});
+	}
 
-    const headers: Record<string, string> = {};
-    if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-      const { token } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-      headers.authorization = token ? token : null;
-    }
-    try {
-      const data: any = await request(routes.QUIZES.CREATE, 'POST', body, headers);
-      setAppAlert(data.message, statuses.SUCCESS);
-      handleResetForm();
-      history.push(routes.QUIZES.TYPES[selectedType]);
-    } catch (err) {
-      setAppAlert(err.message, statuses.ERROR);
-      clearError();
-    }
-  };
+	const handleAddQuizAvatar = (e: any) => {
+		if (!e.target && !e.target.files) return;
+		const reader = new FileReader();
 
-  const handleResetForm = () => {
-    if (!selectedType) return;
-    setQuestionAnswers({
-      ...questionAnswers,
-      [selectedType]: []
-    });
-    clearValue(selectedType);
-    setValue(selectedType + '_editor', EditorState.createEmpty());
-    setSelectedType(null);
-  };
+		reader.readAsDataURL(e.target.files[0]);
 
-  const addSuggestedAnswers = (): JSX.Element => {
-    return selectedType && questionAnswers[selectedType] && questionAnswers[selectedType].length
-      ? <>
-        <HTag size="m" className={styles.suggested}>Suggested answers:</HTag>
-        <List list={questionAnswers[selectedType]} className={styles.list} onClose={handleAnswerDelete}/> 
-      </>
-      : <></>;
-  };
+		reader.onload = ev => {
+			setValue('quizAvatar', ev.target.result.toString());
+			setA(ev.target.result.toString());
+		};
+	}
 
-  const buildQuesionCreatorAccordingToType = (): JSX.Element => {
-    if (!selectedType) return <></>;
-    switch (selectedType) {
-      case QuestionTypes.SA: {
-        return (
-          <>
-            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
-            <div className={styles.saAnswers}>
-              <div className={styles.addAnswer}>
-                <Input
-                  label="Write an answer to your question:"
-                  name={selectedType}
-                  type="text"
-                  placeholder="Write an answer variant to your question"
-                  value={getValue(selectedType)}
-                  onChange={onChange}
-                />
-                <Button
-                  onClick={handleAnswerAdd}
-                >Add</Button>
-              </div>
-              {addSuggestedAnswers()}
-            </div>
-          </>
-        );
-      }
-      case QuestionTypes.TA:
-        return (
-          <>
-            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
-          </>
-        );
-      case QuestionTypes.RA:
-        return (
-          <>
-            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
-            <div className={styles.addAnswer}>
-              <Input
-                label="Or just paste the image URL that you want to be estimated:"
-                name={selectedType}
-                type="text"
-                placeholder="Paste an URL of an image..."
-                value={getValue(selectedType)}
-                onChange={onChange}
-                onKeyDown={() => console.log('key down')}
-              />
-              <Button
-                disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 1}
-                onClick={handleAnswerAdd}
-              >Add</Button>
-            </div>
-            {addSuggestedAnswers()}
-          </>
-        );
-      case QuestionTypes.AB:
-        return (
-          <>
-            <HTag size="m" className={styles.writeQuestionTitle}>Write your question:</HTag>
-            <Controller
-              name={selectedType + '_editor'}
-              control={control}
-              render={({ field: {value, onChange} }) => (
-                <Editor placeholder="Type a question you want to ask..." editorState={value} onEditorStateChange={onChange}/>
-              )}
-            />
-            <div className={styles.saAnswers}>
-              <div className={styles.addAnswer}>
-                <Input
-                  label="Write 2 answers for your question or paste 2 URLs to the images that you want to compare"
-                  name={selectedType}
-                  type="text"
-                  placeholder="Write an answer variant to your question"
-                  value={getValue(selectedType)}
-                  onChange={onChange}
-                />
-                <Button
-                  disabled={questionAnswers[selectedType] && questionAnswers[selectedType].length >= 2}
-                  onClick={handleAnswerAdd}
-                >Add</Button>
-              </div>
-              {addSuggestedAnswers()}
-            </div>
-          </>
-        );
-      default: return <></>;
-    }
-  };
-  return (
-    <div className={styles.createPage}>
-      <HTag size="l" className={styles.createPageTitle}>Create Quiz!</HTag>
-      <Card>
-        <form onSubmit={handleSubmit(handleQuestionCreation)} ref={formRef}>
-          <div className={styles.selecType}>
-            <HTag size="m" className={styles.selectTypeTitle}>Select your a type of a Quiz:</HTag>
-            <div className={styles.types}>
-              {
-                questionTypesWithDescription.map(type => {
-                  return (
-                    <Tagger
-                      key={type[0]}
-                      onClick={() => setSelectedType(type[0])}
-                      className={cn(styles.tagger, {
-                        [styles.selectedType]: selectedType === type[0],
-                        [styles.unselectedType]: selectedType !== type[0] && selectedType !== null
-                      })}>
-                      <HTag size="s">Type:&nbsp;{type[1]}</HTag>
-                      <p style={{paddingTop: '5px'}}>Description:&nbsp;{type[2]}</p>
-                    </Tagger>
-                  );
-                })
-              }
-            </div>
-          </div>
-          {selectedType ? <>
-              <Input
-                label="Quiz Title:"
-                className={styles.inputTitle}
-                type="text"
-                name={selectedType + '_title'}
-                value={getValue(selectedType + '_title')}
-                onChange={onChange}
-                placeholder="Write title of your question..."
-              />
-            </> : <></>
-          }
-          {buildQuesionCreatorAccordingToType()}
-          <HR className={styles.mainHr}/>
-          <div className={styles.actions}>
-            <Button className={styles.reset} onClick={handleResetForm}>Reset</Button>
-            <Button color="primary" className={styles.create} type="submit">Create</Button>
-          </div>
-        </form>
-      </Card>
-    </div>
-  );
+	return (
+		<div className={styles.createPage}>
+			<HTag size="l" className={styles.createPageTitle}>Create {quizzesTypesWithDescription[qType].title}!</HTag>
+			<Card>
+				<form onSubmit={handleSubmit(handleQuizCreation)}>
+					<HTag size="large">{quizzesTypesWithDescription[qType].title}</HTag>
+					<HTag size="small">{quizzesTypesWithDescription[qType].description}</HTag>
+					<Input
+						{...register('title')}
+						hasValue={dirtyFields.title}
+						error={errors.title}
+						label="QuizSA Title:"
+						type="text"
+						placeholder="Write the quiz title..."
+					/>
+					<Controller
+						name="question"
+						control={control}
+						render={({field: {onChange}}) => (
+							<Editor
+								label={'Question for a quiz:'}
+								className={styles.editor}
+								onChange={onChange}
+								placeholder="Type a question you want to ask..."
+							/>
+						)}
+					/>
+					<Input type="file" ref={inputAddQuizPreview} onChange={handleAddQuizAvatar}/>
+					<Button onClick={() => inputAddQuizPreview.current.click()} style={{marginTop: '10px'}}>Add quiz preview
+						image</Button>
+					<div>
+						Preview:
+						<Image src={a} style={{display: !a && 'none', maxHeight: '150px'}}/>
+					</div>
+					{
+						returnQuizTemplate(qType, formState)
+					}
+					<HR className={styles.mainHr}/>
+					<div className={styles.actions}>
+						<Button className={styles.reset} color="danger">Reset</Button>
+						<Button color="primary" className={styles.create} type="submit">Create</Button>
+					</div>
+				</form>
+			</Card>
+		</div>
+	);
 };
+
+const templates = {} as Record<string, (useFormState: UseFormReturn<Quiz>) => JSX.Element>;
+
+templates.QuizTemplateSA = (useFormState) => {
+	const {setAppAlert} = useActions();
+	const {register, control, setValue, watch, getValues, formState: {errors}} = useFormState;
+	// @ts-ignore
+	const {fields, prepend, remove} = useFieldArray<Quiz, 'variants', 'variantId'>({
+		control, name: 'variants', keyName: 'variantId'
+	})
+
+	const answerPrepend = () => {
+		if (fields.length > 10) return setAppAlert(`It's not possible to add more than 10 variants to one quiz`, statuses.WARNING);
+
+		prepend({variantId: fields.length});
+		setValue('variants', getValues('variants').map(val => {
+			return JSON.stringify({}) === JSON.stringify(val) ? '' : Object.values(val).join('');
+		}));
+	};
+
+	return <>
+		<div className={styles.saAnswers}>
+			<Input
+				className={styles.checkbox}
+				type="checkbox"
+				label="Click if you want to have several answers to your quiz:"
+				{...register('multiple')}
+			/>
+			<div className={styles.addAnswer}>
+				<Button onClick={() => answerPrepend()}>Add answer to your quiz</Button>
+				{
+					fields.map(({variantId}, index) =>
+						<div className={styles.newAnswer} key={index}>
+							<span>{fields.length - index}</span>
+							<Input
+								{...(register(`variants.${index}` as const))}
+								type="text"
+								placeholder="Write answer"
+							/>
+							<Button color="danger" onClick={() => remove(index)}>&#215;</Button>
+						</div>
+					)
+				}
+			</div>
+		</div>
+	</>;
+};
+
+templates.QuizTemplateTA = (useFormState): JSX.Element => {
+	const {register, handleSubmit, reset, formState: {errors}} = useFormState;
+
+	return <></>;
+};
+
+templates.QuizTemplateRA = (useFormState): JSX.Element => {
+	const {setAppAlert} = useActions();
+	const {control, register, formState: {errors}} = useFormState;
+	const {fields, append, remove} = useFieldArray<any, 'images', 'imageId' | 'imageBase64' | 'name' | 'size' | 'type'>({
+		name: 'images', keyName: 'imageId', control
+	})
+	const ref = useRef<HTMLInputElement>(null);
+
+	async function check(e: any, append: (params: any) => void) {
+		if (!e.target || !e.target.files.length) return;
+
+		const imagesNames = fields.map(field => field.name);
+		const files = [...e.target.files].filter(file => file.type.split('/')[0] === 'image' && !imagesNames.includes(file.name));
+
+		if (fields.length > 8 || files.length > 8 || files.length + fields.length > 8)
+			return setAppAlert(`It's not possible to add more than 8 images`, statuses.WARNING);
+
+		const promises = files.map(file => {
+			const reader = new FileReader();
+			return new Promise(res => {
+				const {name, size, type} = file;
+				reader.readAsDataURL(file);
+
+				reader.onload = ev => {
+					res(ev.target.result);
+					append({
+						name, size, type,
+						imageBase64: ev.target.result,
+						imageId: type + size + name
+					});
+				};
+			})
+		});
+
+		const result = await (Promise as any).allSettled(promises)
+	}
+
+	return <>
+		<div className={styles.addAnswer}>
+			<div className={styles.addAnswerLeft}>
+				<Button color="ghost" onClick={() => ref.current.click()}>Add images to be rated</Button>
+				<Input
+					name="img"
+					accept={acceptedFiles}
+					type="file"
+					onChange={(e) => check(e, append)}
+					ref={ref}
+					multiple={true}
+				/>
+			</div>
+			<div className={styles.imagesContainer}>
+				{
+					fields.map(({name, imageBase64, imageId}, index) =>
+						<div key={imageId}>
+							<Image
+								src={imageBase64}
+								className={styles.image}
+							/>
+							<Button className={styles.imageRemove} color="danger" onClick={() => remove(index)}>&times;</Button>
+							<div className={styles.imageName}>{name}</div>
+						</div>
+					)
+				}
+			</div>
+		</div>
+	</>;
+};
+
+templates.QuizTemplateAB = (useFormState): JSX.Element => {
+	const {control, register, handleSubmit, reset, formState: {errors}} = useFormState;
+	const {setAppAlert} = useActions();
+	const {fields, append, remove} = useFieldArray<any, 'images', 'imageId' | 'imageBase64' | 'name' | 'size' | 'type'>({
+		name: 'images', keyName: 'imageId', control
+	})
+	const ref = useRef<HTMLInputElement>(null);
+
+	async function check(e: any, append: (params: any) => void) {
+		if (!e.target || !e.target.files.length) return;
+		const files = [...e.target.files].filter(file => file.type.split('/')[0] === 'image');
+
+		if (fields.length > 8 || files.length > 8 || files.length + fields.length > 8)
+			return setAppAlert(`It's not possible to add more than 2 images`, statuses.WARNING);
+
+		const promises = files.map(file => {
+			const reader = new FileReader();
+			return new Promise(res => {
+				const {name, size, type} = file;
+				reader.readAsDataURL(file);
+
+				reader.onload = ev => {
+					res(ev.target.result);
+					append({
+						name, size, type,
+						imageBase64: ev.target.result,
+						imageId: file.name
+					});
+				};
+			})
+		});
+
+		const result = await (Promise as any).allSettled(promises)
+	}
+
+	return <>
+		<div className={styles.saAnswers}>
+			<div className={styles.addAnswer}>
+				<div className={styles.addAnswerRight}>
+					<Button color="ghost" onClick={() => ref.current.click()} style={{marginRight: '20px'}}>Загрузить
+						изображение</Button>
+					<Button color="danger" onClick={() => {
+					}}>Remove all</Button>
+				</div>
+				<div className={styles.imagesContainer}>
+					{
+						fields.map(({name, imageBase64, imageId}, index) =>
+							<div key={imageId}>
+								<Image
+									src={imageBase64}
+									className={styles.image}
+								/>
+								<Button className={styles.imageRemove} color="danger" onClick={() => remove(index)}>&times;</Button>
+								<div className={styles.imageName}>{name}</div>
+							</div>
+						)
+					}
+				</div>
+				<Input
+					name="img"
+					accept={acceptedFiles}
+					type="file"
+					onChange={(e) => check(e, append)}
+					ref={ref}
+					multiple={true}
+				/>
+			</div>
+		</div>
+	</>;
+};
+
+function returnQuizTemplate(quizType: string, useFormState: UseFormReturn<Quiz>): JSX.Element {
+	return templates['QuizTemplate' + quizType.toUpperCase()](useFormState);
+}
 
 export default withMainLayout(Create);

@@ -1,8 +1,12 @@
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "../store/action-creators/all";
+import { allSagaActions } from '@ActionCreators/sagaActions';
+import { allExternalActions } from "@ActionCreators/externalActions";
 
 export const useActions = () => {
   const dispatch = useDispatch();
-  return bindActionCreators(ActionCreators, dispatch);
+  return bindActionCreators({
+    ...allSagaActions,
+    ...allExternalActions
+  }, dispatch);
 };

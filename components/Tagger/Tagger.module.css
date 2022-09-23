@@ -1,8 +1,9 @@
 .tagger {
-  font-size: 15px;
-  padding: 8px 10px;
-  border: 1px solid var(--white);
-  border-radius: 20px;
-  cursor: pointer;
-  background-color: var(--white);
+	padding: 8px 10px;
+
+	cursor: pointer;
+
+	background-color: var(--white);
+
+	font-size: 15px;
 }

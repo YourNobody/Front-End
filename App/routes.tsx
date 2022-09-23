@@ -1,24 +1,22 @@
 import { useActions } from "../hooks/useActions.hook";
-import { FC } from 'react';
-import { Route, Switch } from "react-router-dom";
+import { FC, useState } from 'react'
+import { Route, Switch, useHistory } from "react-router-dom";
 import { Home, Quizes, Profile, Authorization, Page404, Create, Quiz } from '..//pages/pages';
 import { routes } from "../constants/routes";
 import { useTypedSelector } from './../hooks/useTypedSelector.hook';
 import { useEffect } from 'react';
-import { LOCALSTORAGE_USER_DATA_NAME, statuses } from './../constants/app';
-import { IUserLocalStorage } from "../interfaces/user.interface";
-import { useRequest } from "../hooks/useRequest";
+import { LOCALSTORAGE_ACCESS_TOKEN_NAME } from '@Constants'
 
 const buildBaseRoutes = (): JSX.Element => (
   <Switch>
     <Route path={routes.HOME} exact>
     <Home title="Home" />
     </Route>
-    <Route path={routes.QUIZES.ROOT + '/:qType' + '/:title'} exact>
+    <Route path={routes.QUIZZES.ROOT + '/:qType/:orderNumber/:title'} exact>
       <Quiz title="Quiz" />
     </Route>
-    <Route path={routes.QUIZES.ROOT}>
-      <Quizes title="Quizes" />
+    <Route path={routes.QUIZZES.ROOT}>
+      <Quizes title="Quizzes" />
     </Route>
     <Route path={routes.AUTH.ROOT}>
       <Authorization title="Authorization" />
@@ -34,16 +32,16 @@ const buildAllRoutes = (): JSX.Element => (
     <Route path={routes.HOME} exact>
       <Home title="Home" />
     </Route>
-    <Route path={routes.QUIZES.ROOT + '/:qType' + '/:title'} exact>
-      <Quiz title="Quiz" />
-    </Route>
-    <Route path={routes.QUIZES.CREATE} exact>
+    <Route path={routes.QUIZZES.ROOT + '/:qType/create'} exact>
       <Create title="Create Question" />
     </Route>
-    <Route path={routes.QUIZES.ROOT}>
-      <Quizes title="Quizes" />
+    <Route path={routes.QUIZZES.ROOT + '/:qType/:orderNumber/:title'} exact>
+      <Quiz title="Quiz" />
     </Route>
-    <Route path={routes.PROFILE.ACCOUNT}>
+    <Route path={routes.QUIZZES.ROOT}>
+      <Quizes title="Quizzes" />
+    </Route>
+    <Route path={routes.PROFILE.ROOT}>
       <Profile title="Profile" />
     </Route>
     <Route path={routes.AUTH.ROOT}>
@@ -56,44 +54,18 @@ const buildAllRoutes = (): JSX.Element => (
 );
 
 export const Routes: FC<any> = () => {
-  const { userLogOut, setAppAlert } = useActions();
-  const { request, loading, error, clearError } = useRequest();
-
-  const checkForAuthed = async (): Promise<void> => {
-    try {
-      if (localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME)) {
-        const data: IUserLocalStorage = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-        const { isAuthenticated: isAuthed } = await request<{ isAuthenticated: boolean }>('/auth/check', 'POST', { token: data.token }, {});
-
-        if (!isAuthed) {
-          userLogOut();
-        } else {
-          const expirationData = JSON.parse(atob(data.token.split('.')[1]));
-          const { expiresIn, expiresAt } = expirationData;
-          const minutesBeforeExpiration = new Date(expiresIn).getMinutes();
-          const now = Date.now();
-          const diff = expiresAt - now;
-          if (diff < 0) {
-            setAppAlert('Your session has expired', statuses.WARNING, false);
-            userLogOut();
-          }
-        }
-      }
-    } catch (err) { 
-      console.log(err);
-      userLogOut();
-    }
-  };
+  const { checkUserAuth } = useActions();
+  const history = useHistory();
+  const { accessToken, isAuthChecked } = useTypedSelector(state => state.user);
 
   useEffect(() => {
-    checkForAuthed();
-  }, []);
-
-  const isAuthenticated = useTypedSelector(state => state.user.isAuthenticated);
+    if (!isAuthChecked) checkUserAuth();
+  }, [accessToken]);
   
-  if (isAuthenticated) {
+  if (accessToken) {
+    history.location.pathname.indexOf(routes.AUTH.ROOT) !== -1 && history.push(routes.HOME);
     return buildAllRoutes();
   }
 
   return buildBaseRoutes();
-};
+}

@@ -1,4 +1,7 @@
-.editor {
-  background-color: var(--mega-white);
-  color: var(--black) !important;
+.label {
+	display: inline-block;
+
+	margin-bottom: 8px;
+
+	font-size: 16px;
 }

@@ -1,0 +1,49 @@
+.wrapper {
+}
+
+.input {
+	width: 100%;
+	padding: 8px 8px;
+
+	background-color: #fff;
+
+	box-shadow: 0 0 0 1px var(--gray);
+
+	font-size: 16px;
+
+	&:focus {
+		box-shadow: 0 0 0 1px var(--blue-purple);
+	}
+}
+
+.label {
+	display: inline-block;
+
+	margin-bottom: 8px;
+	will-change: box-shadow;
+	transition: all 0.2s;
+
+	font-size: 16px;
+}
+
+.has {
+	color: var(--blue-purple);
+}
+
+.hasError {
+	color: var(--red);
+}
+
+.errorInput {
+	box-shadow: 0 0 0 1px var(--red);
+
+	&:focus {
+		box-shadow: 0 0 0 1px var(--red);
+	}
+}
+
+.error {
+	margin-bottom: 8px;
+
+	word-break: break-word;
+}

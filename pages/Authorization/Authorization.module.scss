@@ -1,0 +1,79 @@
+.authorizationWrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 30px 0;
+	min-height: 100vh;
+}
+
+.authorization {
+	word-break: break-all;
+}
+
+.text {
+	padding: 20px;
+
+	h2 {
+		text-align: center;
+		white-space: pre;
+
+		font-weight: 400 !important;
+		line-height: 30px;
+	}
+
+	hr {
+		margin-top: 20px;
+	}
+}
+
+.form {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 20px;
+
+	width: 350px;
+
+	padding: 28px 30px 35px 30px;
+
+	border-radius: 8px;
+	background-color: var(--white);
+	box-shadow: 0 0 5px var(--blue);
+}
+
+.naming {
+	margin-bottom: 25px;
+
+	text-align: center;
+
+	color: var(--blue);
+
+	font-size: 42px;
+}
+
+.title {
+	margin-bottom: 10px;
+
+	text-align: center;
+}
+
+.inputBlock {
+	width: 100%;
+}
+
+.info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	margin-top: 14px;
+	padding: 0 7px;
+
+	a {
+		color: var(--black);
+
+		&:hover {
+			color: var(--blue-hover);
+		}
+	}
+}

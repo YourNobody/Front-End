@@ -1,3 +1,6 @@
+import {FC, ReactFragment} from "react";
+import {wrapWithFragment} from "./react.helper";
+
 export const checkForValideImageLink = (src: string): boolean => {
   if (!src) return false;
   return !!src.match(/(\.jpg|\.png|\.jpeg|\.jfif|\.gif)$/);
@@ -14,31 +17,56 @@ export const getFirstLetters = (initials: string): string => {
   return 'YOU';
 };
 
-export const getEmptyObject = <T>(data: T): T => {
+export const getEmptyObject = <T>(data: T, returnTheComingObject = false): T => {
   if (!data) return {} as T;
-  return Object.keys(data).reduce((R, key) => {
+  if (!returnTheComingObject) {
+    return Object.keys(data).reduce((R, key) => {
+      if (typeof data[key] === 'function') {
+        R[key] = null;
+      } else if (data[key] instanceof Array) {
+        R[key] = [];
+      } else if (data[key] instanceof Object) {
+        R[key] = {};
+      } else {
+        R[key] = '';
+      }
+      return R;
+    }, {}) as T || {} as T;
+  }
+
+  Object.keys(data).forEach(key => {
     if (typeof data[key] === 'function') {
-      R[key] = null;
+      data[key] = null;
     } else if (data[key] instanceof Array) {
-      R[key] = [];
+      data[key] = [];
     } else if (data[key] instanceof Object) {
-      R[key] = {};
+      data[key] = {};
     } else {
-      R[key] = '';
+      data[key] = '';
     }
-    return R;
-  }, {}) as T || {} as T;
+  });
+
+  return data;
 };
 
-export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string): any => {  
+export const getObjectWithDefinedKeys = (initial: any, keys: string[] | string | Record<string, unknown | string>): any => {
+  if (!initial || !Object.keys(initial).length) return {};
+  if (!keys) return initial;
   if (typeof keys === 'string') {
     keys = keys.split(' ');
+  } else if (keys instanceof Array) {
+    return keys.reduce((output, key) => {
+      if (initial[key]) {
+        output[key] = initial[key];
+      }
+      return output;
+    }, {});
   }
-  return keys.reduce((output, key) => {
+  return Object.keys(keys).reduce((R, key) => {
     if (initial[key]) {
-      output[key] = initial[key];
+      R[key] = initial[key];
+      return R;
     }
-    return output;
   }, {});
 };
 
@@ -53,12 +81,34 @@ export const formatDate = (date: number | Date): string => {
   }).format(new Date(date));
 };
 
+export const formatPrice = (price: number, currency = 'USD', locale = 'en-US'): string => {
+  if (!price) return '';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(price);
+};
+
 export const changeStatisticsTooltipLabel = (value: number | string, name: string, props: any) => {
-  
   return function (oldLabel: string, newLabel: string): void {
-    console.log(value, name, props);
     if (name && oldLabel) {
       props.name = newLabel + ': ' + value;
     }
   };
 };
+
+export const saveTemplateHelper = (salt: string) => {
+  const templates = {};
+
+  function getTemplate(templateKey: string, props: any): JSX.Element {
+    return wrapWithFragment(templates[salt + templateKey], props);
+  }
+
+  function toTemplates<T>(templateKey: string, template: FC<T>) {
+    templates[salt + templateKey] = template;
+  }
+
+  return {
+    getTemplate, toTemplates
+  };
+}

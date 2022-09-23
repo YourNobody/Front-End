@@ -1,17 +1,60 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizePlugin = require('css-minimizer-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const IS_DEV_MODE = (process.env.NODE_ENV = 'development');
+const IS_PROD = !IS_DEV_MODE;
 const MODE = process.env.NODE_ENV;
 
 function filename(ext) {
   if (IS_DEV_MODE) return `[name]${ext}`;
   return `[name].[hash]${ext}`;
+}
+
+function filenameCssModules() {
+  if (IS_DEV_MODE) return '[name]_[local]_[hash:base64:5]';
+  return '[name]_[hash:base64:5]';
+}
+
+function optimization() {
+  const config = {
+    splitChunks: {
+      chunks: 'all',
+    },
+  };
+
+  if (IS_PROD) {
+    config.minimizer = [
+      new TerserWebpackPlugin()
+    ];
+  }
+
+  return config;
+}
+
+function cssLoaders(extra, options) {
+  const loaders = [
+    MiniCssExtractPlugin.loader
+  ];
+
+  loaders.push({
+    loader: 'css-loader',
+    options: {
+      ...options
+    },
+  });
+
+  if (extra) {
+    loaders.push(extra);
+  }
+
+  return loaders;
 }
 
 const config = {
@@ -26,14 +69,26 @@ const config = {
   },
 
   resolve: {
-    extensions: ['.js', '.json', '.ts', '.jsx', '.tsx'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        baseUrl: './',
+        configFile: './tsconfig.json',
+        extensions: ['.js', '.ts', '.tsx'],
+      }),
+    ],
+    alias: {
+      'react-dom$': 'react-dom/profiling',
+      'react-dom/server': 'react-dom/profiling',
+      'scheduler/tracing': 'scheduler/tracing-profiling',
+    },
+    extensions: ['.js', '.json', '.ts', '.jsx', '.tsx']
   },
 
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
+  devtool: 'inline-source-map',
+
+  target: IS_DEV_MODE ? 'web' : 'browserslist',
+
+  optimization: optimization(),
 
   devServer: {
     port: 3000,
@@ -62,49 +117,48 @@ const config = {
       template: './src/public/index.html',
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: path.resolve(__dirname, 'src/assets'), to: 'assets' },
+        {from: path.resolve(__dirname, 'src/assets'), to: 'assets'},
       ]
     }),
+    new MiniCssExtractPlugin({
+      filename: filename('.css'),
+    })
   ],
 
   module: {
     rules: [
       {
-        test: /\.(css|scss)$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              modules: {
-                localIdentName: "[name]__[local]___[hash:base64:5]",
-              },
-            }
+        test: /\.css$/,
+        use: cssLoaders(null, {
+          importLoaders: 1,
+          modules: {
+            localIdentName: filenameCssModules(),
           }
-        ],
+        }),
         include: /\.module\.css$/
+      },
+      {
+        test: /\.s(c|a)ss$/,
+        use: cssLoaders('sass-loader', {
+          modules: {
+            localIdentName: filenameCssModules(),
+          },
+          sourceMap: IS_DEV_MODE ? true : false,
+          importLoaders: 1,
+        }),
+        include: /\.module\.s(a|c)ss$/
       },
       {
         test: /\.(css|scss)$/,
         use: [
           'style-loader',
-          'css-loader'
+          'css-loader',
+          'sass-loader'
         ],
-        exclude: /\.module\.css$/
+        exclude: /\.module\.(css|s(a|c)ss)$/
       },
-      // {
-      //   test: /\.css$/i,
-      //   use: [
-      //     { loader: 'style-loader', options: { modules: true }},
-      //     { loader: 'css-loader', options: { modules: true }},
-      //   ],
-      // },
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
@@ -135,13 +189,12 @@ const config = {
         },
       },
       {
-        test: /\.(svg|png|gif|jpg|ico|jpeg|jfif)$/,
-        exclude: /node_modules/,
-        use: ['file-loader'],
-      },
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      }
     ],
   },
-}
+};
 
 if (!IS_DEV_MODE) {
   config.optimization = {
@@ -151,7 +204,7 @@ if (!IS_DEV_MODE) {
       new CssMinimizePlugin(),
       new UglifyJsPlugin()
     ]
-  }
+  };
 }
 
 module.exports = config;

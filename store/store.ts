@@ -1,35 +1,20 @@
-import { applyMiddleware, createStore } from "redux";
-import thunk from "redux-thunk";
-import { rootReducer } from "./reducers/all";
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { LOCALSTORAGE_USER_DATA_NAME } from "../constants/app";
-import { IUserReducer, IUserState } from "./interfaces-reducers/userReducer.interface";
-import { getEmptyObject } from "../helpers/custom.helper";
+import RootReducer from '@Slices';
+import createSagaMiddleware from "@redux-saga/core";
+import {configureStore} from "@reduxjs/toolkit";
+import {rootWatcher} from "./watchers";
 
-const preloadState = () => {  
-    const userData: { user: IUserReducer, token: string } = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_DATA_NAME));
-    const userInitial: IUserState = {
-      user: getEmptyObject<IUserReducer>({ id: '', nickname: '', email: '', questions: [] }),
-      isAuthenticated: false,
-      loading: false
-    };
+const sagaMiddleware = createSagaMiddleware();
 
-    if (userData && userData.token) {
-      return {
-        ...userInitial,
-        user: {
-          id: userData.user.id,
-          nickname: userData.user.nickname,
-          email: userData.user.email,
-          questions: userData.user.questions
-        },
-        isAuthenticated: !!userData.token,
-      };
-    }
+export const store = configureStore({
+	reducer: RootReducer,
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+		thunk: false,
+		immutableCheck: false,
+		serializableCheck: false
+	}).concat([sagaMiddleware])
+});
 
-    return userInitial;
-};
+sagaMiddleware.run(rootWatcher);
 
-export const store = createStore(rootReducer, {
-  user: preloadState()
-}, composeWithDevTools(applyMiddleware(thunk))); 
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
