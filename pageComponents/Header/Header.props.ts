@@ -1,4 +1,2 @@
-import { ReactNode } from "react";
-export interface HeaderProps {
-  children?: ReactNode;
-}
+import { DetailedHTMLProps, HTMLAttributes } from "react";
+export interface HeaderProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}

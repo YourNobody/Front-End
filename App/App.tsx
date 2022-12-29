@@ -1,13 +1,23 @@
-import React from "react";
+import {Profiler} from 'react';
+import {Provider} from "react-redux";
+import {store} from "../store/store";
+import {Alerter, Modal} from "../pageComponents/index";
+import {Routes} from "./routes";
 import './App.module.css';
-import Home from '../pages/Home';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 function App(): JSX.Element {
-  return (
-    <>
-      <Home />
-    </>
-  );
+	return (
+		<Provider store={store}>
+			<Modal>
+				<Alerter>
+					<Router>
+						<Routes/>
+					</Router>
+				</Alerter>
+			</Modal>
+		</Provider>
+	);
 }
 
 export default App;

@@ -1,0 +1,214 @@
+$chosenShadow: 3px 3px 7px var(--gray);
+
+.subscriptionWrapper {
+	display: grid;
+	grid-template-areas:
+		"title title"
+		"cards form"
+	;
+	grid-template-columns: auto 1fr;
+	align-content: flex-start;
+	//align-items: flex-start;
+	//justify-content: flex-start;
+	//justify-items: flex-start;
+
+	button {
+		margin: 0;
+		transition: 0.2s all ease-in-out;
+
+		&.silver, &.gold {
+			&:hover {
+				box-shadow: 0 0 0 1px var(--black);
+			}
+		}
+	}
+
+	@media (max-width: 1300px) {
+
+	}
+
+	@media (max-width: 1000px) {
+		grid-template-areas:
+			"title title"
+			"cards cards"
+			"form form"
+		;
+		grid-template-columns: 1fr;
+	}
+}
+
+.cardElement {
+	position: static;
+
+	height: auto;
+	margin-top: 10px;
+	padding: 10px 4px;
+
+	color: var(--black) !important;
+	border: 1px solid white;
+	background: var(--white);
+
+	font-size: 16px;
+}
+
+.cardElement * {
+	color: var(--black);
+}
+
+.loadingCard {
+	position: relative;
+}
+
+.loadingTitle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+
+	transform: translate(-50%, -50%);
+
+	font-size: 24px;
+}
+
+.allSubs {
+	grid-area: cards;
+
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: space-evenly;
+
+	.sub:not(:last-of-type) {
+		margin-bottom: 15px;
+	}
+
+	@media (max-width: 1000px) {
+		flex-flow: row wrap;
+
+		.sub {
+			margin-bottom: 0 !important;
+		}
+	}
+}
+
+.sub {
+	position: relative;
+
+	display: grid;
+	align-items: center;
+
+	width: 100%;
+	max-width: 500px;
+	height: auto;
+	border: 2px solid transparent;
+
+	transition: 0.2s all;
+
+	background: var(--gray-light);
+	grid-template-columns: 1fr;
+	justify-items: center;
+	gap: 15px;
+
+	.formTitle {
+		margin: 12px 0;
+
+		&.silver {
+			color: rgb(192, 192, 192);
+		}
+
+		&.gold {
+			color: var(--yellow);
+		}
+	}
+
+	@media (max-width: 1300px) {
+	}
+
+	@media (max-width: 1000px) {
+	}
+}
+
+.subTitle {
+	grid-area: title;
+
+	margin-bottom: 20px;
+
+	text-align: center;
+}
+
+.description {
+
+}
+
+.sub.has {
+	border: 1px solid var(--blue);
+}
+
+.sub.expired {
+	border: 1px solid var(--red-bright);
+}
+
+.sub .subscribed {
+	position: absolute;
+	right: -1px;
+	bottom: 0;
+	left: -1px;
+
+	display: grid;
+	align-items: center;
+
+	height: 0;
+
+	transition: 0.2s all;
+	transform: translateY(100%);
+
+	opacity: 0;
+	color: var(--yellow);
+	background: var(--white-transparent);
+	grid-template-columns: 1fr;
+	gap: 10px;
+	justify-items: center;
+}
+
+.sub .subscribed button {
+	width: 100%;
+	margin: 0;
+
+	border: none;
+	border-radius: 0;
+}
+
+.sub .subscribed h2 {
+	margin: 5px 0;
+
+	font-weight: 300;
+}
+
+.sub:hover .subscribed {
+	height: 104px;
+
+	opacity: 1;
+	border: 1px solid var(--blue);
+	border-top: 0;
+}
+
+.paySub {
+	grid-area: form;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 15px;
+	margin: 20px 0;
+	padding: 0 32px;
+}
+
+.chosen {
+	box-shadow: $chosenShadow;
+}
+
+.chosenGold {
+	border: 2px solid var(--yellow);
+}
+
+.chosenSilver {
+	border: 2px solid var(--gray);
+}

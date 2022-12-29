@@ -1,0 +1,26 @@
+.question {
+	margin: 15px 0 25px 0;
+
+	font-size: 18px;
+}
+
+.answerTitle {
+	padding-bottom: 10px;
+}
+
+.toAnswer {
+	margin-top: 0;
+	margin-bottom: -10px;
+}
+
+.info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	margin: 10px 0 10px 0;
+}
+
+.hr {
+	margin-top: 20px;
+}

@@ -1,0 +1,70 @@
+.info {
+	display: grid;
+	grid-template-areas:
+		'info image'
+		'change change';
+	gap: 30px;
+	grid-template-columns: 1fr 150px;
+}
+
+.content {
+	grid-area: info;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto auto 1fr;
+}
+
+.content > div {
+	margin-bottom: 15px;
+}
+
+.infoLine {
+	display: grid;
+	grid-template-columns: minmax(120px, 200px) auto;
+}
+
+.image {
+	grid-area: image;
+
+	width: 150px;
+	height: 150px;
+}
+
+.imageWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.imageWrapper button {
+	background-color: var(--red);
+}
+
+.changeInfo {
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+	justify-content: flex-end;
+	grid-area: change;
+}
+
+.changeInfo a {
+	margin-bottom: 20px;
+
+	transition: 0.2s all;
+
+	color: var(--black);
+
+	font-size: 16px;
+}
+
+.changeInfo a:hover {
+	margin-left: 10px;
+
+	color: var(--blue-hover);
+}
+
+.changeInfo .changeInfoTitle {
+	margin-bottom: 25px;
+}

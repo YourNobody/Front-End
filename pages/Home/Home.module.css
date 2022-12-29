@@ -1,0 +1,25 @@
+.home {
+	display: flex;
+	align-items: center;
+	flex-flow: column;
+	justify-content: center;
+
+	height: 100%;
+
+	text-align: center;
+}
+
+.appName {
+	color: var(--blue);
+}
+
+.description {
+	padding: 20px 100px;
+
+	font-size: 20px;
+	line-height: 24px;
+}
+
+.actions button:nth-of-type(1) {
+	margin-right: 15px;
+}

@@ -1,0 +1,83 @@
+.changeWrapper input {
+	margin-bottom: 15px;
+}
+
+.changeWrapper div:last-of-type input {
+	margin-bottom: 0;
+}
+
+.changeWrapper button[type=submit] {
+	margin-top: 20px;
+}
+
+.formTitle {
+	margin-bottom: 20px;
+}
+
+.title {
+	text-align: center;
+	padding: 6px 0 12px 0;
+}
+
+.option {
+	border: 1px solid var(--gray);
+	margin-bottom: 20px;
+	padding: 18px 12px 8px 14px;
+	position: relative;
+
+	h3 {
+		background-color: var(--white);
+		padding: 2px 10px;
+		position: absolute;
+		transform: translateY(-50%);
+		top: 0;
+		left: 15px;
+	}
+}
+
+.optionAvatar {
+	display: flex;
+	flex-flow: row wrap;
+
+	.avatar {
+		margin-left: 30px;
+		max-height: 200px;
+		max-width: 200px;
+	}
+}
+
+.changeInfo {
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+	justify-content: flex-end;
+	grid-area: change;
+
+	a {
+		margin-bottom: 20px;
+
+		transition: 0.2s all;
+
+		color: var(--black);
+
+		font-size: 16px;
+
+		&:hover {
+			margin-left: 10px;
+
+			color: var(--blue-hover);
+		}
+	}
+
+	.changeInfoTitle {
+		margin-bottom: 25px;
+	}
+}
+
+.previewAvatar {
+	margin-top: 20px;
+	width: 280px;
+	height: 280px;
+	display: flex;
+	align-items: center;
+}

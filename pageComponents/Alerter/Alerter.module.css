@@ -1,0 +1,77 @@
+.alerterWrapper {
+	position: fixed;
+	z-index: 99999;
+	right: 0;
+	bottom: 0;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 15px;
+}
+
+.alerter {
+	right: 0;
+
+	display: grid;
+
+	transition: all 0.3s;
+
+	opacity: 1;
+
+	color: var(--white);
+	grid-template-columns: auto 400px;
+}
+
+.removing {
+	opacity: 0;
+}
+
+.message {
+	padding: 15px;
+
+	white-space: initial;
+
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.close {
+	display: flex;
+	align-items: center;
+
+	padding: 16px 15px 15px 15px;
+
+	cursor: pointer;
+	transition: all 0.2s;
+
+	font-size: 16px;
+}
+
+.success {
+	color: var(--black);
+	background-color: var(--green);
+}
+
+.success .close:hover {
+	color: var(--black);
+	background-color: var(--green);
+}
+
+.warning {
+	color: var(--black);
+	background-color: var(--yellow);
+}
+
+.warning .close:hover {
+	color: var(--black);
+	background-color: var(--yellow-noopacity);
+}
+
+.error {
+	background-color: var(--red-noopacity);
+}
+
+.error .close:hover {
+	color: var(--black);
+	background-color: var(--red-noopacity);
+}

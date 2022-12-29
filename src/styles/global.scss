@@ -1,0 +1,64 @@
+:root {
+  --black: #0b0c10;
+  --black-transparent: rgba(96, 96, 96, 0.49);
+  --black-light: #1f2833;
+  --gray-light: #e1e1e1;
+  --gray: #c5c6c7;
+  --white: #fff;
+  --white-transparent: #e7e7e73d;
+  --mega-white-transparent: #e7e7e721;
+  --mega-white: #f0f0f0;
+  --blue: #7bf4ff;
+  --blue-dark: #544aa1;
+  --blue-hover: rgba(78, 95, 240, 0.75);
+  --blue-purple: #4e5ff0;
+  --yellow-noopacity: rgb(252, 230, 51);
+  --green-noopacity: rgb(112, 250, 60);
+  --red-noopacity: rgb(252, 47, 47);
+  --red: rgba(253, 105, 105, 0.842);
+  --red-bright: rgb(255, 109, 109);
+  --red-hover: rgba(214, 97, 97, 0.781);
+  --red-transparent: rgba(253, 105, 105, 0.3);
+  --green: rgba(152, 252, 112, 0.842);
+  --green-transparent: rgba(166, 255, 131, 0.4);
+  --yellow: rgba(255, 239, 97, 0.842);
+  --yellow-transparent: rgba(255, 240, 101, 0.47);
+  --orange: rgba(253, 140, 105, 0.842);
+  --orange-light: rgba(253, 177, 105, 0.842);
+  --yellow-green: rgba(243, 253, 105, 0.842);
+  --opac: 0.9;
+}
+
+$black: #000000;
+
+html {
+  overflow-x: hidden;
+
+  margin-right: calc(-1 * (100vw - 100%));
+}
+
+body {
+  color: var(--black);
+  background: url("../assets/images/back_two.jpg") center/cover no-repeat;
+  background-color: $black;
+  font-family: 'Roboto', sans-serif;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--white);
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+
+    background-color: var(--black-transparent);
+  }
+}
+
+a {
+  color: var(--black);
+}
+
+#root {
+  min-height: 100vh;
+  width: 100vw;
+}

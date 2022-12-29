@@ -5,9 +5,24 @@
     "outDir": "js",
     "sourceMap": true,
     "module": "es6",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "noImplicitAny": false,
+    "baseUrl": "./",
+    "paths": {
+      "@Components": ["components/"],
+      "@Helpers": ["helpers/"],
+      "@PageComponents": ["pageComponents/"],
+      "@Hooks": ["hooks/"],
+      "@Constants": ["constants/"],
+      "@Interfaces/*": ["interfaces/*"],
+      "@Layouts": ["layouts/"],
+      "@Slices": ["store/reducers/"],
+      "@ActionCreators/*": ["store/action-creators/*"]
+    },
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true
   },
   "include": [
     "next-env.d.ts",

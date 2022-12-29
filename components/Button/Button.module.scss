@@ -1,0 +1,64 @@
+.button {
+	padding: 8px 16px;
+	will-change: background-color;
+	will-change: color;
+	transition: all 0.2s;
+	text-align: center;
+
+	border-radius: 5px;
+	box-shadow: 0 0 0 1px var(--gray);
+
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.primary {
+	background-color: var(--blue);
+}
+
+.button:active {
+	transform: scale(0.95);
+}
+
+.primary {
+	background-color: var(--blue);
+}
+
+.ghost {
+	background-color: var(--white);
+}
+
+.silver {
+	&:hover {
+		background-color: var(--white);
+	}
+}
+
+.gold {
+	background-color: var(--yellow);
+
+	&:hover {
+		color: var(--black);
+		background-color: var(--yellow);
+	}
+}
+
+.primary:not(:disabled):hover {
+	color: var(--white);
+	background-color: var(--blue-hover);
+}
+
+.ghost:not(:disabled):hover {
+	background-color: var(--blue);
+}
+
+.danger {
+	color: var(--black);
+	background-color: var(--red-transparent);
+	box-shadow: 0 0 0 1px var(--red);
+}
+
+.danger:not(:disabled):hover {
+	color: var(--white);
+	background-color: var(--red);
+}

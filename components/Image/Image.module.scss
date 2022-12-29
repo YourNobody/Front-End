@@ -1,0 +1,83 @@
+.imageWrapper {
+	overflow: hidden;
+
+	width: 100%;
+	height: 100%;
+
+	border-radius: 5px;
+}
+
+.image {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.template {
+	display: flex;
+	overflow: hidden;
+	align-items: center;
+	justify-content: center;
+
+	width: 50px;
+	height: 50px;
+
+	&.full {
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	background-color: var(--black-transparent);
+}
+
+.tempImage.full {
+	width: 100%;
+	height: 100%;
+}
+
+.imageLoading {
+	position: relative;
+
+	.tempImage {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+
+		&.loaded {
+			position: static !important;
+		}
+
+		&.hide {
+			display: none;
+		}
+	}
+}
+
+.templateInitials {
+	color: var(--white);
+
+	font-size: 21px;
+	font-weight: 700;
+}
+
+.circle {
+	border-radius: 50%;
+}
+
+.contain {
+	object-fit: contain;
+}
+
+.cover {
+	object-fit: cover;
+}
+
+.fill {
+	object-fit: fill;
+}
+
+.none {
+	object-fit: none;
+}

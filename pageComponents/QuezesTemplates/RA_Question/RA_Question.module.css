@@ -1,0 +1,94 @@
+.questionWrapper {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto minmax(175px, 1fr) auto auto;
+}
+
+.question {
+	margin: 15px 0 25px 0;
+
+	font-size: 18px;
+}
+
+.answerWrapper {
+	display: grid;
+	grid-template-columns: auto auto 1fr;
+
+	align-items: center;
+
+	margin: 15px 0 10px 0;
+}
+
+.answerWrapper button {
+	justify-self: flex-end;
+
+	margin: 0;
+}
+
+.image {
+	height: auto;
+
+	background-color: var(--mega-white-transparent);
+}
+
+.slider {
+	width: 300px;
+	margin: 0 15px 0 0;
+
+	border-radius: 10px;
+	-webkit-appearance: none;
+}
+
+.slider::-webkit-slider-runnable-track {
+	height: 8px;
+
+	border: none;
+	border-radius: 10px;
+	background: var(--mega-white);
+}
+
+.slider::-webkit-slider-thumb {
+	width: 18px;
+	height: 18px;
+	margin-top: -5px;
+
+	transition: 0.2s all;
+
+	border: none;
+	border-radius: 50%;
+	background: var(--blue);
+	-webkit-appearance: none;
+}
+
+.slider:focus {
+	outline: none;
+}
+
+.slider:focus::-webkit-slider-thumb {
+	width: 24px;
+	height: 24px;
+	margin-top: -7.5px;
+
+	outline: none;
+	box-shadow: 0 0 4px var(--black);
+}
+
+.markWrapper {
+	position: relative;
+	top: 0;
+	left: 30px;
+}
+
+.markWrapper span {
+	position: relative;
+	top: 2px;
+	right: -5px;
+
+	display: inline-block;
+
+	font-size: 24px;
+}
+
+.hr {
+	margin-top: 20px;
+}

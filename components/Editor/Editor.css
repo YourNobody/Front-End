@@ -1,0 +1,23 @@
+.editer-content.rdw-editor-main {
+	padding-left: 15px;
+
+	color: var(--black);
+	background-color: var(--white);
+}
+
+.demo-wrapper.rdw-editor-wrapper {
+	border: 1px solid var(--black-light);
+}
+
+.rdw-colorpicker-wrapper,
+.rdw-link-wrapper,
+.rdw-embedded-wrapper,
+.rdw-emoji-wrapper,
+.rdw-image-wrapper,
+.rdw-image-wrapper {
+	display: none;
+}
+
+.rdw-editor-toolbar {
+	border-bottom: 1px solid var(--gray);
+}
